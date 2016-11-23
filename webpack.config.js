@@ -2,14 +2,15 @@
 const webpack = require('webpack');
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const WebpackShellPlugin = require('webpack-shell-plugin');
 const rootDir = __dirname;
 /**
  * Resolve paths so that we don't have to use relative paths when importing dependencies.
  * Very helpful when scaling an application and changing the location of a file that my require another file
  * in the same directory as the one it used to be in
  */
-const pathResolves = [ path.resolve(rootDir, 'src'), path.resolve(rootDir, 'node_modules') ];
-
+const pathResolves = [path.resolve(rootDir, 'src'), path.resolve(rootDir, 'node_modules')];
+console.log('path', path.resolve(rootDir, 'src/server'));
 module.exports = {
   entry: path.resolve(rootDir, 'src/client/main.ts'),
   output: {
@@ -18,10 +19,15 @@ module.exports = {
   },
   module: {
     rules: [
-      { 
-        test: /\.ts$/, 
-        use: ['ts-loader'],
-        exclude: [path.resolve(rootDir, 'node_modules')] 
+      {
+        test: /\.ts$/,
+        use: [{
+          loader: 'ts-loader',
+          options: {
+            configFileName: path.resolve(rootDir, 'tsconfig.client.json')
+          }
+        }],
+        include: [path.resolve(rootDir, 'src/client')]
       },
       {
         test: /\.jade$/,
@@ -58,8 +64,8 @@ module.exports = {
      * The angular CLI team implemented this quick regexp fix to get around compilation errors
      */
     new webpack.ContextReplacementPlugin(
-        /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-        './'
-      )
+      /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
+      './'
+    )
   ]
 };
