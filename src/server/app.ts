@@ -1,24 +1,12 @@
 import * as express from 'express';
 
+export function app(injector) {
+  const app = express();
 
-export class App {
-  constructor(private app = express()) {
-  }
-
-  public init(injector) {
-    this.app.use('/', (req: express.Request, res: express.Response) => {
-      res.json({ hello: 'hi' })
-    });
-  }
+  
+  app.use('/', (req: express.Request, res: express.Response) => {
+    res.json({ hello: 'hi' });
+  });
+  
+  return app;
 }
-
-// export function app(injector) {
-//   const app = express();
-
-  
-//   app.use('/', (req: express.Request, res: express.Response) => {
-//     res.json({ hello: 'hi' });
-//   });
-  
-//   return app;
-// }
