@@ -1,7 +1,3 @@
-import 'core-js';
-import 'reflect-metadata';
-import 'zone.js/dist/zone';
-
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
 import { AppModule } from 'client/app/app.module';
@@ -14,8 +10,8 @@ const platform = platformBrowserDynamic();
  * see https://angular.io/docs/ts/latest/api/core/index/enableProdMode-function.html
  * 
  */
-console.log(`Using ${ app.environment }...`);
-if (app.environment === 'production') {
+console.log(`Using ${ APP_ENV }...`);
+if (APP_ENV === 'production') {
   enableProdMode();
 }
 platform.bootstrapModule(AppModule);

@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'my-app',
-  template: require('client/app/app.component.jade'),
-  styles: [require('client/app/app.component.styl')]
+  templateUrl: './app.component.jade',
+  styleUrls: ['./app.component.styl']
 })
 
 export class AppComponent {
-
+  
 }

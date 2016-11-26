@@ -12,22 +12,45 @@ const rootDir = __dirname;
 const pathResolves = [path.resolve(rootDir, 'src'), path.resolve(rootDir, 'node_modules')];
 console.log('path', path.resolve(rootDir, 'src/server'));
 module.exports = {
-  entry: path.resolve(rootDir, 'src/client/main.ts'),
+  entry: {
+    'app': path.resolve(rootDir, 'src/client/main.ts'),
+    'polyfills': [
+      'core-js/es6',
+      'core-js/es7/reflect',
+      'zone.js/dist/zone'
+    ]
+  },
   output: {
     path: path.resolve(rootDir, 'dist'),
-    filename: 'app.bundle.js'
+    filename: '[name].[hash].js'
   },
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        use: [{
-          loader: 'ts-loader',
-          options: {
-            configFileName: path.resolve(rootDir, 'tsconfig.client.json')
-          }
-        }],
+        test: /\.component.ts$/,
+        use: [
+          {
+            loader: 'angular2-template-loader'
+          },
+          {
+            loader: 'ts-loader',
+            options: {
+              configFileName: path.resolve(rootDir, 'tsconfig.client.json')
+            }
+          }],
         include: [path.resolve(rootDir, 'src/client')]
+      },
+      {
+        test: /\.ts$/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              configFileName: path.resolve(rootDir, 'tsconfig.client.json')
+            }
+          }
+        ],
+        exclude: /\.component.ts$/
       },
       {
         test: /\.jade$/,
@@ -47,17 +70,18 @@ module.exports = {
     modules: pathResolves
   },
   plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'polyfills'
+    }),
     new HTMLWebpackPlugin({
-      template: path.resolve(rootDir, 'src/index.jade')
+      template: path.resolve(rootDir, 'dist/index.html')
     }),
 
     /**
      * Define any environment variables for client
      */
     new webpack.DefinePlugin({
-      app: {
-        environment: JSON.stringify(process.env.APP_ENVIRONMENT || 'development')
-      }
+      APP_ENV: JSON.stringify(process.env.APP_ENVIRONMENT || 'development')
     }),
     /**
      * This plugin is required because webpack 2.0 has some issues compiling angular 2.
