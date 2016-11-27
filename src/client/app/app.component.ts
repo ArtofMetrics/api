@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ViewReadyService } from 'client/shared/view-ready.service';
 
 @Component({
   selector: 'my-app',
@@ -8,4 +9,5 @@ import { Component } from '@angular/core';
 
 export class AppComponent {
   applicationTitle = 'Art of Metrics';
+ 
 }

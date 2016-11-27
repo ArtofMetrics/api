@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ViewReadyService } from 'client/shared/view-ready.service';
 
 @Component({
   selector: 'view-wrapper',
@@ -7,5 +8,8 @@ import { Component } from '@angular/core';
 })
 
 export class ViewWrapperComponent {
-
+  constructor(private viewState: ViewReadyService ) {
+    
+    console.log(viewState);
+  }
 }
