@@ -37,7 +37,7 @@ module.exports = {
           {
             loader: 'ts-loader',
             options: {
-              configFileName: path.resolve(rootDir, 'tsconfig.client.json')
+              configFileName: path.resolve(rootDir, 'src/client/tsconfig.json')
             }
           }],
         include: [path.resolve(rootDir, 'src/client')]
@@ -48,7 +48,7 @@ module.exports = {
           {
             loader: 'ts-loader',
             options: {
-              configFileName: path.resolve(rootDir, 'tsconfig.client.json')
+              configFileName: path.resolve(rootDir, 'src/client/tsconfig.json')
             }
           }
         ],

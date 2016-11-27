@@ -3,7 +3,7 @@
     "target": "es5",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": ".",
+    "baseUrl": "..",
     "paths":{
       "*": [
         "src/*",
