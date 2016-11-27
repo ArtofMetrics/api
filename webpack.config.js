@@ -3,6 +3,8 @@ const webpack = require('webpack');
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const WebpackShellPlugin = require('webpack-shell-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 const rootDir = __dirname;
 /**
  * Resolve paths so that we don't have to use relative paths when importing dependencies.
@@ -62,11 +64,16 @@ module.exports = {
           { loader: 'raw-loader' },
           { loader: 'stylus-loader' }
         ]
+      },
+      {
+        test: /\.css$/,
+        exclude: path.resolve('src/client'),
+        loader: ExtractTextPlugin.extract({fallbackLoader: 'style-loader', loader: 'css-loader'})
       }
     ]
   },
   resolve: {
-    extensions: ['.js', '.ts', '.jade', '.styl'],
+    extensions: ['.js', '.ts', '.jade', '.styl', '.css'],
     modules: pathResolves
   },
   plugins: [
@@ -74,7 +81,7 @@ module.exports = {
       name: 'polyfills'
     }),
     new HTMLWebpackPlugin({
-      template: path.resolve(rootDir, 'dist/index.html')
+      template: path.resolve(rootDir, 'src/index.jade')
     }),
 
     /**
@@ -90,6 +97,7 @@ module.exports = {
     new webpack.ContextReplacementPlugin(
       /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
       './'
-    )
+    ),
+    new ExtractTextPlugin('[name].css')
   ]
 };

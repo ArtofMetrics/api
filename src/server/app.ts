@@ -11,6 +11,8 @@ export function app(Container) {
     app.use(morgan('combined'));
   }
 
+  app.use(express.static('dist'));
+
   app.get('/', (req: express.Request, res: express.Response) => {
     const indexPath: string = `dist/index.html`;
     const encodeType: string = `utf-8`;
