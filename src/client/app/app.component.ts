@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
+import { ViewReadyService } from 'client/shared/view-ready.service';
 
 @Component({
   selector: 'my-app',
-  template: require('client/app/app.component.jade'),
-  styles: [require('client/app/app.component.styl')]
+  templateUrl: './app.component.jade',
+  styleUrls: ['./app.component.styl']
 })
 
 export class AppComponent {
-
+  applicationTitle = 'Art of Metrics';
+ 
 }

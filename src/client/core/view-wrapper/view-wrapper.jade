@@ -1,0 +1,5 @@
+div.loading-spinner
+  div#spinner(*ngIf="viewState.state.hide")
+    div.spinner
+  div.content([hidden]="!viewState.state.hide")
+    ng-content
