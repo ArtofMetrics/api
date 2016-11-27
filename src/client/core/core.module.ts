@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 import { AUTH_PROVIDERS } from 'angular2-jwt';
 import JWTService from './jwt.service';
 import UserService from './user.service';
 import TopMenuModule from './top-menu/top-menu.module';
 import TopMenuComponent from './top-menu/top-menu.component';
+import {ViewWrapperModule} from './view-wrapper/view-wrapper.module';
+import {ViewWrapperComponent} from './view-wrapper/view-wrapper.component';
 
 @NgModule({
-  imports: [BrowserModule, TopMenuModule],
-  exports: [TopMenuComponent],
+  imports: [CommonModule, TopMenuModule, ViewWrapperModule],
+  exports: [TopMenuComponent, ViewWrapperComponent],
   providers: [AUTH_PROVIDERS, JWTService, UserService]
 })
 

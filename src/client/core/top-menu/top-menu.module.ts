@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import TopMenuComponent from './top-menu.component';
 import TopMenuService from './top-menu.service';
+import { routing } from 'client/app/app.routing';
 
 @NgModule({
-  imports: [BrowserModule],
+  imports: [CommonModule, routing],
   declarations: [TopMenuComponent],
   providers: [TopMenuService],
   exports: [TopMenuComponent]

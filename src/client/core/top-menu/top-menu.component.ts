@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { TopMenuLink } from './top-menu-link.model';
 import TopMenuService from './top-menu.service';
-import UserService from '../user.service';
+import UserService from 'client/core/user.service';
 
 @Component({
   selector: `top-menu`,
@@ -10,6 +10,7 @@ import UserService from '../user.service';
 })
 export default class TopMenuComponent {
   links: TopMenuLink[];
+  homeHref = '/';
   @Input() title = '';
   constructor(private topMenuService: TopMenuService, private auth: UserService) {
     this.links = topMenuService.fetchLinks({ 

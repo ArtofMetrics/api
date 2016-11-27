@@ -61,8 +61,8 @@ module.exports = {
       {
         test: /\.styl$/,
         use: [
-          { loader: 'raw-loader' },
-          { loader: 'stylus-loader' }
+          'raw-loader',
+          'stylus-loader'
         ]
       },
       {
@@ -98,6 +98,12 @@ module.exports = {
       /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
       './'
     ),
-    new ExtractTextPlugin('[name].css')
-  ]
+    new ExtractTextPlugin('[name].css'),
+    new WebpackShellPlugin({
+      onBuildStart: 'rm -rf ./dist'
+    })
+  ],
+  devServer: {
+    historyApiFallback: true
+  }
 };
