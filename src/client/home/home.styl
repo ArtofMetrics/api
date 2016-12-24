@@ -1,5 +1,11 @@
-@import '../app/app.component';
+@import '../global-styles/variables.styl'
+@import '../global-styles/buttons.styl'
 
-#home-component
-  height: 100vh
-  background-color $brand-general-bg
+// Background color for top section of home page (dark blue)
+$home-section-one-bg = #34495E;
+
+#home-section-one
+  background-color $home-section-one-bg
+  .home-header
+    font-family $brand-header-font
+

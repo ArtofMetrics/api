@@ -61,14 +61,18 @@ module.exports = {
       {
         test: /\.styl$/,
         use: [
-          'raw-loader',
-          'stylus-loader'
+          { loader: 'raw-loader' },
+          { loader: 'stylus-loader' }
         ]
       },
       {
         test: /\.css$/,
-        exclude: path.resolve('src/client'),
-        loader: ExtractTextPlugin.extract({fallbackLoader: 'style-loader', loader: 'css-loader'})
+        // exclude: path.resolve('src/client'),
+        loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: 'css-loader' })
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        loader: 'file-loader'
       }
     ]
   },

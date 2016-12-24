@@ -1,4 +1,19 @@
-div#home-component
-  .col-xs-6.offset-xs-3(
-    aom-section="intro-img")
-    h5 Welcome to Art of Metrics
+//- Section one: Introductory / Explanatory text
+div.container-fluid#home-section-one
+  //- Header Row
+  div.row
+    div.col-xs-6.col-xs-offset-3.text-center
+      h2.home-header Learn Econometrics the Fun & Intuitive Way
+  
+  //- Carousel row
+  div.row
+    div.col-xs-12.col-md-7
+      home-carousel
+    div.col-xs-12.col-md-3(align="center")
+      p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+//- Section two: New User / Signup
+div.container-fluid#home-section-two
+  div.row
+    div.col-xs-6.col-xs-offset-3.text-center
+      button.btn.btn-primary.aom-btn-flat Start Learning
