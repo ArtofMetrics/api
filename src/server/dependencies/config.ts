@@ -1,6 +1,6 @@
-import { Service } from 'typedi';
+import { injectable } from 'stejar-di';
 
-@Service()
+@injectable
 export class Config {
   log = {
     dev: false

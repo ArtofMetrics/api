@@ -9,10 +9,11 @@ import TopMenuModule from './top-menu/top-menu.module';
 import TopMenuComponent from './top-menu/top-menu.component';
 import {ViewWrapperModule} from './view-wrapper/view-wrapper.module';
 import {ViewWrapperComponent} from './view-wrapper/view-wrapper.component';
-
+import { CarouselDirective } from './carousel.directive';
 @NgModule({
   imports: [CommonModule, SharedModule, TopMenuModule, ViewWrapperModule],
-  exports: [TopMenuComponent, ViewWrapperComponent],
+  exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective],
+  declarations: [CarouselDirective],
   providers: [AUTH_PROVIDERS, JWTService, UserService]
 })
 

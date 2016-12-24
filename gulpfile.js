@@ -4,11 +4,15 @@ const gulp = require('gulp');
 const ts = require('gulp-typescript');
 const chalk = require('chalk');
 const nodemon = require('gulp-nodemon');
+const path = require('path');
 
-const tsProject = ts.createProject('./tsconfig.server.json');
+// Constants
+const rootDir = __dirname;
+const SERVER_TS_CONFIG_PATH = path.resolve(__dirname, 'src/server/tsconfig.json');
+const tsProject = ts.createProject(SERVER_TS_CONFIG_PATH);
 gulp.task('transpile-server', () => {
   console.log(chalk.yellow('Recompiling server-side typescript...'));
-  return gulp.src(['./src/server/**/*.ts', './lib/server/*.ts'])
+  return gulp.src(['./src/server/**/*.ts', './src/server/*.ts'])
     .pipe(tsProject())
     .js
     .pipe(gulp.dest('./dist/server'));

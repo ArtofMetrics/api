@@ -3,10 +3,21 @@
     "target": "es6",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
     "module": "commonjs",
     "sourceMap": true,
-    "removeComments": true
+    "removeComments": true,
+    "baseUrl": "../../",
+    "paths": {
+      "dependencies/*": [
+        "src/server/dependencies/**/*",
+        "*"
+      ]
+    }
   },
+  "files": [
+    "index.ts"
+  ],
   "exclude": [
     "node_modules",
     "src/client"

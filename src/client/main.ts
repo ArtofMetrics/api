@@ -1,4 +1,9 @@
-import 'bootstrap/dist/css/bootstrap.css';
+// import foundation css
+import 'client/vendor/css/bootstrap.min.css';
+// import foundations what input
+import 'client/vendor/js/bootstrap.min.js';
+
+// import foundation js
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
