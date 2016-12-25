@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import { each } from 'lodash';
 import * as pluralize from 'pluralize';
 
-// SixPlus Deps
+// AOM Deps
 import { models } from './models';
 
 export function db(di) {

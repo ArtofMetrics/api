@@ -5,7 +5,7 @@ import * as morgan from 'morgan';
 import * as helmet from 'helmet';
 import { ServiceManager } from 'stejar-di';
 
-// SixPlus Deps
+// AOM Deps
 import { Config } from './dependencies/config';
 import { Api } from './api';
 

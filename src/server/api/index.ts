@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import { ServiceManager } from 'stejar-di';
-// SixPlus Deps
+// AOM Deps
 import { AuthRouter } from './auth';
 
 export function Api(di: ServiceManager) {

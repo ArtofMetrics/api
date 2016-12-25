@@ -14,7 +14,7 @@ export interface Config {
 
   database: { uri: string };
 
-  users: { secret: string };
+  jwt: { secret: string };
 
   ssl: {
     enabled: boolean;
@@ -39,7 +39,7 @@ export function config() {
     },
 
     // Auth Config
-    users: {
+    jwt: {
       secret: 'fAn7aSmicH0rrorTaco'
     },
 

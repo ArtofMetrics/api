@@ -2,7 +2,7 @@
 import { Schema, Document, Model, model, SchemaTypes } from 'mongoose';
 import * as emailValidator from 'email-validator';
 
-// SixPlus Deps
+// AOM Deps
 import { IUser } from './user.model';
 
 export interface IUserModel extends IUser, Document {}

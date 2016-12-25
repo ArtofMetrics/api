@@ -63,6 +63,10 @@
   dependencies:
     "@types/express" "*"
 
+"@types/http-status@^0.2.29":
+  version "0.2.29"
+  resolved "https://registry.yarnpkg.com/@types/http-status/-/http-status-0.2.29.tgz#3d7d256a1ca503858c1c6280e6af76df2fcbaa56"
+
 "@types/invariant@2.2.28":
   version "2.2.28"
   resolved "https://registry.yarnpkg.com/@types/invariant/-/invariant-2.2.28.tgz#ad721b5c0168db3aaffe551d4acfb8a5b4386e30"
@@ -70,6 +74,10 @@
 "@types/js-yaml@^3.5.29":
   version "3.5.29"
   resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.5.29.tgz#29f4dd9314fbccb080d8bd84b9c23811ec5090c2"
+
+"@types/jwt-simple@^0.5.32":
+  version "0.5.32"
+  resolved "https://registry.yarnpkg.com/@types/jwt-simple/-/jwt-simple-0.5.32.tgz#e8c417a76201051ac3fe440ca562db183add54e7"
 
 "@types/lodash":
   version "4.14.39"
@@ -2046,6 +2054,10 @@ http-signature@~1.1.0:
     assert-plus "^0.2.0"
     jsprim "^1.2.2"
     sshpk "^1.7.0"
+
+http-status@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/http-status/-/http-status-0.2.3.tgz#b8fba208d6723d0fe0de5afec3ae624f6bae03db"
 
 https-browserify@0.0.1:
   version "0.0.1"
@@ -4322,6 +4334,10 @@ sshpk@^1.7.0:
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
 
+standard-error@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/standard-error/-/standard-error-1.1.0.tgz#23e5168fa1c0820189e5812701a79058510d0d34"
+
 "statuses@>= 1.3.1 < 2", statuses@~1.3.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.3.1.tgz#faf51b9eb74aaef3b3acf4ad5f61abf24cb7b93e"
@@ -4606,9 +4622,9 @@ type-is@~1.6.13:
     media-typer "0.3.0"
     mime-types "~2.1.13"
 
-typescript@^2.0.10:
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.0.10.tgz#ccdd4ed86fd5550a407101a0814012e1b3fac3dd"
+typescript@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.1.4.tgz#b53b69fb841126acb1dd4b397d21daba87572251"
 
 uglify-js@2.7.x, uglify-js@^2.6.1, uglify-js@~2.7.3:
   version "2.7.4"

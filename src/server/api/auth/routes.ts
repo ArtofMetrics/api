@@ -2,7 +2,7 @@
 import { ServiceManager, injectable } from 'stejar-di';
 import * as express from 'express';
 
-// SixPlus Deps
+// AOM Deps
 import { Config } from '../../dependencies/config';
 import { CustomErrorService } from '../../dependencies/custom-error.service';
 
