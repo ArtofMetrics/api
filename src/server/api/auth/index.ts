@@ -6,7 +6,11 @@ export function AuthRouter(di) {
   const api: express.Router = express.Router();
   const AuthRoutes = new Routes(di);
 
-  // AuthRoutes.getMe();
-  api.use('/me', AuthRoutes.getMe);
+  /**
+   * route: /api/auth/me
+   */
+  api.route('/me')
+    .get(AuthRoutes.getMe);
+    
   return api;
 }

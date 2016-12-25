@@ -13,8 +13,8 @@ export function app(Container: ServiceManager) {
   const app = express();
   app.use(helmet());
   
-  const config: Config = Container.get(Config);
-
+  const config: any = Container.get('$config');
+  
   if (config.log.dev) {
     app.use(morgan('combined'));
   }

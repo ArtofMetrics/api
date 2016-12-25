@@ -10,7 +10,7 @@
     "baseUrl": "../../",
     "paths": {
       "dependencies/*": [
-        "src/server/dependencies/**/*",
+        "src/server/dependencies/*",
         "*"
       ]
     }
