@@ -1,3 +1,4 @@
+// NPM Deps
 import { Http, Headers, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
@@ -10,7 +11,7 @@ import { AuthHttp } from 'angular2-jwt';
  */
 
 @Injectable()
-export default class JWTService {
+export class JWTService {
   TOKEN_NAME: string = 'id_token';
   constructor(private authHttp: AuthHttp) {
   }

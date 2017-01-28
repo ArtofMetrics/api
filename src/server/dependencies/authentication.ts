@@ -1,0 +1,58 @@
+// NPM Deps
+import * as emailValidator from 'email-validator';
+import * as status from 'http-status';
+import * as bcrypt from 'bcrypt';
+import { Schema } from 'mongoose';
+
+// AOM Deps
+import { CustomErrorService } from './custom-error.service';
+
+export class AuthenticationService {
+  constructor(private $customError: CustomErrorService, 
+              private $User, 
+              private $config,
+              private $Password) { }
+
+  public validateEmail = async (email: string): Promise<void> => {
+    const self = this;
+    const duplicateCheckOp = self.$User.count({ 'profile.email': email }).exec();
+
+    try {
+      emailValidator.validate(email);
+    } catch (error) {
+      self.$customError.defaultError({
+        error: `Invalid email ${ email }: ${ error }`,
+        readableError: `${ email } is an invalid email`,
+        code: status.BAD_REQUEST
+      });
+    }
+
+    const duplicate = await duplicateCheckOp;
+    if (duplicate) {
+      self.$customError.defaultError({
+        error: `Email is already in use by another user`,
+        readableError: `Another user with this email already exists in our system`,
+        code: status.BAD_REQUEST
+      });
+    }
+  }
+
+  public validatePassword = async (password: string, confirmPassword: string) => {
+    const self = this;
+    if (password !== confirmPassword) {
+      self.$customError.defaultError({
+        error: `password and confirmPassword not equal`,
+        readableError: `Password and confirmation password do not match`,
+        code: status.BAD_REQUEST
+      });
+    }
+  }
+
+  public createPassword = async (password: string): Promise<Schema.Types.ObjectId> => {
+    const self = this;
+    const hash = await bcrypt.hash(password, 8);
+    const pass = await self.$Password.create({ hash });
+
+    return pass._id;
+  }
+}

@@ -3,18 +3,18 @@ import * as express from 'express';
 import * as fs from 'fs';
 import * as morgan from 'morgan';
 import * as helmet from 'helmet';
-import { ServiceManager } from 'stejar-di';
 
 // AOM Deps
 import { Config } from './dependencies/config';
 import { Api } from './api';
 
-export function app(Container: ServiceManager) {
+export function app(di) {
   const app = express();
   app.use(helmet());
   
-  const config: any = Container.get('$config');
+  const config: Config = di.get('$config');
   
+  console.log(config.log.dev);
   if (config.log.dev) {
     app.use(morgan('combined'));
   }
@@ -23,7 +23,7 @@ export function app(Container: ServiceManager) {
 
   app.use(express.static('assets'))
   
-  app.use('/api', Api(Container));
+  app.use('/api/v1', Api(di));
 
   app.get('/', (req: express.Request, res: express.Response) => {
     const indexPath: string = `dist/index.html`;

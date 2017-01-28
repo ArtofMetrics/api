@@ -9,4 +9,5 @@ export const passwordSchema: Schema = new Schema({
   hash: { type: String }
 });
 
-export const Password = model<IPasswordModel>('Password', passwordSchema);
+
+// export const Password = model<IPasswordModel>('Password', passwordSchema);

@@ -1,4 +1,3 @@
-import { injectable } from 'stejar-di';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
@@ -27,10 +26,10 @@ export interface Config {
 
 export function config() {
   const CONFIG_PATH = process.env.CONFIG || 'dev.config.yml';
-
+  const PORT = process.env.PORT || 3000;
   const contents = yaml.safeLoad(fs.readFileSync(CONFIG_PATH, 'utf-8'));
 
-  return recursiveMerge(contents, {
+  const merged = recursiveMerge(contents, {
     serve: './dist',
     
     // DB Config
@@ -50,8 +49,10 @@ export function config() {
     },
 
     // domain
-    domain: `http://localhost:${ process.env.PORT }`
+    domain: `http://localhost:${ PORT }`
   });
+
+  return merged;
 }
 
 function recursiveMerge(source, target: Config) {

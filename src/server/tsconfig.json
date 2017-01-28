@@ -12,6 +12,10 @@
       "dependencies/*": [
         "src/server/dependencies/*",
         "*"
+      ],
+      "shared/*": [
+        "src/shared/*",
+        "*"
       ]
     }
   },

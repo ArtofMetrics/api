@@ -5,3 +5,4 @@ declare var APP_ENV: string;
 
 declare var $: any;
 declare var Foundation: any;
+declare var mongoose: any;

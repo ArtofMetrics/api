@@ -8,6 +8,8 @@ import { models } from './models';
 
 export function db(di) {
   each(models, (schema, name) => {
-    di.bind(name, schema);
+    di.factory(`$${ name }`, function() {
+      return schema;
+    });
   });
 }

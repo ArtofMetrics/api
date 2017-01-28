@@ -1,10 +1,10 @@
-import { SchemaTypes } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
-export interface IUser {
+export interface IUser extends Document {
   status: string;
 
   internal: {
-    password: SchemaTypes.ObjectId;  
+    password: Schema.Types.ObjectId;  
   };
 
   profile: {
@@ -16,8 +16,8 @@ export interface IUser {
     };
   };
 
-  role: string;
-  
+  roles: string[];
+
   created_at: string;
   updated_at: string;
   

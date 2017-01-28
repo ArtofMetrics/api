@@ -1,13 +1,14 @@
 // NPM Deps
-import { injectable } from 'stejar-di';
 import * as express from 'express';
 import * as StandardError from 'standard-error';
 
 export class CustomErrorService {
   
-  public httpError(error: any) {
-    return (res: express.Response) => {
-      res.json({ error });
+  public httpError(res: express.Response) {
+    return (error: any) => {
+      const formatted = error;
+      formatted.ok = false;
+      res.json({ data: formatted });
     }
   }
 

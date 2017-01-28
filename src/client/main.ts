@@ -3,7 +3,12 @@ import 'client/vendor/css/bootstrap.min.css';
 // import foundations what input
 import 'client/vendor/js/bootstrap.min.js';
 
-// import foundation js
+// Import Rx.js
+import 'rxjs/add/observable/throw';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/catch';
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';

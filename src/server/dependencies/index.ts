@@ -1,13 +1,36 @@
-import { ServiceManager } from 'stejar-di';
-import { config } from './config';
+// NPM Deps
+import * as mongoose from 'mongoose';
+
+// AOM Deps
+import { config, Config } from './config';
 import { CustomErrorService } from './custom-error.service';
+import { db } from './db';
+import { AuthenticationService } from './authentication';
+import * as wagner from 'wagner-core';
 
 export function dependencies() {
-  const di = new ServiceManager();
+  const di = wagner.module('server.api');
+
+  // Custom Error
+  di.factory('$customError', function () {
+    return new CustomErrorService()
+  });
 
   // Config
-  di.bind('$config', config());
+  di.factory('$config', function() {
+    return config()
+  });
 
-  di.bind('$customError', new CustomErrorService());
+  // Mongoose db
+  di.factory('$db', ($config: Config) => {
+    return mongoose.createConnection($config.database.uri);
+  });
+
+  di.factory('$authentication', function($customError: CustomErrorService, $User) {
+    return new AuthenticationService($customError, $User);
+  });
+
+  db(di);
+
   return di;
-}
+};

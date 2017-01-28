@@ -1,5 +1,4 @@
 // NPM Deps
-import { ServiceManager } from 'stejar-di';
 import * as jwt from 'jwt-simple';
 import { Request, Response, NextFunction } from 'express';
 import * as status from 'http-status';
@@ -8,38 +7,35 @@ import { Document } from 'mongoose';
 // AOM Deps
 import { Config } from '../../dependencies/config';
 import { CustomErrorService } from '../../dependencies/custom-error.service';
-import { IUser } from '../../dependencies/models/user/user.model';
 
-interface Decoded extends IUser, Document {
+// AOM models
+import { AuthenticatedRequest } from '../interfaces/authenticated-request.model';
+import { RequestUser } from '../interfaces/request-user.model';
+
+interface Decoded {
   valid: boolean;
   id: string;
-}
-export interface ReqUser {
-  _id: string;
-
-  profile: { email: string, name: { first: string, last: string } };
+  profile: {
+    name: {
+      first: string;
+      last: string;
+    };
+    email: string;
+  }
 
   role: string;
 }
-
-export interface AuthenticatedRequest extends Request {
-  headers: {
-    authorization: string;
-  }
-
-  user?: ReqUser
-}
-
-
 
 export class Middleware {
   private $config: Config;
   private $customError: CustomErrorService;
 
-  constructor(di: ServiceManager) {
+  constructor(di) {
     const self = this;
-
-    ['$config', '$customError'].forEach(dep => self[dep] = di.get(dep));
+    di.invoke(function($config, $customError) {
+      self.$config = $config;
+      self.$customError = $customError;
+    });
   }
 
   public jwtDecoder(req: AuthenticatedRequest, res: Response, next: NextFunction) {
