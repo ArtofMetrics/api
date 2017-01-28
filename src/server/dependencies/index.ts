@@ -1,5 +1,6 @@
 // NPM Deps
-import * as mongoose from 'mongoose';
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
 // AOM Deps
 import { config, Config } from './config';
@@ -26,8 +27,8 @@ export function dependencies() {
     return mongoose.createConnection($config.database.uri);
   });
 
-  di.factory('$authentication', function($customError: CustomErrorService, $User) {
-    return new AuthenticationService($customError, $User);
+  di.factory('$authentication', function($customError: CustomErrorService, $User, $config, $Password) {
+    return new AuthenticationService($customError, $User, $config, $Password);
   });
 
   db(di);

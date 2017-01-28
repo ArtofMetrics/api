@@ -11,6 +11,7 @@ import { AuthenticationService } from '../../dependencies/authentication';
 
 // AOM Models
 import { AuthenticatedRequest } from '../interfaces/authenticated-request.model';
+import { RegistrationParams } from 'shared/interfaces/user-registration.model';
 
 // Constants
 const CLIENT_USER_FIELDS = ['_id', 'profile', 'role', 'status'];
@@ -39,29 +40,37 @@ export class AuthController {
   public registerEmail($customError: CustomErrorService, 
                        $authentication: AuthenticationService,
                        $User) {
-    return async (req, res: express.Response) => {
+    return async (req: { body: RegistrationParams }, res: express.Response) => {
       const self = this;
       try {
         checkDoc(req.body);
 
-        await $authentication.validateEmail(_.get<string>(req, 'body.profile.email'));
+        const sanitizedEmail = $authentication.sanitizeEmail(req.body.doc.profile.email);
+        await $authentication.validateEmail(sanitizedEmail);
         $authentication.validatePassword(req.body.password, req.body.confirmPassword);
 
         const user = new $User({ 
           roles: [],
-          profile: req.body.profile
+          profile: req.body.doc.profile
         });
 
-        user.set('internal.password', await $authentication.createPassword(req.body.password));
+        const passwordId = await $authentication.createPassword(req.body.password);
+        user.set('internal.password', passwordId);
 
         await user.save();
+        
+        user.set('internal', undefined);
 
-        res.json({ user });
+        const doc = user.toObject();
+        _.unset(doc, 'internal');
+        const token = $authentication.encodeToken(user);
+        res.json({ user: doc, token });
       } catch (error) {
+        console.log("in error", error);
         return $customError.httpError(res)(error);
       }
 
-      function checkDoc(requestBody) {
+      function checkDoc(requestBody: RegistrationParams) {
         if (!requestBody.doc) {
           $customError.defaultError({
             readableError: `No user document provided to register with via email!`,

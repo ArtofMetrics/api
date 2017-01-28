@@ -111,7 +111,7 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     proxy: {
-      '/api': 'http://localhost:3000'
+      '/api/*': 'http://localhost:3000'
     },
     host: '0.0.0.0',
     headers: { "Access-Control-Allow-Origin": "*" },

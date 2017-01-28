@@ -7,17 +7,20 @@ import * as some from 'lodash/some';
 import { JWTService } from './jwt.service';
 import { ApiService } from 'client/core/api/api.service';
 
+// Interfaces
+import { RegistrationParams } from 'shared/interfaces/user-registration.model';
+
 @Injectable()
-export default class UserService {
+export class UserService {
   $: any;
   
   constructor(private jwtService: JWTService, private apiService: ApiService) {
   }
 
-  public registerEmail = (doc) => {
+  public registerEmail = (params: RegistrationParams) => {
     const self = this;
     return self.apiService.auth
-      .register(doc)
+      .register(params)
       .then(result => {
         self.setUser(result);
       })

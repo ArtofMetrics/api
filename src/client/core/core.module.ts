@@ -11,7 +11,7 @@ import { HttpModule } from '@angular/http';
 
 // AOM Services
 import { JWTService } from './jwt.service';
-import UserService from './user.service';
+import { UserService } from './user.service';
 import { ApiService } from 'client/core/api/api.service';
 
 // AOM Components

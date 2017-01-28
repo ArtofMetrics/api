@@ -5,6 +5,7 @@ import {NgForm } from '@angular/forms';
 // AOM Deps
 import { userSchema } from 'server/dependencies/models/user';
 import { ApiService } from 'client/core/api/api.service';
+import { UserService } from 'client/core/user.service';
 
 @Component({
   selector: 'register-form',
@@ -25,8 +26,13 @@ export class RegisterFormComponent implements OnInit {
     this.doc = new mongoose.Document({}, userSchema);
   }
 
-  onSubmit(ev, form: NgForm) {
-   
+  onSubmit = (ev, form: NgForm) => {
+   this.userService
+    .registerEmail({ doc: this.doc, password: this.password, confirmPassword: this.confirmPassword })
+    .catch(error => {
+      console.error(error);
+      throw error;
+    })
   }
 }
 

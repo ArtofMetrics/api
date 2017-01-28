@@ -7,7 +7,7 @@ export const userSchema: Schema = new Schema({
 
   // Internal
   internal: {
-    password: { type: Schema.Types.ObjectId }
+    password: { type: Schema.Types.ObjectId, select: false }
   },
 
   // Profile

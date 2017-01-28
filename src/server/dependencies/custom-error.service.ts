@@ -6,6 +6,7 @@ export class CustomErrorService {
   
   public httpError(res: express.Response) {
     return (error: any) => {
+      console.error(`Error: ${ error }\n${ error.stack }`)
       const formatted = error;
       formatted.ok = false;
       res.json({ data: formatted });

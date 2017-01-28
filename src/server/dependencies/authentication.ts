@@ -2,6 +2,7 @@
 import * as emailValidator from 'email-validator';
 import * as status from 'http-status';
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jwt-simple';
 import { Schema } from 'mongoose';
 
 // AOM Deps
@@ -40,9 +41,17 @@ export class AuthenticationService {
   public validatePassword = async (password: string, confirmPassword: string) => {
     const self = this;
     if (password !== confirmPassword) {
-      self.$customError.defaultError({
+      return self.$customError.defaultError({
         error: `password and confirmPassword not equal`,
         readableError: `Password and confirmation password do not match`,
+        code: status.BAD_REQUEST
+      });
+    }
+
+    if (password.length < 6) {
+      return self.$customError.defaultError({
+        error: `Password must be at least 6 characters long`,
+        readableError: `Password must be at least 6 characters long`,
         code: status.BAD_REQUEST
       });
     }
@@ -54,5 +63,13 @@ export class AuthenticationService {
     const pass = await self.$Password.create({ hash });
 
     return pass._id;
+  }
+
+  public sanitizeEmail = (email: string): string => {
+    return email.trim().toLowerCase();
+  }
+
+  public encodeToken = (doc: any): string => {
+    return jwt.encode(doc, this.$config.jwt.secret);
   }
 }
