@@ -15,22 +15,24 @@ export class AuthenticationService {
               private $Password) { }
 
   public validateEmail = async (email: string): Promise<void> => {
-    const self = this;
-    const duplicateCheckOp = self.$User.count({ 'profile.email': email }).exec();
-
     try {
+      console.log('validating')
       emailValidator.validate(email);
     } catch (error) {
-      self.$customError.defaultError({
+      console.log('NOT VALID')
+      this.$customError.defaultError({
         error: `Invalid email ${ email }: ${ error }`,
         readableError: `${ email } is an invalid email`,
         code: status.BAD_REQUEST
       });
     }
 
-    const duplicate = await duplicateCheckOp;
+    console.log('checking dupe')
+    const duplicate = await this.$User.count({ 'profile.email': email });
+    console.log('duplicate?')
     if (duplicate) {
-      self.$customError.defaultError({
+      console.log('nope')
+      this.$customError.defaultError({
         error: `Email is already in use by another user`,
         readableError: `Another user with this email already exists in our system`,
         code: status.BAD_REQUEST

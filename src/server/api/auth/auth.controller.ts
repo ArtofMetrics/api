@@ -44,7 +44,6 @@ export class AuthController {
       const self = this;
       try {
         checkDoc(req.body);
-
         const sanitizedEmail = $authentication.sanitizeEmail(req.body.doc.profile.email);
         await $authentication.validateEmail(sanitizedEmail);
         $authentication.validatePassword(req.body.password, req.body.confirmPassword);
@@ -66,7 +65,6 @@ export class AuthController {
         const token = $authentication.encodeToken(user);
         res.json({ user: doc, token });
       } catch (error) {
-        console.log("in error", error);
         return $customError.httpError(res)(error);
       }
 

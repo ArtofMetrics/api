@@ -1,5 +1,7 @@
 // NPM Dependencies
 import { Schema, Document, Model, model, DocumentQuery } from 'mongoose';
+import { studentCourseSchema } from '../student-course';
+
 import * as emailValidator from 'email-validator';
 
 export const userSchema: Schema = new Schema({
@@ -7,7 +9,10 @@ export const userSchema: Schema = new Schema({
 
   // Internal
   internal: {
-    password: { type: Schema.Types.ObjectId, select: false }
+    password: { type: Schema.Types.ObjectId, select: false, ref: 'passwords' },
+    
+    // machines
+    machines: [String]
   },
 
   // Profile
@@ -16,13 +21,25 @@ export const userSchema: Schema = new Schema({
     name: {
       first: { type: String, required: true },
       last: { type: String, required: true }
+    },
+    education: {
+      kind: { type: String },
+      institution: { type: String }
+    },
+    location: {
+      city: { type: String },
+      country: { type: String },
+      zipcode: { type: String }
     }
   },
+  
+  // Courses
+  courses: [studentCourseSchema],
 
   // Roles
   roles: [{
     type: String,
-    enum: ['student', 'instructor', 'admin', 'super-admin']
+    enum: ['instructor', 'admin', 'super-admin']
   }]
 }, { timestamps: true });
 

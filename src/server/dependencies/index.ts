@@ -21,13 +21,15 @@ export function dependencies() {
   di.factory('$config', function() {
     return config()
   });
-
+  console.log('set up config')
   // Mongoose db
-  di.factory('$db', ($config: Config) => {
+  di.factory('db', function($config) {
+    console.log('created cnx')
     return mongoose.createConnection($config.database.uri);
   });
 
   di.factory('$authentication', function($customError: CustomErrorService, $User, $config, $Password) {
+    console.log('set up authentication')
     return new AuthenticationService($customError, $User, $config, $Password);
   });
 

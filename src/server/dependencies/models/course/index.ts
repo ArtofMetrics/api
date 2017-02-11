@@ -6,6 +6,27 @@ import { visibilityPlugin } from '../plugins/visibility';
 import { isVisible } from '../helpers/isVisible';
 import { isPublished } from '../helpers/isPublished';
 
+export interface ICourse {
+  status: String;
+  slug: String;
+  internal: {};
+
+  admin: {
+    readableId: Number;
+    subscription: { };
+  };
+
+  data: {
+    title: String;
+    description: String;
+    category: String;
+    photos: { url: String; caption: String; isCover: Boolean}[];
+  }
+  
+  createdAt: String;
+  updatedAt: String;
+}
+
 export const courseSchema: Schema = new Schema({
   status: { type: String, required: true, default: 'Incomplete' },
   slug: { type: String, required: true },

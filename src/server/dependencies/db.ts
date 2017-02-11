@@ -7,9 +7,12 @@ import * as pluralize from 'pluralize';
 import { models } from './models';
 
 export function db(di) {
-  each(models, (schema, name) => {
-    di.factory(`$${ name }`, function() {
-      return schema;
+  di.invoke(function(db) {
+    each(models, (schema, name) => {
+      const model = db.model(name, schema);
+      di.factory(`$${ name }`, function() {
+        return model;
+      });
     });
   });
 }
