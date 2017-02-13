@@ -18,11 +18,9 @@ export class RegisterFormComponent implements OnInit {
   password: string;
   confirmPassword: string;
   
-  constructor(private apiService: ApiService, private userService: UserService) {
-    console.log(apiService);
-   }
+  constructor(private apiService: ApiService, private userService: UserService) {}
 
-  ngOnInit() {
+  ngOnInit = () => {
     this.doc = new mongoose.Document({}, userSchema);
   }
 
@@ -33,6 +31,15 @@ export class RegisterFormComponent implements OnInit {
       console.error(error);
       throw error;
     })
+  }
+
+  oauthSignin = (type: string) => {
+    this.userService
+      .authenticateOauth({ doc: this.doc, type })
+      .catch(error => {
+        console.error(error);
+        throw error;
+      });
   }
 }
 

@@ -1,11 +1,16 @@
 // NPM Deps
 import { Injectable } from '@angular/core';
+import * as facebook from 'facebook-oauth-agent';
+import * as linkedin from 'linkedin-oauth-agent';
+// import * as google from 'google-auth-agent';
+
 import * as includes from 'lodash/includes';
 import * as some from 'lodash/some';
 
 // AOM Deps
 import { JWTService } from './jwt.service';
 import { ApiService } from 'client/core/api/api.service';
+import { Config } from 'client/core/config';
 
 // Interfaces
 import { RegistrationParams } from 'shared/interfaces/user-registration.model';
@@ -13,8 +18,11 @@ import { RegistrationParams } from 'shared/interfaces/user-registration.model';
 @Injectable()
 export class UserService {
   $: any;
-  
-  constructor(private jwtService: JWTService, private apiService: ApiService) {
+  ALLOWED_OAUTH_SERVICES = ['linkedin', 'google', 'facebook'];
+
+  constructor(private jwtService: JWTService,
+    private apiService: ApiService,
+    private config: Config) {
   }
 
   public registerEmail = (params: RegistrationParams) => {
@@ -24,6 +32,29 @@ export class UserService {
       .then(result => {
         self.setUser(result);
       })
+
+  }
+
+  public authenticateOauth = (userDoc: any, type: string) => {
+    return new Promise((resolve, reject) => {
+      let method = { linkedin, facebook }[type];
+      if (!method) {
+        return reject(new Error(`No method ${type}`));
+      }
+
+      method(this.config[type].client_id, (err, code) => {
+        if (err) {
+          return reject(err);
+        }
+
+        this.apiService.auth
+          .authenticateOauth(userDoc, type)
+          .then(result => {
+            this.setUser(result);
+            return resolve(result);
+          });
+      });
+    });
 
   }
 

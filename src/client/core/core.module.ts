@@ -1,5 +1,5 @@
 // NPM Deps
-import { NgModule } from '@angular/core';
+import { NgModule, OpaqueToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AUTH_PROVIDERS } from 'angular2-jwt';
 
@@ -13,6 +13,10 @@ import { HttpModule } from '@angular/http';
 import { JWTService } from './jwt.service';
 import { UserService } from './user.service';
 import { ApiService } from 'client/core/api/api.service';
+import { AomHTTPService } from './aom-http.service';
+
+// AOM Configs
+import { Config } from './config';
 
 // AOM Components
 import TopMenuComponent from './top-menu/top-menu.component';
@@ -25,7 +29,13 @@ import { CarouselDirective } from './carousel.directive';
   imports: [CommonModule, SharedModule, TopMenuModule, ViewWrapperModule],
   exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective, SharedModule],
   declarations: [CarouselDirective],
-  providers: [AUTH_PROVIDERS, JWTService, UserService, ApiService]
+  providers: [
+    AUTH_PROVIDERS, 
+    JWTService, 
+    UserService, 
+    ApiService, 
+    AomHTTPService,
+    Config]
 })
 
 export default class CoreModule {

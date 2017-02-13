@@ -5,8 +5,8 @@ mixin error-banner(text)
 div.register-form-component
   div.header.text-center
     h3 Signup
-    a.pointer Are you an instructor?
-    
+    a.btn.btn-primary.oauth-btn((click)="oauthSignin('linkedin')") Sign in with Facebook
+    a.btn.btn-primary.oauth-btn Sign in with LinkedIn
 
   form((ngSubmit)="onSubmit($event, form)" novalidate #form="ngForm")
     //- First name
