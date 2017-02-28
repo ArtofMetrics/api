@@ -18,7 +18,7 @@ import { RegistrationParams } from 'shared/interfaces/user-registration.model';
 @Injectable()
 export class UserService {
   $: any;
-  ALLOWED_OAUTH_SERVICES = ['linkedin', 'google', 'facebook'];
+  ALLOWED_OAUTH_SERVICES = ['linkedin', 'facebook'];
 
   constructor(private jwtService: JWTService,
     private apiService: ApiService,
@@ -26,16 +26,13 @@ export class UserService {
   }
 
   public registerEmail = (params: RegistrationParams) => {
-    const self = this;
-    return self.apiService.auth
+    return this.apiService.auth
       .register(params)
-      .then(result => {
-        self.setUser(result);
-      })
+      .do(result => this.setUser(result));
 
   }
 
-  public authenticateOauth = (userDoc: any, type: string) => {
+  public authenticateOauth = (userDoc: any, type: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       let method = { linkedin, facebook }[type];
       if (!method) {
@@ -49,22 +46,19 @@ export class UserService {
 
         this.apiService.auth
           .authenticateOauth(userDoc, type)
-          .then(result => {
-            this.setUser(result);
-            return resolve(result);
-          });
+          .do(result => this.setUser(result))
+          .subscribe(
+            data => resolve(data),
+            error => reject(error));
       });
     });
 
   }
-
-  public load() {
-    const self = this;
-    return self.apiService.auth
+  
+  public load = () => {
+    return this.apiService.auth
       .getMe()
-      .then(result => {
-        self.setUser(result);
-      });
+      .do(result => this.setUser(result));
   }
 
   private setUser = (result: { user?: any }) => {
@@ -73,35 +67,31 @@ export class UserService {
   /**
    * @desc Asynchronously determines if user is logged
    */
-  public isLoggedInAsync(): Promise<boolean> {
-    const self = this;
-    return self
+  public isLoggedInAsync = (): Promise<boolean> => {
+    return this
       .load()
+      .toPromise()
       .then(() => {
-        return !!self.$;
+        return !!this.$;
       });
   }
 
-  public isLoggedIn() {
-    const self = this;
-    return !!self.$;
+  public isLoggedIn = () => {
+    return !!this.$;
   }
-  public isAdmin(): boolean {
-    const self = this;
-    return self.hasRole(self.$, 'admin');
+  public isAdmin = (): boolean => {
+    return this.hasRole(this.$, 'admin');
   }
 
-  public isInstructor(): boolean {
-    const self = this;
-    return self.hasRole(self.$, 'instructor');
+  public isInstructor = (): boolean  => {
+    return this.hasRole(this.$, 'instructor');
   }
 
-  public isStudent(): boolean {
-    const self = this;
-    return self.hasRole(self.$, 'student');
+  public isStudent = (): boolean => {
+    return this.hasRole(this.$, 'student');
   }
 
-  private hasRole(user: any, role: string | string[]) {
+  private hasRole = (user: any, role: string | string[]) => {
     if (!user || !user.roles) {
       return false;
     }
@@ -113,5 +103,10 @@ export class UserService {
         return includes(user.roles, r);
       });
     }
+  }
+
+  private handleHttpError = (error) => {
+    console.log(error);
+    throw error;
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { RequestOptions, RequestOptionsArgs, Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 // AOM Deps
@@ -12,31 +12,34 @@ interface HttpCustomOptions {
 
 @Injectable()
 export class AomHTTPService {
-  constructor(private http: Http, private jwtService: JWTService) { }
+  constructor(private _jwtService: JWTService,
+              private _http: Http,
+              defaultOptions: RequestOptions ) { 
+  }
 
-  public get = (url: string, params?: any, customOptions?: HttpCustomOptions): Observable<any> => {
-    return this.http
+  get = (url: string, params?: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<Response> => {
+    return this._http
       .get(url, Object.assign({}, params, { headers: this.defineHeaders() }));
   }
 
-  public post = (url: string, params: {}, customOptions?: HttpCustomOptions) => {
-    return this.http
-      .post(url, params, Object.assign({}, customOptions || {}, { headers: this.defineHeaders() }));
+  post = (url: string, params: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<Response> => {
+    return this._http
+      .post(url, params, { headers: this.defineHeaders() });
   }
 
-  public put = (url: string, params: {}, customOptions?: HttpCustomOptions) => {
-    return this.http
-      .put(url, params, Object.assign({}, customOptions || {}, { headers: this.defineHeaders() }));
+  put = (url: string, params: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<Response> => {
+    return this._http
+      .put(url, params, { headers: this.defineHeaders() });
   }
   
-  public delete = (url: string, customOptions?: HttpCustomOptions) => {
-    return this.http
-      .delete(url, Object.assign({}, customOptions || {}, { headers: this.defineHeaders() }));
+  delete = (url: string, params?: RequestOptionsArgs): Observable<Response> => {
+    return this._http
+      .delete(url, Object.assign(params, { headers: this.defineHeaders() }));
   }
 
   private defineHeaders(): Headers {
     const headers = new Headers();
-    headers.append('Authorization', `Bearer ${this.jwtService.getToken()}`);
+    headers.append('Authorization', `Bearer ${this._jwtService.getToken()}`);
     return headers;
   }
 }
