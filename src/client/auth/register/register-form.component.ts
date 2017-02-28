@@ -1,5 +1,5 @@
 // NPM Deps
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {NgForm } from '@angular/forms';
 
 // AOM Deps
@@ -14,14 +14,12 @@ import { SignupResponse } from 'client/auth/register/models';
   styleUrls: ['./register-form.component.styl']
 })
 
-export class RegisterFormComponent implements OnInit {
+export class RegisterFormComponent {
   doc: any;
   password: string;
   confirmPassword: string;
   
-  constructor(private apiService: ApiService, private userService: UserService) {}
-
-  ngOnInit = () => {
+  constructor(private apiService: ApiService, private userService: UserService) {
     this.doc = new mongoose.Document({}, userSchema);
   }
 

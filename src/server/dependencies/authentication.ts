@@ -41,9 +41,8 @@ export class AuthenticationService {
   }
 
   public validatePassword = async (password: string, confirmPassword: string) => {
-    const self = this;
     if (password !== confirmPassword) {
-      return self.$customError.defaultError({
+      return this.$customError.defaultError({
         error: `password and confirmPassword not equal`,
         readableError: `Password and confirmation password do not match`,
         code: status.BAD_REQUEST
@@ -51,7 +50,7 @@ export class AuthenticationService {
     }
 
     if (password.length < 6) {
-      return self.$customError.defaultError({
+      return this.$customError.defaultError({
         error: `Password must be at least 6 characters long`,
         readableError: `Password must be at least 6 characters long`,
         code: status.BAD_REQUEST

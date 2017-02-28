@@ -32,22 +32,21 @@ export class Middleware {
 
   constructor(di) {
     const self = this;
-    di.invoke(function($config, $customError) {
+    di.invoke(function ($config, $customError) {
       self.$config = $config;
       self.$customError = $customError;
     });
   }
 
-  public jwtDecoder(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    const self = this;
+  public jwtDecoder = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       let decoded: Decoded;
       const token = req.headers.authorization;
       if (token) {
         const secret = this.$config.jwt.secret;
-        decoded = self.getDecoded(token, secret);
+        decoded = this.getDecoded(token, secret);
         if (!decoded || !decoded.valid) {
-          throw self.$customError.defaultError({
+          this.$customError.defaultError({
             error: `Decoded token is not valid`,
             readableError: `Could not decode token or token is invalid`,
             code: status.BAD_REQUEST
@@ -59,17 +58,16 @@ export class Middleware {
 
       next();
     } catch (error) {
-      this.$customError.httpError(error)(res);
+      this.$customError.httpError(res)(error);
     }
   }
 
-  private getDecoded(token: string, secret: string): any {
-    const self = this;
+  private getDecoded = (token: string, secret: string): any => {
     try {
       const decoded = jwt.decode(token, secret);
       return decoded;
     } catch (error) {
-      throw this.$customError.defaultError({
+      this.$customError.defaultError({
         error: error,
         readableError: `Could not decode JSON web token`,
         code: status.BAD_REQUEST
