@@ -39,7 +39,10 @@ export class AomHTTPService {
 
   private defineHeaders(): Headers {
     const headers = new Headers();
-    headers.append('Authorization', `Bearer ${this._jwtService.getToken()}`);
+    const token = this._jwtService.getToken();
+    if (token) {
+      headers.append('Authorization', token);
+    }
     return headers;
   }
 }
