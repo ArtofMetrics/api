@@ -1,5 +1,5 @@
 // NPM Deps
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {NgForm } from '@angular/forms';
 
 // AOM Deps
@@ -15,6 +15,10 @@ import { SignupResponse } from 'client/auth/register/models';
 })
 
 export class RegisterFormComponent {
+  
+  @Output()
+  change: EventEmitter<any> = new EventEmitter<any>();
+
   doc: any;
   password: string;
   confirmPassword: string;
@@ -49,7 +53,7 @@ export class RegisterFormComponent {
    * Handles successful email signup
    */
   private handleSuccessfulEmailSignup = (data: SignupResponse) => {
-
+    this.change.emit(data);
   }
 
   /**
