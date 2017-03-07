@@ -92,7 +92,8 @@ module.exports = {
      * Define any environment variables for client
      */
     new webpack.DefinePlugin({
-      APP_ENV: JSON.stringify(process.env.APP_ENVIRONMENT || 'development')
+      APP_ENV: JSON.stringify(process.env.APP_ENVIRONMENT || 'development'),
+      'typeof window': '\"object\"'
     }),
     /**
      * This plugin is required because webpack 2.0 has some issues compiling angular 2.
@@ -108,6 +109,12 @@ module.exports = {
     })
   ],
   devServer: {
-    historyApiFallback: true
+    historyApiFallback: true,
+    proxy: {
+      '/api/*': 'http://localhost:3000'
+    },
+    host: '0.0.0.0',
+    headers: { "Access-Control-Allow-Origin": "*" },
+    publicPath: '/'
   }
 };

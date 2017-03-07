@@ -7,10 +7,14 @@ class Server {
 
   async start(di): Promise<void> {
     
-    const server = app(di);
-    server.listen(3000);
-    
-    console.log('Server is listening on port 3000');
+    try {
+      const server = app(di);
+      server.listen(3000);
+      
+      console.log('Server is listening on port 3000');
+    } catch (error) {
+      console.error(`Error starting server: \n ${ error.stack}\n${ error }`);
+    }
   }
 }
 

@@ -1,12 +1,24 @@
+// NPM Deps
 import * as express from 'express';
 
-import { Routes } from './routes';
+// AOM Deps
+import { AuthController } from './auth.controller';
+import { Middleware } from '../middleware';
 
 export function AuthRouter(di) {
   const api: express.Router = express.Router();
-  const AuthRoutes = new Routes(di);
+  const AuthRoutes = new AuthController();
 
-  // AuthRoutes.getMe();
-  api.use('/me', AuthRoutes.getMe);
+  const middleware = new Middleware(di);
+  api.use(middleware.jwtDecoder);
+
+  /**
+   * route: /api/auth/me
+   */
+  api.route('/')
+    .get(di.invoke(AuthRoutes.getMe));
+  
+  api.route('/register/email')
+    .post(di.invoke(AuthRoutes.registerEmail));
   return api;
 }

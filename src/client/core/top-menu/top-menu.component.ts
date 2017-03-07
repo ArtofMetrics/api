@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { TopMenuLink } from './top-menu-link.model';
 import TopMenuService from './top-menu.service';
-import UserService from 'client/core/user.service';
+import { UserService } from 'client/core/user.service';
 @Component({
   selector: `top-menu`,
   templateUrl: './top-menu.component.jade',
@@ -14,17 +14,17 @@ export default class TopMenuComponent {
   
   constructor(
     private topMenuService: TopMenuService, 
-    private auth: UserService) {
+    private userService: UserService) {
     const self = this;
     this.links = topMenuService.fetchLinks({ 
-      isAdmin: auth.isAdmin(),
-      isLoggedIn: auth.isLoggedIn(),
-      isInstructor: auth.isInstructor(),
-      isStudent: auth.isStudent()
+      isAdmin: userService.isAdmin(),
+      isLoggedIn: userService.isLoggedIn(),
+      isInstructor: userService.isInstructor(),
+      isStudent: userService.isStudent()
     });
   }
 
   public isLoggedIn() {
-    return this.auth.isLoggedIn();
+    return this.userService.isLoggedIn();
   }
 }

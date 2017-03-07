@@ -5,8 +5,16 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "../..",
     "paths":{
-      "*": [
-        "src/*",
+      "client/*": [
+        "src/client/*",
+        "*"
+      ],
+      "shared/*": [
+        "src/shared/*",
+        "*"
+      ],
+      "server/*": [
+        "src/server/*",
         "*"
       ]
     }

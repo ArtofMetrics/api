@@ -15,5 +15,22 @@ div.container-fluid#home-section-one
 //- Section two: New User / Signup
 div.container-fluid#home-section-two
   div.row
-    div.col-xs-6.col-xs-offset-3.text-center
-      button.btn.btn-primary.aom-btn-flat Start Learning
+    div.col-xs-6.col-xs-offset-3.text-center.padded
+      a.btn.btn-primary.aom-btn-flat([routerLink]="['/register']") Start Learning
+      br
+      p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+
+//- Section three: Courses
+div.container-fluid#home-section-three
+  div.row
+    div.col-xs-6.col-xs-offset-3.text-center.padded
+      h2.home-header Our Courses
+      br
+      ul
+        li.course-thumb.pointer(
+          *ngFor="let course of courses"
+          [routerLink]="['/course/' + course.slug ]")
+          div.course-image
+            img(src="{{ course.data.photos[0].url }}")
+          p {{ course.data.title }}
+          p {{ course.data.description }}

@@ -1,25 +1,34 @@
+// NPM Deps
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
+
+// AOM Deps
 import CoreModule from 'client/core/core.module';
 import { SharedModule } from 'client/shared/shared.module';
 import { HomeModule } from 'client/home/home.module';
-// import { AppRoutingModule } from 'client/app/app-routing.module';
+import { AppRoutingModule } from 'client/app/app-routing.module';
 
-import { routing } from './app.routing';
-import { AppComponent } from './app.component';
+import { AppComponent } from 'client/app/app.component';
 import { ProfileModule } from 'client/profile/profile.module';
+import { AuthModule } from 'client/auth/auth.module';
+import { CoursesModule } from 'client/courses';
 
 // test
 @NgModule({
   imports: [
-    BrowserModule, 
-    HttpModule, 
+    BrowserModule,
+    HttpModule,
     CoreModule,
     SharedModule,
-    routing,
+    CoursesModule,
+
+    // Component Modules
     HomeModule,
-    ProfileModule],
+    ProfileModule,
+    AuthModule,
+    AppRoutingModule
+  ],
   declarations: [AppComponent],
   bootstrap: [AppComponent]
 })

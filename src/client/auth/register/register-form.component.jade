@@ -1,0 +1,68 @@
+//- Mixins
+mixin error-banner(text)
+  p&attributes(attributes).alert.alert-danger #{text}
+
+div.register-form-component
+  div.header.text-center
+    h3 Signup
+    a.btn.btn-primary.oauth-btn((click)="oauthSignin('linkedin')") Sign in with Facebook
+    a.btn.btn-primary.oauth-btn Sign in with LinkedIn
+
+  form((ngSubmit)="onSubmit($event, form)" novalidate #form="ngForm")
+    //- First name
+    div.form-group
+      label(for="firstName") First Name
+      input.form-control(
+        type="text"
+        name="firstName"
+        [(ngModel)]="doc.profile.name.first"
+        required)
+    
+    //- Last name
+    div.form-group
+      label(for="lastName") Last name
+      input.form-control(
+        type="text"
+        name="lastName"
+        [(ngModel)]="doc.profile.name.last"
+        required)
+
+    //- Email
+    div.form-group
+      label(for="email") Email
+      input.form-control(
+        #emailField="ngModel"
+        type="email"
+        name="email"
+        [(ngModel)]="doc.profile.email"
+        pattern=".+@.+$"
+        required
+      )
+      +error-banner('Please enter a valid email')(*ngIf="emailField.touched && emailField.invalid")
+    
+    //- Password
+    div.form-group
+      label(for="password") Password
+      input.form-control(
+        type="password"
+        name="password"
+        #passwordField="ngModel"
+        [(ngModel)]="password"
+        required
+      )
+      +error-banner('Please enter a password')(*ngIf="passwordField.touched && passwordField.invalid")
+    //- Confirm password
+    div.form-group
+      label(for="confirmPassword") Confirm Password
+      input.form-control(
+        type="password"
+        name="confirmPassword"
+        [(ngModel)]="confirmPassword"
+        required
+      )
+    
+    //- Submit
+    button.btn.btn-primary(type="submit" [disabled]="form.invalid") Register
+    button.btn.btn-danger Cancel
+    
+      

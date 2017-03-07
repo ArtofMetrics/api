@@ -4,8 +4,33 @@
 // Background color for top section of home page (dark blue)
 $home-section-one-bg = #34495E;
 
+// General Spacing classes
+.padded
+  padding: 20px
+
+// General classes
+.pointer
+  cursor: pointer
+
 #home-section-one
-  background-color $home-section-one-bg
+  // background-color $brand-peach
   .home-header
     font-family $brand-header-font
+#home-section-two
+  background-color $brand-green
 
+#home-section-three
+  font-family: $brand-header-font
+
+  .course-thumb
+    width: 33%;
+    list-style: none
+    float: left
+    .course-image
+      width: 50%;
+      height: 50%;
+
+    .course-image > img
+      width: 100%
+      height: 100%
+    span
