@@ -35,7 +35,7 @@ export class AuthenticationService {
     }
   }
 
-  public validatePassword = async (password: string, confirmPassword: string) => {
+  public validatePassword = (password: string, confirmPassword: string) => {
     if (password !== confirmPassword) {
       return this.$customError.defaultError({
         error: `password and confirmPassword not equal`,
@@ -54,9 +54,8 @@ export class AuthenticationService {
   }
 
   public createPassword = async (password: string): Promise<Schema.Types.ObjectId> => {
-    const self = this;
     const hash = await bcrypt.hash(password, 8);
-    const pass = await self.$Password.create({ hash });
+    const pass = await this.$Password.create({ hash });
 
     return pass._id;
   }

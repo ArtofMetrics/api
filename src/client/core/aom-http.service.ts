@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 // AOM Deps
 import { JWTService } from 'client/core/jwt.service';
+import { extractData } from 'client/core/api/helpers';
 
 interface HttpCustomOptions {
   promise?: boolean;
@@ -17,24 +18,28 @@ export class AomHTTPService {
               defaultOptions: RequestOptions ) { 
   }
 
-  get = (url: string, params?: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<Response> => {
+  get = (url: string, params?: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<any> => {
     return this._http
-      .get(url, Object.assign({}, params, { headers: this.defineHeaders() }));
+      .get(url, Object.assign({}, params, { headers: this.defineHeaders() }))
+      .map(response => extractData(response));
   }
 
-  post = (url: string, params: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<Response> => {
+  post = (url: string, params: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<any> => {
     return this._http
-      .post(url, params, { headers: this.defineHeaders() });
+      .post(url, params, { headers: this.defineHeaders() })
+      .map(response => extractData(response));
   }
 
-  put = (url: string, params: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<Response> => {
+  put = (url: string, params: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<any> => {
     return this._http
-      .put(url, params, { headers: this.defineHeaders() });
+      .put(url, params, { headers: this.defineHeaders() })
+      .map(response => extractData(response));
   }
   
-  delete = (url: string, params?: RequestOptionsArgs): Observable<Response> => {
+  delete = (url: string, params?: RequestOptionsArgs): Observable<any> => {
     return this._http
-      .delete(url, Object.assign(params, { headers: this.defineHeaders() }));
+      .delete(url, Object.assign(params, { headers: this.defineHeaders() }))
+      .map(response => extractData(response));
   }
 
   private defineHeaders(): Headers {

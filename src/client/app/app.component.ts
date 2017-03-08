@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ViewReadyService } from 'client/shared/view-ready.service';
+import { UserService } from 'client/core/user.service';
 
 @Component({
   selector: 'my-app',
@@ -7,7 +8,17 @@ import { ViewReadyService } from 'client/shared/view-ready.service';
   styleUrls: ['./app.component.styl']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
+  isLoggedIn: boolean = false;
+
   applicationTitle = 'Art of Metrics';
- 
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    console.log('loading')
+    this.userService.load()
+      .subscribe(
+        () => this.isLoggedIn = this.userService.isLoggedIn(),
+        error => console.error(error));
+  };
 }

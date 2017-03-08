@@ -1,4 +1,4 @@
 div#app-component
-  top-menu([title]="applicationTitle")
+  top-menu([title]="applicationTitle" *ngIf="!isLoggedIn")
   view-wrapper
     router-outlet

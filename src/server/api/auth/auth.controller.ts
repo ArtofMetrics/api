@@ -24,12 +24,12 @@ export class AuthController {
         if (req.user) {
           const user = await $User.findById(req.user._id);
           if (!user) {
-            return res.json({ user: null });
+            return res.json({ data: { user: null } });
           }
           const clientUser = _.pick(user, CLIENT_USER_FIELDS);
-          return res.json({ user: clientUser })
+          return res.json({ data: { user: clientUser } });
         } else {
-          res.json({ user: null })
+          res.json({ data: { user: null  } });
         }
       } catch (error) {
         return $customError.httpError(res)(error);
@@ -39,7 +39,8 @@ export class AuthController {
 
   public registerEmail($customError: CustomErrorService, 
                        $authentication: AuthenticationService,
-                       $User) {
+                       $User,
+                       $Password) {
     return async (req: { body: RegistrationParams }, res: express.Response) => {
       const self = this;
       try {
@@ -47,7 +48,6 @@ export class AuthController {
         const sanitizedEmail = $authentication.sanitizeEmail(req.body.doc.profile.email);
         await $authentication.validateEmail(sanitizedEmail);
         $authentication.validatePassword(req.body.password, req.body.confirmPassword);
-
         const user = new $User({ 
           roles: [],
           profile: req.body.doc.profile
@@ -56,14 +56,19 @@ export class AuthController {
         const passwordId = await $authentication.createPassword(req.body.password);
         user.set('internal.password', passwordId);
 
-        await user.save();
+        try {
+          await user.save();
+        } catch (error) {
+          $Password.remove({ _id: passwordId });
+          throw error;
+        }
         
         user.set('internal', undefined);
 
         const doc = user.toObject();
         _.unset(doc, 'internal');
         const token = $authentication.encodeToken(user);
-        res.json({ user: doc, token });
+        return res.json({ data: { user: doc, token } });
       } catch (error) {
         return $customError.httpError(res)(error);
       }

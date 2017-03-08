@@ -10,6 +10,5 @@ import { ViewReadyService } from 'client/shared/view-ready.service';
 export class ViewWrapperComponent {
   constructor(private viewState: ViewReadyService ) {
     
-    console.log(viewState);
   }
 }
