@@ -10,7 +10,8 @@ import { UserService } from 'client/core/user.service';
 
 export class AppComponent implements OnInit {
   isLoggedIn: boolean = false;
-
+  _opened = false;
+  
   applicationTitle = 'Art of Metrics';
   constructor(private userService: UserService) {}
 
@@ -18,7 +19,9 @@ export class AppComponent implements OnInit {
     console.log('loading')
     this.userService.load()
       .subscribe(
-        () => this.isLoggedIn = this.userService.isLoggedIn(),
+        () => {
+          this.isLoggedIn = this.userService.isLoggedIn();
+        },
         error => console.error(error));
   };
 }
