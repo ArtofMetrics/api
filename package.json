@@ -81,7 +81,6 @@
     "stylus-loader": "^2.3.1",
     "superagent": "^3.5.0",
     "ts-loader": "^1.2.2",
-    "ttab": "^0.5.0",
     "typescript": "^2.1.4",
     "webpack": "2.1.0-beta.27",
     "webpack-dev-server": "2.1.0-beta.11",
