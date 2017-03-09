@@ -12,7 +12,7 @@ import { AuthHttp } from 'angular2-jwt';
 
 @Injectable()
 export class JWTService {
-  TOKEN_NAME: string = 'id_token';
+  TOKEN_NAME: string = 'auth';
   constructor(private authHttp: AuthHttp) {
   }
 

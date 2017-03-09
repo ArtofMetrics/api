@@ -3,6 +3,7 @@ import * as jwt from 'jwt-simple';
 import { Request, Response, NextFunction } from 'express';
 import * as status from 'http-status';
 import { Document } from 'mongoose';
+import { pick } from 'lodash';
 
 // AOM Deps
 import { Config } from '../../dependencies/config';
@@ -14,7 +15,7 @@ import { RequestUser } from '../interfaces/request-user.model';
 
 interface Decoded {
   valid: boolean;
-  id: string;
+  _id: string;
   profile: {
     name: {
       first: string;
@@ -45,7 +46,7 @@ export class Middleware {
       if (token) {
         const secret = this.$config.jwt.secret;
         decoded = this.getDecoded(token, secret);
-        if (!decoded || !decoded.valid) {
+        if (!decoded) {
           this.$customError.defaultError({
             error: `Decoded token is not valid`,
             readableError: `Could not decode token or token is invalid`,
@@ -53,7 +54,7 @@ export class Middleware {
           });
         }
 
-        req.user = { _id: decoded.id, profile: decoded.profile, role: decoded.role };
+        req.user = { _id: decoded._id, profile: decoded.profile, role: decoded.role };
       }
 
       next();
@@ -65,7 +66,8 @@ export class Middleware {
   private getDecoded = (token: string, secret: string): any => {
     try {
       const decoded = jwt.decode(token, secret);
-      return decoded;
+      
+      return pick(decoded, ['_id', 'profile', 'role']);
     } catch (error) {
       this.$customError.defaultError({
         error: error,

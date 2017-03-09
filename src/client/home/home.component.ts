@@ -26,7 +26,6 @@ export class HomeComponent implements OnInit {
       .getCourses()
       .subscribe(courses => {
         self.courses = courses;
-        console.log(self.courses);
         subscription.unsubscribe();
       });
   }

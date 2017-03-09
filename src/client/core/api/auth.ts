@@ -16,27 +16,19 @@ export function authApi(API_ROOT: string, http: AomHTTPService, jwtService: JWTS
     authenticateOauth(code: string, type: string): Observable<{ user: any }> {
       return this.http
         .post(`${ BASE_URL }/register/email`, { code, type })
-        .map(result => toObject(result, data => ({ user: data })))
         .catch(error => Observable.throw(error));
     },
 
     getMe(): Observable<{ user: any }> {
       return http
         .get(BASE_URL)
-        .map(result => toObject(result, data => ({ user: data })))
         .catch(error => Observable.throw(error));
     },
 
     register(params: RegistrationParams): Observable<{ user: any }> {
       return http
         .post(`${ BASE_URL }/register/email`, params)
-        .map(result => toObject(result, data => ({ user: data })))
         .catch(error => Observable.throw(error));
     }
   };
-
-  function toObject(resp: Response, transformFunc?: (obj: any) => any) {
-    const data = extractData(resp.json());
-    return transformFunc ? transformFunc(data) : data;
-  }
 }

@@ -13,7 +13,7 @@ export function courses(API_ROOT: string, http: AomHTTPService, jwtService: JWTS
     getCourses(searchParams?: any): Observable<any[]> {
       return http
         .get(BASE_URL)
-        .map(data => extractData(data).courses);
+        .map(data => data.courses);
     }
   }
 }

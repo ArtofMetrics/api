@@ -1,4 +1,6 @@
 div#app-component
-  top-menu([title]="applicationTitle")
+  top-menu([title]="applicationTitle" *ngIf="!isLoggedIn")
+  aom-sidebar-toggle
+  aom-sidebar
   view-wrapper
     router-outlet

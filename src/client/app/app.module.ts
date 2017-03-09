@@ -13,6 +13,7 @@ import { AppComponent } from 'client/app/app.component';
 import { ProfileModule } from 'client/profile/profile.module';
 import { AuthModule } from 'client/auth/auth.module';
 import { CoursesModule } from 'client/courses';
+import { SidebarModule } from 'client/sidebar/sidebar.module';
 
 // test
 @NgModule({
@@ -24,6 +25,7 @@ import { CoursesModule } from 'client/courses';
     CoursesModule,
 
     // Component Modules
+    SidebarModule,
     HomeModule,
     ProfileModule,
     AuthModule,

@@ -61,8 +61,11 @@ export class UserService {
       .do(result => this.setUser(result));
   }
 
-  private setUser = (result: { user?: any }) => {
+  private setUser = (result: { user?: any, token?: string }) => {
     this.$ = result.user || null;
+    if (result.token) {
+      this.jwtService.setToken(result.token);
+    }
   }
   /**
    * @desc Asynchronously determines if user is logged
@@ -106,7 +109,6 @@ export class UserService {
   }
 
   private handleHttpError = (error) => {
-    console.log(error);
     throw error;
   }
 }
