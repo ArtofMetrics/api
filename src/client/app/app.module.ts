@@ -2,7 +2,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { SidebarModule } from 'ng-sidebar';
 
 // AOM Deps
 import CoreModule from 'client/core/core.module';
@@ -14,6 +13,7 @@ import { AppComponent } from 'client/app/app.component';
 import { ProfileModule } from 'client/profile/profile.module';
 import { AuthModule } from 'client/auth/auth.module';
 import { CoursesModule } from 'client/courses';
+import { SidebarModule } from 'client/sidebar/sidebar.module';
 
 // test
 @NgModule({

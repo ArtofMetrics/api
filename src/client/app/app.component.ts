@@ -16,7 +16,6 @@ export class AppComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit() {
-    console.log('loading')
     this.userService.load()
       .subscribe(
         () => {

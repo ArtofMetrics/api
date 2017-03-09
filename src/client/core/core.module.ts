@@ -34,11 +34,6 @@ import { CarouselDirective } from './carousel.directive';
     JWTService,
     UserService,
     ApiService,
-    // {
-    //   provide: Http,
-    //   useFactory: (jwtService: JWTService, backend: ConnectionBackend, requestOptions: RequestOptions) => new AomHTTPService(jwtService, backend, requestOptions),
-    //   deps: [JWTService, ConnectionBackend, RequestOptions]
-    // },
     AomHTTPService,
     Config]
 })

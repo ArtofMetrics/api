@@ -1,8 +1,6 @@
 div#app-component
   top-menu([title]="applicationTitle" *ngIf="!isLoggedIn")
-  ng-sidebar-container
-    ng-sidebar(([opened])="_opened")
-      a lol
-    view-wrapper
-
-      router-outlet
+  aom-sidebar-toggle
+  aom-sidebar
+  view-wrapper
+    router-outlet
