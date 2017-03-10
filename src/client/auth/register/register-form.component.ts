@@ -17,7 +17,7 @@ import { SignupResponse } from 'client/auth/register/models';
 export class RegisterFormComponent {
   
   @Output()
-  change: EventEmitter<any> = new EventEmitter<any>();
+  onRegister: EventEmitter<any> = new EventEmitter<any>();
 
   doc: any;
   password: string;
@@ -36,7 +36,7 @@ export class RegisterFormComponent {
     .subscribe(
       data => this.handleSuccessfulEmailSignup(data),
       error => this.handleHttpError(error, 'email')
-    )
+    );
   }
 
   /**
@@ -52,15 +52,16 @@ export class RegisterFormComponent {
   /**
    * Handles successful email signup
    */
-  private handleSuccessfulEmailSignup = (data: SignupResponse) => {
-    this.change.emit(data);
+  private handleSuccessfulEmailSignup = (data) => {
+    this.userService.setUser(data);
+    this.onRegister.emit(data);
   }
 
   /**
    * Handles successful oauth registration / signup
    */
   private handleSuccessfulOauth = (data: SignupResponse) => {
-
+    this.onRegister.emit(data);
   }
 
   /**

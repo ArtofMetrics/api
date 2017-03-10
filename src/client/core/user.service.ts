@@ -32,9 +32,7 @@ export class UserService {
 
   public registerEmail = (params: RegistrationParams) => {
     return this.apiService.auth
-      .register(params)
-      .do(result => this.setUser(result));
-
+      .register(params);
   }
 
   public authenticateOauth = (userDoc: any, type: string): Promise<any> => {
@@ -115,7 +113,7 @@ export class UserService {
   /**
    * @desc Sets the user on the $ state tracking property and also sets jwt
    */
-  private setUser = (result: { user?: any, token?: string }) => {
+  public setUser = (result: { user?: any, token?: string }) => {
     this.$ = result.user || null;
     if (result.token) {
       this.jwtService.setToken(result.token);
@@ -123,6 +121,8 @@ export class UserService {
     if (this.$) {
       this._stateTracker.next('LOGGED_IN');
     }
+
+    return Object.assign({}, this.$);
   }
 
   /**
