@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import ProfileComponent from 'client/profile/profile.component';
 import { HomeComponent } from 'client/home/home.component';
 import { RegisterComponent } from 'client/auth/register';
+import { LoginComponent } from 'client/auth/login';
 
 export const routing: Routes = [
   {
@@ -18,6 +19,11 @@ export const routing: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
     pathMatch: 'full'
   },
   {

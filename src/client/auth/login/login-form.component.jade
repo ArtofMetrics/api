@@ -1,0 +1,29 @@
+div.header
+  h3 Login
+
+form((ngSubmit)="onSubmit($event, form)" novalidate #form="ngForm")
+  div.row
+    //- Email
+    div.col.s12
+      div.input-field
+        i.material-icons.prefix email
+        input#login-email(
+          type="text" 
+          name="email"
+          [(ngModel)]="login.email")
+        label(for="login-email") Email
+    
+    //- Password
+    div.col.s12
+      div.input-field
+        i.material-icons.prefix lock
+        input#login-password(
+          type="password" 
+          name="password"
+          [(ngModel)]="login.password")
+        label(for="login-password") Password
+    
+    //- Submit
+    div.col.s3.offset-s3
+    button.btn.btn-waves.waves-light(type="submit") Login
+      i.material-icons send

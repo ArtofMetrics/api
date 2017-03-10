@@ -29,6 +29,12 @@ export function authApi(API_ROOT: string, http: AomHTTPService, jwtService: JWTS
       return http
         .post(`${ BASE_URL }/register/email`, params)
         .catch(error => Observable.throw(error));
+    },
+
+    authenticateEmail(params: { email: string, password: string }) {
+      return http
+        .post(`${ BASE_URL }/login/email`, params)
+        .catch(error => Observable.throw(error));
     }
   };
 }

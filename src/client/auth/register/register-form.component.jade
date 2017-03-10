@@ -2,11 +2,11 @@
 mixin error-banner(text)
   p&attributes(attributes).alert.alert-danger #{text}
 
-div.register-form-component
-  div.header.text-center
+div.register-form-component.center-align
+  div.header
     h3 Signup
-    a.btn.btn-primary.oauth-btn((click)="oauthSignin('linkedin')") Sign in with Facebook
-    a.btn.btn-primary.oauth-btn Sign in with LinkedIn
+    a.btn.btn-waves.waves-light.oauth-btn((click)="oauthSignin('facebook')") Sign in with Facebook
+    a.btn.btn-waves.waves-light.oauth-btn Sign in with LinkedIn
 
   form((ngSubmit)="onSubmit($event, form)" novalidate #form="ngForm")
     //- First name
@@ -62,7 +62,10 @@ div.register-form-component
       )
     
     //- Submit
-    button.btn.btn-primary(type="submit" [disabled]="form.invalid") Register
-    button.btn.btn-danger Cancel
+    button.btn.waves-effect.waves-light(
+      type="submit" 
+      [disabled]="form.invalid"
+      name="email-signup") Register
+      i.material-icons send
     
       
