@@ -5,6 +5,7 @@ import { ViewReadyService } from 'client/shared//view-ready.service';
 
 // AOM Deps
 import { UserService } from 'client/core/user.service';
+import { SignupResponse } from 'client/auth/register/models';
 
 @Component({
   selector: 'register',
@@ -24,8 +25,12 @@ export class RegisterComponent implements OnInit {
     this.viewState.emitFinished();
   }
 
-  onRegister = (user) => {
-    this.userService.setUser(user);
+  onRegister = (data: SignupResponse) => {
+    this.userService.setUser(data);
+    this.redirectOnSuccess(data.user);
+  }
+
+  redirectOnSuccess = (user) => {
     this.router.navigate(['/']);
   }
 
