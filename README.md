@@ -14,3 +14,8 @@
 
 6) Wait for step 5 to complete (it will say listening on port 3000), then open up your browser and go
    to `localhost:8080` (NOT `localhost:3000`, the development environment "proxies" requests to the server through a different port)
+   
+   
+   
+   I did this:
+   git clone https://github.com/ArtofMetrics/api.git
