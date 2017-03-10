@@ -2,6 +2,8 @@
 import { Injectable } from '@angular/core';
 import * as facebook from 'facebook-oauth-agent';
 import * as linkedin from 'linkedin-oauth-agent';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 // import * as google from 'google-auth-agent';
 
 import * as includes from 'lodash/includes';
@@ -18,6 +20,9 @@ import { RegistrationParams } from 'shared/interfaces/user-registration.model';
 @Injectable()
 export class UserService {
   $: any;
+  private _stateTracker = new BehaviorSubject<string>('INIT');
+  state$ = this._stateTracker.asObservable();
+
   ALLOWED_OAUTH_SERVICES = ['linkedin', 'facebook'];
 
   constructor(private jwtService: JWTService,
@@ -48,52 +53,81 @@ export class UserService {
           .authenticateOauth(userDoc, type)
           .do(result => this.setUser(result))
           .subscribe(
-            data => resolve(data),
-            error => reject(error));
+          data => resolve(data),
+          error => reject(error));
       });
     });
 
   }
-  
+
   public load = () => {
     return this.apiService.auth
       .getMe()
-      .do(result => this.setUser(result));
+      .toPromise()
+      .then(result => this.setUser(result));
   }
 
-  private setUser = (result: { user?: any, token?: string }) => {
-    this.$ = result.user || null;
-    if (result.token) {
-      this.jwtService.setToken(result.token);
-    }
+  public logout = (): void => {
+    this.jwtService.clearToken();
+    this.$ = null;
+    this._stateTracker.next('LOGGED_OUT');
   }
+
   /**
    * @desc Asynchronously determines if user is logged
    */
   public isLoggedInAsync = (): Promise<boolean> => {
     return this
       .load()
-      .toPromise()
       .then(() => {
         return !!this.$;
       });
   }
 
+  /**
+   * @desc Determines if a user is logged in
+   */
   public isLoggedIn = () => {
     return !!this.$;
   }
+
+  /**
+   * @desc Determines if a user is an admin
+   */
   public isAdmin = (): boolean => {
     return this.hasRole(this.$, 'admin');
   }
 
-  public isInstructor = (): boolean  => {
+  /**
+   * @desc Determines if a user is an instructor
+   */
+  public isInstructor = (): boolean => {
     return this.hasRole(this.$, 'instructor');
   }
 
+  /**
+   * @desc Determines if a user is a student
+   */
   public isStudent = (): boolean => {
     return this.hasRole(this.$, 'student');
   }
 
+  /**
+   * @desc Sets the user on the $ state tracking property and also sets jwt
+   */
+  private setUser = (result: { user?: any, token?: string }) => {
+    this.$ = result.user || null;
+    if (result.token) {
+      this.jwtService.setToken(result.token);
+    }
+    if (this.$) {
+      this._stateTracker.next('LOGGED_IN');
+    }
+  }
+
+  /**
+   * @desc Determines if a user has a given role or roles
+   */
   private hasRole = (user: any, role: string | string[]) => {
     if (!user || !user.roles) {
       return false;

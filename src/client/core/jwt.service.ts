@@ -17,17 +17,21 @@ export class JWTService {
   }
 
   // Fetches JWT from local storage
-  public getToken(): string {
+  public getToken = (): string => {
     const token = window.localStorage.getItem(this.TOKEN_NAME);
     return token;
   }
 
   // Sets JWT in local storage
-  public setToken(token: string): string {
+  public setToken = (token: string): string => {
     if (token) {
       window.localStorage.setItem(this.TOKEN_NAME, token);
     }
 
     return token;
+  }
+
+  public clearToken = (): void => {
+    window.localStorage.removeItem(this.TOKEN_NAME);
   }
 }

@@ -13,14 +13,19 @@ export class AppComponent implements OnInit {
   _opened = false;
   
   applicationTitle = 'Art of Metrics';
+  
   constructor(private userService: UserService) {}
 
   ngOnInit() {
-    this.userService.load()
-      .subscribe(
-        () => {
-          this.isLoggedIn = this.userService.isLoggedIn();
-        },
-        error => console.error(error));
+    // we never need to unsubscribe from this because the app component is always alive
+    this.userService.state$.subscribe(
+      (val: string) => {
+        this.isLoggedIn = val === 'LOGGED_IN'
+      },
+      (error: Error) => console.error(`error in state subscribe`, error)
+    );
+
+    this.userService
+      .load();
   };
 }
