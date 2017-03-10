@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ViewReadyService } from 'client/shared//view-ready.service';
 
 // AOM Deps
+import { UserService } from 'client/core/user.service';
 
 @Component({
   selector: 'register',
@@ -13,8 +14,10 @@ import { ViewReadyService } from 'client/shared//view-ready.service';
 export class RegisterComponent implements OnInit {
   doc: any;
 
-  constructor(private viewState: ViewReadyService,
-    private router: Router
+  constructor(
+    private viewState: ViewReadyService,
+    private router: Router,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -22,6 +25,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onRegister = (user) => {
+    this.userService.setUser(user);
     this.router.navigate(['/']);
   }
 

@@ -53,7 +53,6 @@ export class RegisterFormComponent {
    * Handles successful email signup
    */
   private handleSuccessfulEmailSignup = (data) => {
-    this.userService.setUser(data);
     this.onRegister.emit(data);
   }
 
