@@ -24,8 +24,8 @@ export class LoginFormComponent {
     this.apiService.auth
       .authenticateEmail(this.login)
       .subscribe(data => {
-
-      })
+        this.onLogin.emit(data);
+      });
       
   }
 }

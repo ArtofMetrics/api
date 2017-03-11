@@ -20,5 +20,8 @@ export function AuthRouter(di) {
   
   api.route('/register/email')
     .post(di.invoke(AuthRoutes.registerEmail));
+  api.route('/login/email')
+    .post(di.invoke(AuthRoutes.loginEmail));
+    
   return api;
 }
