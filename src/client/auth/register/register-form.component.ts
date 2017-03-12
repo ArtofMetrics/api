@@ -3,7 +3,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {NgForm } from '@angular/forms';
 
 // AOM Deps
-import { userSchema } from 'server/dependencies/models/user';
 import { ApiService } from 'client/core/api/api.service';
 import { UserService } from 'client/core/user.service';
 import { SignupResponse } from 'client/auth/register/models';
@@ -17,14 +16,14 @@ import { SignupResponse } from 'client/auth/register/models';
 export class RegisterFormComponent {
   
   @Output()
-  change: EventEmitter<any> = new EventEmitter<any>();
+  onRegister: EventEmitter<SignupResponse> = new EventEmitter<SignupResponse>();
 
   doc: any;
   password: string;
   confirmPassword: string;
   
   constructor(private apiService: ApiService, private userService: UserService) {
-    this.doc = new mongoose.Document({}, userSchema);
+    this.doc = { profile: { name: { first: '', last: '' }, email: '' } };
   }
 
   /**
@@ -36,7 +35,7 @@ export class RegisterFormComponent {
     .subscribe(
       data => this.handleSuccessfulEmailSignup(data),
       error => this.handleHttpError(error, 'email')
-    )
+    );
   }
 
   /**
@@ -53,14 +52,14 @@ export class RegisterFormComponent {
    * Handles successful email signup
    */
   private handleSuccessfulEmailSignup = (data: SignupResponse) => {
-    this.change.emit(data);
+    this.onRegister.emit(data);
   }
 
   /**
    * Handles successful oauth registration / signup
    */
   private handleSuccessfulOauth = (data: SignupResponse) => {
-
+    this.onRegister.emit(data);
   }
 
   /**

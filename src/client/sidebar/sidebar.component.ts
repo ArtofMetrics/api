@@ -1,5 +1,9 @@
 // NPM Deps
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+
+// Our Deps
+import { UserService } from 'client/core/user.service';
 
 @Component({
   selector: 'aom-sidebar',
@@ -8,13 +12,14 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 
 
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
   NAV_SELECTOR: string = `#aom-sidebar`;
 
-  constructor() { }
+  constructor(private userService: UserService, private router: Router) { }
 
-  ngOnInit() {
-    console.log('running side nav')
-    // $(this.NAV_SELECTOR).sideNav('show');
-  }
+  public logout = () => {
+    this.userService.logout();
+    this.router.navigate(['/register']);
+  };
+
 }

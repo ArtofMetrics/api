@@ -34,7 +34,7 @@ export class AuthenticationService {
       });
     }
   }
-
+  
   public validatePassword = (password: string, confirmPassword: string) => {
     if (password !== confirmPassword) {
       return this.$customError.defaultError({
