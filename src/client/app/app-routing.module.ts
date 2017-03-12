@@ -1,9 +1,15 @@
+// External Deps
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
+// Our Deps
 import ProfileComponent from 'client/profile/profile.component';
 import { HomeComponent } from 'client/home/home.component';
 import { RegisterComponent } from 'client/auth/register';
 import { LoginComponent } from 'client/auth/login';
+
+// Our Guards
+import { LoginGuard } from 'client/auth/auth-guard.service';
 
 export const routing: Routes = [
   {
@@ -13,6 +19,7 @@ export const routing: Routes = [
   },
   {
     path: 'profile',
+    canActivate: [LoginGuard],
     component: ProfileComponent,
     pathMatch: 'full'
   },
