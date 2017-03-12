@@ -3,7 +3,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {NgForm } from '@angular/forms';
 
 // AOM Deps
-import { userSchema } from 'server/dependencies/models/user';
 import { ApiService } from 'client/core/api/api.service';
 import { UserService } from 'client/core/user.service';
 import { SignupResponse } from 'client/auth/register/models';
@@ -24,7 +23,7 @@ export class RegisterFormComponent {
   confirmPassword: string;
   
   constructor(private apiService: ApiService, private userService: UserService) {
-    this.doc = new mongoose.Document({}, userSchema);
+    this.doc = { profile: { name: { first: '', last: '' }, email: '' } };
   }
 
   /**

@@ -1,10 +1,13 @@
 // External Deps
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 // AOM Deps
 import { ApiService } from 'client/core/api/api.service';
 import { UserService } from 'client/core/user.service';
+
+// AOM Models
+import { LoginEmailResponse } from 'server/api/auth/models';
 
 @Component({
   selector: 'login-form',
@@ -23,9 +26,7 @@ export class LoginFormComponent {
   emailLogin = (ev, form: NgForm) => {
     this.apiService.auth
       .authenticateEmail(this.login)
-      .subscribe(data => {
-        this.onLogin.emit(data);
-      });
+      .subscribe((data: LoginEmailResponse) => this.onLogin.emit(data));
       
   }
 }

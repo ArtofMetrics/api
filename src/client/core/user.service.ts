@@ -15,7 +15,7 @@ import { ApiService } from 'client/core/api/api.service';
 import { Config } from 'client/core/config';
 
 // Interfaces
-import { RegistrationParams } from 'shared/interfaces/user-registration.model';
+import { RegistrationEmailRequest } from 'server/api/auth/models';
 
 @Injectable()
 export class UserService {
@@ -30,7 +30,7 @@ export class UserService {
     private config: Config) {
   }
 
-  public registerEmail = (params: RegistrationParams) => {
+  public registerEmail = (params: RegistrationEmailRequest) => {
     return this.apiService.auth
       .register(params);
   }
@@ -77,9 +77,7 @@ export class UserService {
   public isLoggedInAsync = (): Promise<boolean> => {
     return this
       .load()
-      .then(() => {
-        return !!this.$;
-      });
+      .then(() => !!this.$);
   }
 
   /**

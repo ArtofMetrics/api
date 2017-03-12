@@ -40,8 +40,6 @@ export interface RegistrationEmailRequestBody extends AuthenticatedRequest {
 }
 
 export interface RegistrationEmailResponse {
-  data: {
-    user: any;
-    token: string;
-  }
+  user: any;
+  token: string;
 }

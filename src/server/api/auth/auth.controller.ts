@@ -12,6 +12,7 @@ import { AuthenticationService } from '../../dependencies/authentication';
 // AOM Models
 import { AuthenticatedRequest } from '../interfaces/authenticated-request.model';
 import { RegistrationParams } from 'shared/interfaces/user-registration.model';
+import { HTTPResponse } from '../models';
 import { 
   LoginEmailRequestBody, 
   LoginEmailResponse, 
@@ -141,7 +142,7 @@ export class AuthController {
         _.unset(doc, 'internal');
         const token = $authentication.encodeToken(user);
 
-        const responseBody: RegistrationEmailResponse = { data: { user: doc, token } };
+        const responseBody: HTTPResponse<RegistrationEmailResponse> = { data: { user: doc, token } };
         return res.json(responseBody);
       } catch (error) {
         return $customError.httpError(res)(error);

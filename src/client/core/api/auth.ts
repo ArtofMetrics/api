@@ -8,7 +8,11 @@ import { JWTService } from 'client/core/jwt.service';
 import { extractData } from 'client/core/api/helpers';
 
 // Interfaces
-import { RegistrationParams } from 'shared/interfaces/user-registration.model';
+import { 
+  RegistrationEmailRequest, 
+  RegistrationEmailResponse, 
+  LoginEmailRequest,
+  LoginEmailResponse } from 'server/api/auth/models';
 
 export function authApi(API_ROOT: string, http: AomHTTPService, jwtService: JWTService) {
   const BASE_URL = `${ API_ROOT }/auth`;
@@ -25,13 +29,13 @@ export function authApi(API_ROOT: string, http: AomHTTPService, jwtService: JWTS
         .catch(error => Observable.throw(error));
     },
 
-    register(params: RegistrationParams): Observable<{ user: any }> {
+    register(params: RegistrationEmailRequest): Observable<RegistrationEmailResponse> {
       return http
         .post(`${ BASE_URL }/register/email`, params)
         .catch(error => Observable.throw(error));
     },
 
-    authenticateEmail(params: { email: string, password: string }) {
+    authenticateEmail(params: LoginEmailRequest): Observable<LoginEmailResponse> {
       return http
         .post(`${ BASE_URL }/login/email`, params)
         .catch(error => Observable.throw(error));
