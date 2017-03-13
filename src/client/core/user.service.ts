@@ -113,6 +113,7 @@ export class UserService {
    */
   public setUser = (result: { user?: any, token?: string }) => {
     this.$ = result.user || null;
+    console.log('just got user', this.$);
     if (result.token) {
       this.jwtService.setToken(result.token);
     }

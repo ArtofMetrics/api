@@ -4,12 +4,14 @@ import { studentCourseSchema } from '../student-course';
 
 import * as emailValidator from 'email-validator';
 
+const { Types: { ObjectId } } = Schema;
+
 export const userSchema: Schema = new Schema({
   status: { type: String, default: 'active' },
 
   // Internal
   internal: {
-    password: { type: Schema.Types.ObjectId, select: false, ref: 'passwords' },
+    password: { type: ObjectId, select: false, ref: 'passwords' },
     
     // machines
     machines: [String]
@@ -34,7 +36,10 @@ export const userSchema: Schema = new Schema({
   },
   
   // Courses
-  courses: [studentCourseSchema],
+  courses: {
+    active: [{ type: ObjectId, ref: 'courses' }],
+    completed: [{ type: ObjectId, ref: 'courses' }]
+  },
 
   // Roles
   roles: [{
