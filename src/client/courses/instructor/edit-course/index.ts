@@ -1,0 +1,1 @@
+export { EditCourseComponent } from './edit-course.component';

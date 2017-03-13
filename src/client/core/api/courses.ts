@@ -14,9 +14,9 @@ export function courses(API_ROOT: string, http: AomHTTPService, jwtService: JWTS
 
   return {
 
-    getCourse({ id }: { id: string }): Observable<GetOneCourseResponse> {
+    getCourseBySlug({ slug }: { slug: string }): Observable<GetOneCourseResponse> {
       return http
-        .get(`${ BASE_URL }/${ id }`);
+        .get(`${ BASE_URL }/${ slug }`);
     },
 
     getCourses(searchParams?: any): Observable<any[]> {

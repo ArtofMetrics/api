@@ -2,13 +2,16 @@
 import * as express from 'express';
 import * as StandardError from 'standard-error';
 import * as kebabCase from 'lodash/kebabCase';
+import * as some from 'lodash/some';
 import * as slugify from 'slug';
+import * as status from 'http-status';
 
 // AOM Deps
 import { CustomErrorService } from '../../dependencies/custom-error.service';
+import { isInstructor } from '../utils';
 
 // AOM Models
-import { CreateCourseRequest, CreateCourseResponse } from './models';
+import { CreateCourseRequest, CreateCourseResponse, GetOneCourseResponse } from './models';
 
 export function getCourses($customError: CustomErrorService, $Course) {
   return async(req, res: express.Response) => {
@@ -60,7 +63,31 @@ export function createCourse($customError: CustomErrorService, $Course) {
     } catch (error) {
       return $customError.httpError(res)(error);
     }
-  }
+  };
+}
+
+export function getOneCourse($customError: CustomErrorService, $Course) {
+  return async (req, res: express.Response) => {
+    try {
+      const options = { skipVisibility: isInstructor(req.user)}
+      const course = await $Course
+        .findOne({ slug: req.params.slug })
+        .setOptions({options});
+      
+      if (!course) {
+        $customError.defaultError({
+          readableError: `Could not find course with slug ${ req.params.slug }`,
+          error: `No course found with slug ${ req.params.slug }`,
+          code: status.NOT_FOUND
+        });
+      }
+
+      const responseBody: GetOneCourseResponse = { course };
+      return res.json(responseBody);
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  };
 }
 
 async function createSlug(name: string, $Course: any) {

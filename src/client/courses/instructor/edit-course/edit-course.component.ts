@@ -12,9 +12,9 @@ import { ApiService } from 'client/core/api/api.service';
 })
 
 export class EditCourseComponent implements OnInit, OnDestroy {
-  subscriptions: { id: Subscription };
+  subscriptions: { slug: Subscription };
   course: any;
-  
+
   constructor(
     private viewState: ViewReadyService,
     private apiService: ApiService,
@@ -22,8 +22,8 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   ) {}
   
   ngOnInit() {
-    this.subscriptions.id = this.route.params
-      .subscribe(params => this.fetchCourse({ id: params.id }));
+    this.subscriptions.slug = this.route.params
+      .subscribe((params: { slug: string }) => this.fetchCourse({ slug: params.slug }));
   }
 
   ngOnDestroy() {
@@ -32,9 +32,9 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     });
   }
 
-  fetchCourse = ({ id }: { id: string }) => {
+  fetchCourse = ({ slug }: { slug: string }) => {
     return this.apiService.courses
-      .getCourse({ id })
+      .getCourseBySlug({ slug })
       .subscribe(
         data => this.course = data.course,
         error => this.handleHttpError(error));

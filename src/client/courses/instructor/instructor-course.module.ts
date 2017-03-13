@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 
 // AOM Deps
 import { CreateCourseFormComponent, CreateCourseComponent } from './create-course';
+import { EditCourseComponent } from './edit-course';
 
 @NgModule({
   imports: [FormsModule, CommonModule],
-  declarations: [CreateCourseFormComponent, CreateCourseComponent]
+  declarations: [CreateCourseFormComponent, CreateCourseComponent, EditCourseComponent]
 })
 
 export class InstructorCourseModule {}

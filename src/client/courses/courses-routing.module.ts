@@ -14,7 +14,7 @@ const coursesRoutes: Routes = [
         component: CreateCourseComponent
       },
       {
-        path: ':id',
+        path: ':slug',
         component: CourseViewComponent
       }
     ]
