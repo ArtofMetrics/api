@@ -63,6 +63,22 @@ export class Middleware {
     }
   }
 
+  public requireLogin = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      if (!req.user) {
+        this.$customError.defaultError({
+          error: `Not logged in`,
+          readableError: `You must be logged in for this`,
+          code: status.UNAUTHORIZED
+        });
+      }
+
+      return next();
+    } catch (error) {
+      this.$customError.httpError(res)(error);
+    }
+  };
+
   private getDecoded = (token: string, secret: string): any => {
     try {
       const decoded = jwt.decode(token, secret);
