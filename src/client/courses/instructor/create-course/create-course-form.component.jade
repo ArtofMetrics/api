@@ -3,9 +3,9 @@ div.container
   div.form
     form(
       novalidate 
-      #form="ngForm" 
       name="createCourseForm"
-      (ngSubmit)="createCourse()")
+      #form="ngForm"
+      (ngSubmit)="createCourse($event, form)")
       div.row
         //- Course name
         div.col.s6.offset-s3
@@ -16,8 +16,8 @@ div.container
               [(ngModel)]="course.data.name")
             label(for="create-course-name") Course Name
      
-    div.row
-      div.col.s6.offset-s3
-        button.btn.btn-waves.waves-effect(
-          type="submit"
-          [disabled]="!course.data.name") Add Modules
+      div.row
+        div.col.s6.offset-s3
+          button.btn.btn-waves.waves-effect(
+            type="submit"
+            [disabled]="!course.data.name") Add Modules

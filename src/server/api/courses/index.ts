@@ -8,10 +8,10 @@ export function coursesRouter(di): Router {
   const api = Router();
   const middleware = new Middleware(di);
   
-  api.use(di.invoke(middleware.jwtDecoder));
+  api.use(middleware.jwtDecoder);
   api.route('/')
     .get(di.invoke(getCourses))
-    .post(di.invoke(middleware.requireLogin), di.invoke(createCourse));
+    .post(middleware.requireLogin, di.invoke(createCourse));
 
   return api;
 };

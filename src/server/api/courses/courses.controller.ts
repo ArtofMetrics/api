@@ -56,7 +56,7 @@ export function createCourse($customError: CustomErrorService, $Course) {
       const doc = await $Course.create(newCourse);
 
       const responseBody: CreateCourseResponse = { course: doc.toObject({ virtuals: false }) };
-      return res.json(responseBody);
+      return res.json({ data: responseBody });
     } catch (error) {
       return $customError.httpError(res)(error);
     }
