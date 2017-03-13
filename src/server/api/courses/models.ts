@@ -1,5 +1,6 @@
 import { AuthenticatedRequest } from '../interfaces/authenticated-request.model';
 
+// Create Course models
 export interface CreateCourseData {
   course: {
     data: {
@@ -13,5 +14,10 @@ export interface CreateCourseRequest extends AuthenticatedRequest {
 }
 
 export interface CreateCourseResponse {
+  course: any;
+}
+
+// Get one course models
+export interface GetOneCourseResponse {
   course: any;
 }
