@@ -20,7 +20,7 @@ import {
   RegistrationEmailResponse } from './models';
 
 // Constants
-const CLIENT_USER_FIELDS = ['_id', 'profile', 'role', 'status'];
+const CLIENT_USER_FIELDS = ['_id', 'profile', 'roles', 'status', 'courses'];
 
 export class AuthController {
 
@@ -28,10 +28,7 @@ export class AuthController {
     return async (req: AuthenticatedRequest, res: express.Response) => {
       try {
         if (req.user) {
-          const user = await $User.findById(req.user._id);
-          if (!user) {
-            return res.json({ data: { user: null } });
-          }
+          const user = req.user;
           const clientUser = _.pick(user, CLIENT_USER_FIELDS);
           return res.json({ data: { user: clientUser } });
         } else {
