@@ -5,16 +5,21 @@ import { Component, OnInit } from '@angular/core';
 import { ViewReadyService } from 'client/shared/view-ready.service';
 
 @Component({
-  selector: 'create-course',
-  templateUrl: './create-course.component.jade'
+  selector: 'create-course-form',
+  templateUrl: './create-course-form.component.jade',
+  styleUrls: ['./create-course-form.component.styl']
 })
 
-export class CreateCourseComponent implements OnInit {
+export class CreateCourseFormComponent implements OnInit {
+  course: any;
   constructor(
     private viewState: ViewReadyService
   ) {}
 
   ngOnInit() {
+    this.course = {
+      data: { name: '' }
+    }
     this.viewState.emitFinished();
   }
 }
