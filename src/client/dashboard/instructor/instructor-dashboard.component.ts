@@ -1,5 +1,5 @@
 // External Deps
-import { Component } from '@angular/core';
+import { Component, Input, ElementRef } from '@angular/core';
 
 // AOM Deps
 
@@ -9,5 +9,9 @@ import { Component } from '@angular/core';
 })
 
 export class InstructorDashboardComponent {
+  @Input()
+  instructor: any;
+
   constructor() {}
+
 }

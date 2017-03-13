@@ -14,6 +14,12 @@ export function courses(API_ROOT: string, http: AomHTTPService, jwtService: JWTS
       return http
         .get(BASE_URL)
         .map(data => data.courses);
+    },
+
+    createCourse({ course }): Observable<any> {
+      return http
+        .post(BASE_URL, { course })
+        .map(data => data.course);
     }
   }
 }

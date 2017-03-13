@@ -1,7 +1,11 @@
 div.container
   //- Course Description Header
   div.form
-    form(novalidate #form="ngForm" name="createCourseForm")
+    form(
+      novalidate 
+      #form="ngForm" 
+      name="createCourseForm"
+      (ngSubmit)="createCourse()")
       div.row
         //- Course name
         div.col.s6.offset-s3
@@ -11,11 +15,9 @@ div.container
               name="create-course-name"
               [(ngModel)]="course.data.name")
             label(for="create-course-name") Course Name
-  //- div.row
-  //-   div.col.s6.offset-s3
-      
-  //- div.row
-  //-   //- Modules Sidebar
-  //-   div.col.s3
-  //-     a.waves-effect.waves-light.btn#add-module-btn((click)="addModule()")
-
+     
+    div.row
+      div.col.s6.offset-s3
+        button.btn.btn-waves.waves-effect(
+          type="submit"
+          [disabled]="!course.data.name") Add Modules

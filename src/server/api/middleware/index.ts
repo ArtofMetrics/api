@@ -24,7 +24,7 @@ interface Decoded {
     email: string;
   }
 
-  role: string;
+  roles: string[];
 }
 
 export class Middleware {
@@ -54,7 +54,7 @@ export class Middleware {
           });
         }
 
-        req.user = { _id: decoded._id, profile: decoded.profile, role: decoded.role };
+        req.user = { _id: decoded._id, profile: decoded.profile, roles: decoded.roles };
       }
 
       next();

@@ -7,6 +7,8 @@ import { isVisible } from '../helpers/isVisible';
 import { isPublished } from '../helpers/isPublished';
 
 export interface ICourse {
+  isVisible: boolean;
+  isDeleted: boolean;
   status: String;
   slug: String;
   internal: {};
@@ -17,7 +19,7 @@ export interface ICourse {
   };
 
   data: {
-    title: String;
+    name: String;
     description: String;
     category: String;
     photos: { url: String; caption: String; isCover: Boolean}[];
@@ -28,6 +30,8 @@ export interface ICourse {
 }
 
 export const courseSchema: Schema = new Schema({
+  isVisible: { type: Boolean, default: false },
+  isDeleted: { type: Boolean, default: false },
   status: { type: String, required: true, default: 'Incomplete' },
   slug: { type: String, required: true },
 
@@ -44,7 +48,7 @@ export const courseSchema: Schema = new Schema({
 
   // editable by instructors or admins
   data: {
-    title: { type: String, required: isPublished },
+    name: { type: String, required: true },
     description: { type: String, required: isPublished },
     category: { type: String },
     photos: [

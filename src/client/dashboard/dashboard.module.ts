@@ -1,15 +1,21 @@
 // External Deps
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 // AOM Deps
-import { InstructorDashboardComponent } from './instructor';
+import { InstructorDashboardComponent, InstructorDescriptionComponent } from './instructor';
 import { StudentDashboardComponent, StudentDescriptionComponent } from './student';
 import { UserDashboardComponent } from './user-dashboard.component';
 
 @NgModule({
-  imports: [RouterModule],
-  declarations: [UserDashboardComponent, StudentDashboardComponent, StudentDescriptionComponent, InstructorDashboardComponent],
+  imports: [RouterModule, CommonModule],
+  declarations: [
+    UserDashboardComponent, 
+    StudentDashboardComponent, 
+    StudentDescriptionComponent, 
+    InstructorDashboardComponent,
+    InstructorDescriptionComponent],
   exports: [UserDashboardComponent]
 })
 
