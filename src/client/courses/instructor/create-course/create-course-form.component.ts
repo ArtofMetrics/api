@@ -1,5 +1,6 @@
 // External Deps
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 // AOM Deps
 import { ViewReadyService } from 'client/shared/view-ready.service';
@@ -12,10 +13,11 @@ import { ApiService } from 'client/core/api/api.service';
 })
 
 export class CreateCourseFormComponent implements OnInit {
-  course: any;
+  course: { data: { name: string }};
   constructor(
     private viewState: ViewReadyService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -26,6 +28,15 @@ export class CreateCourseFormComponent implements OnInit {
   }
 
   createCourse = () => {
-    return this.apiService.courses.createCourse({ course: this.course });
+    return this.apiService.courses
+      .createCourse({ course: this.course })
+      .subscribe(
+        data => this.router.navigate(['course', data.course._id, 'edit']),
+        error => this.handleHttpError(error));
   };
+
+  handleHttpError = (error: Error) => {
+    console.error(`Error`, error);
+    throw error;
+  }
 }

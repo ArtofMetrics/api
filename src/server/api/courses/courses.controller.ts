@@ -48,7 +48,7 @@ export function createCourse($customError: CustomErrorService, $Course) {
       const data = req.body.course.data;
       let newCourse = {
         data,
-        slug: await createSlug(data.name, $Course),
+        slug: await createSlug(data.name.toLowerCase(), $Course),
         admin: { readableId: (await $Course.count()) + 1 }
       };
 
