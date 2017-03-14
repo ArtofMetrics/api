@@ -14,6 +14,7 @@ import { ProfileModule } from 'client/profile/profile.module';
 import { AuthModule } from 'client/auth/auth.module';
 import { CoursesModule } from 'client/courses';
 import { SidebarModule } from 'client/sidebar/sidebar.module';
+import { DashboardModule } from 'client/dashboard/dashboard.module';
 
 // test
 @NgModule({
@@ -22,10 +23,11 @@ import { SidebarModule } from 'client/sidebar/sidebar.module';
     HttpModule,
     CoreModule,
     SharedModule,
-    CoursesModule,
 
     // Component Modules
+    CoursesModule,
     SidebarModule,
+    DashboardModule,
     HomeModule,
     ProfileModule,
     AuthModule,
