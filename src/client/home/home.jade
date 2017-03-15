@@ -1,29 +1,36 @@
+
+
 //- Section one: Introductory / Explanatory text
-div.container-fluid#home-section-one
+div#home-section-one
   //- Header Row
   div.row
-    div.col-xs-6.col-xs-offset-3.text-center
+    //div.col-xs-6.col-xs-offset-3.text-center
+    div.col.s6.offset-s3.center-align
       h2.home-header Learn Econometrics the Fun & Intuitive Way
   
   //- Carousel row
   div.row
-    div.col-xs-12.col-md-7
+    //div.col-xs-12.col-md-7
+    div.col.s12.m7
       home-carousel
-    div.col-xs-12.col-md-3(align="center")
+    //div.col-xs-12.col-md-3(align="center")
+    div.col.s12.m3.center-align
       p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 //- Section two: New User / Signup
-div.container-fluid#home-section-two
+div#home-section-two
   div.row
-    div.col-xs-6.col-xs-offset-3.text-center.padded
+    //div.col-xs-6.col-xs-offset-3.text-center.padded
+    div.col.s6.offset-s3.center-align.padded
       a.btn.btn-primary.aom-btn-flat([routerLink]="['/register']") Start Learning
       br
       p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
 
 //- Section three: Courses
-div.container-fluid#home-section-three
+div#home-section-three
   div.row
-    div.col-xs-6.col-xs-offset-3.text-center.padded
+    //div.col-xs-6.col-xs-offset-3.text-center.padded
+    div.col.s6.offset-s3.center-align.padded
       h2.home-header Our Courses
       br
       ul
