@@ -7,13 +7,18 @@ import * as each from 'lodash/each';
 // AOM Deps
 import { ViewReadyService } from 'client/shared/view-ready.service';
 import { ApiService } from 'client/core/api/api.service';
+
+// AOM Models
+import { Course } from 'server/dependencies/models/course';
+
 @Component({
-  selector: 'edit-course'
+  selector: 'edit-course',
+  templateUrl: './edit-course.component.jade'
 })
 
 export class EditCourseComponent implements OnInit, OnDestroy {
-  subscriptions: { slug: Subscription };
-  course: any;
+  subscriptions: { slug?: Subscription } = {};
+  course: Course;
 
   constructor(
     private viewState: ViewReadyService,
@@ -23,7 +28,14 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   
   ngOnInit() {
     this.subscriptions.slug = this.route.params
-      .subscribe((params: { slug: string }) => this.fetchCourse({ slug: params.slug }));
+      .subscribe((params: { slug: string }) => {
+        if (!this.viewState.isLoading()) {
+          this.viewState.emitLoading();
+        }
+        this
+          .fetchCourse({ slug: params.slug })
+          .add(() => this.viewState.emitFinished());
+      });
   }
 
   ngOnDestroy() {
@@ -36,8 +48,11 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     return this.apiService.courses
       .getCourseBySlug({ slug })
       .subscribe(
-        data => this.course = data.course,
-        error => this.handleHttpError(error));
+        data => {
+          this.course = data.course
+          console.log(this.course)
+        },
+        error => this.handleHttpError(error))
   }
 
   handleHttpError = (error: Error) => {

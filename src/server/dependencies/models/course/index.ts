@@ -1,32 +1,36 @@
 // NPM Dependencies
 import { Schema, Document, Model, model, DocumentQuery } from 'mongoose';
 
-// AOM Deps
+// AOM Plugins
 import { visibilityPlugin } from '../plugins/visibility';
 import { isVisible } from '../helpers/isVisible';
 import { isPublished } from '../helpers/isPublished';
 
-export interface ICourse {
+// AOM Schemas
+import { courseModuleSchema } from '../module';
+
+export interface Course {
   isVisible: boolean;
   isDeleted: boolean;
-  status: String;
-  slug: String;
+  status: string;
+  slug: string;
   internal: {};
 
   admin: {
-    readableId: Number;
+    readableId: number;
     subscription: { };
   };
 
   data: {
-    name: String;
-    description: String;
-    category: String;
-    photos: { url: String; caption: String; isCover: Boolean}[];
+    name: string;
+    description: string;
+    category: string;
+    photos: { url: string; caption: string; isCover: boolean}[];
+    modules: any[]
   }
   
-  createdAt: String;
-  updatedAt: String;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const courseSchema: Schema = new Schema({
@@ -57,7 +61,8 @@ export const courseSchema: Schema = new Schema({
         caption: { type: String },
         isCover: { type: Boolean, default: false, required: true }
       }
-    ]
+    ],
+    modules: [courseModuleSchema]
   }
 }, { timestamps: true });
 

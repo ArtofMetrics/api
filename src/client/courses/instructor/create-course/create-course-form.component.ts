@@ -1,5 +1,5 @@
 // External Deps
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
@@ -14,6 +14,9 @@ import { ApiService } from 'client/core/api/api.service';
 })
 
 export class CreateCourseFormComponent implements OnInit {
+  @Output()
+  onCreateCourse: EventEmitter<any> = new EventEmitter<any>();
+
   course: { data: { name: string } };
   constructor(
     private viewState: ViewReadyService,
@@ -33,7 +36,7 @@ export class CreateCourseFormComponent implements OnInit {
       .createCourse({ course: this.course })
       .map(data => data.course)
       .subscribe(
-        course => this.router.navigate(['course', course._id, 'edit']),
+        course => this.onCreateCourse.emit({ course }),
         error => this.handleHttpError(error)
       );
   };

@@ -10,7 +10,8 @@ import * as status from 'http-status';
 import { CustomErrorService } from '../../dependencies/custom-error.service';
 import { isInstructor } from '../utils';
 
-// AOM Models
+// AOM models
+import { HTTPResponse } from '../models';
 import { CreateCourseRequest, CreateCourseResponse, GetOneCourseResponse } from './models';
 
 export function getCourses($customError: CustomErrorService, $Course) {
@@ -82,7 +83,7 @@ export function getOneCourse($customError: CustomErrorService, $Course) {
         });
       }
 
-      const responseBody: GetOneCourseResponse = { course };
+      const responseBody: HTTPResponse<GetOneCourseResponse> = { data: { course } };
       return res.json(responseBody);
     } catch (error) {
       return $customError.httpError(res)(error);
