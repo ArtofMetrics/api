@@ -21,14 +21,15 @@ import { Config } from './config';
 // AOM Components
 import TopMenuComponent from './top-menu/top-menu.component';
 import { ViewWrapperComponent } from './view-wrapper/view-wrapper.component';
+import { FooterComponent } from './footer';
 
 // AOM Directives
 import { CarouselDirective } from './carousel.directive';
 
 @NgModule({
   imports: [CommonModule, SharedModule, TopMenuModule, ViewWrapperModule],
-  exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective, SharedModule],
-  declarations: [CarouselDirective],
+  exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective, SharedModule, FooterComponent],
+  declarations: [CarouselDirective, FooterComponent],
   providers: [
     AUTH_PROVIDERS,
     JWTService,
