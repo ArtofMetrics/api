@@ -31,6 +31,6 @@ export class LoginComponent implements OnInit {
   };
 
   redirectOnSuccess = () => {
-    this.router.navigate(['/']);
+    this.router.navigate(['/dashboard']);
   };
 }

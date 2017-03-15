@@ -3,5 +3,5 @@ export interface RequestUser {
 
   profile: { email: string, name: { first: string, last: string } };
 
-  role: string;
+  roles: string[];
 }

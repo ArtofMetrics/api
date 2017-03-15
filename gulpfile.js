@@ -8,9 +8,18 @@ const path = require('path');
 
 // Constants
 const rootDir = __dirname;
+const SHARED_TS_CONFIG_PATH = path.resolve(__dirname, 'src/shared/tsconfig.json');
 const SERVER_TS_CONFIG_PATH = path.resolve(__dirname, 'src/server/tsconfig.json');
 const tsProject = ts.createProject(SERVER_TS_CONFIG_PATH);
-gulp.task('transpile-server', () => {
+const sharedTsProject = ts.createProject(SHARED_TS_CONFIG_PATH);
+gulp.task('transpile-shared', () => {
+  return gulp.src(['./src/shared/**/*.ts', './src/shared/*.ts'])
+    .pipe(sharedTsProject())
+    .js
+    .pipe(gulp.dest('./dist/shared'));
+});
+
+gulp.task('transpile-server', ['transpile-shared'], () => {
   console.log(chalk.yellow('Recompiling server-side typescript...'));
   return gulp.src(['./src/server/**/*.ts', './src/server/*.ts'])
     .pipe(tsProject())
