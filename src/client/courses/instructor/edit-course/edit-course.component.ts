@@ -10,6 +10,7 @@ import { ApiService } from 'client/core/api/api.service';
 
 // AOM Models
 import { Course } from 'server/dependencies/models/course';
+import { CourseModule } from 'server/dependencies/models/module';
 
 @Component({
   selector: 'edit-course',
@@ -32,6 +33,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
         if (!this.viewState.isLoading()) {
           this.viewState.emitLoading();
         }
+        
         this
           .fetchCourse({ slug: params.slug })
           .add(() => this.viewState.emitFinished());
@@ -48,13 +50,24 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     return this.apiService.courses
       .getCourseBySlug({ slug })
       .subscribe(
-        data => {
-          this.course = data.course
-          console.log(this.course)
-        },
+        data => this.course = data.course,
         error => this.handleHttpError(error))
   }
 
+  addModule = (position: number) => {
+    const data: CourseModule = {
+      name: '',
+      description: '',
+      lessons: []
+    };
+
+    if (position || position === 0) {
+      this.course.data.modules.splice(position, 0, data);
+    } else {
+      this.course.data.modules.push(data);
+    }
+
+  }
   handleHttpError = (error: Error) => {
     console.error(error);
     throw error;

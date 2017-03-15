@@ -7,7 +7,7 @@ import { isVisible } from '../helpers/isVisible';
 import { isPublished } from '../helpers/isPublished';
 
 // AOM Schemas
-import { courseModuleSchema } from '../module';
+import { CourseModule, courseModuleSchema } from '../module';
 
 export interface Course {
   isVisible: boolean;
@@ -26,7 +26,7 @@ export interface Course {
     description: string;
     category: string;
     photos: { url: string; caption: string; isCover: boolean}[];
-    modules: any[]
+    modules: CourseModule[]
   }
   
   createdAt: string;
