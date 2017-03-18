@@ -4,7 +4,7 @@ import { TopMenuLink } from './top-menu-link.model';
 
 @Injectable()
 export default class TopMenuService {
-  public fetchLinks = (config: TopMenuLinkConfig): TopMenuLink[] => this.DEFAULT_LINKS;
+  public fetchLinks = (): TopMenuLink[] => this.DEFAULT_LINKS;
 
   private DEFAULT_LINKS: TopMenuLink[] = [
     {
