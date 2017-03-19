@@ -1,8 +1,20 @@
-div#top-menu.navbar.navbar-default.navbar-fixed-top(role="navigation")
-  div.container
-    div.navbar-header
-      a.navbar-brand([routerLink]="homeHref") {{ title }}
-    //- Nav links
-    ul.nav.navbar-nav.navbar-right
-      li.nav-item(*ngFor="let link of links")
-        a.nav-link([routerLink]="link.href") {{link.name}}
+//- div#top-menu.navbar.navbar-default.navbar-fixed-top(role="navigation")
+//-   div.container
+//-     div.navbar-header
+//-       a.navbar-brand([routerLink]="homeHref") {{ title }}
+//-     //- Nav links
+//-     ul.nav.navbar-nav.navbar-right
+//-       li.nav-item(*ngFor="let link of links")
+//-         a.nav-link([routerLink]="link.href") {{link.name}}
+        
+        
+.navbar-fixed
+  nav#top-menu.z-depth-0
+      .nav-wrapper
+        a.brand-logo.left([routerLink]="homeHref")
+          img#logo.responsive-img(src="http://artofmetrics.com/wp-content/uploads/2016/01/header-retina.png")
+        //- Nav links
+        ul#nav-mobile.right.hide-on-small-and-down
+          li.nav-item(*ngFor="let link of links")
+            a.nav-link.black-text([routerLink]="link.href") {{link.name}}
+          
