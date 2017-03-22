@@ -1,5 +1,5 @@
 // External Deps
-import { Component, Input, ElementRef } from '@angular/core';
+import { Component, Input, ElementRef, OnInit } from '@angular/core';
 
 // AOM Deps
 
@@ -8,10 +8,13 @@ import { Component, Input, ElementRef } from '@angular/core';
   templateUrl: './instructor-dashboard.component.jade'
 })
 
-export class InstructorDashboardComponent {
+export class InstructorDashboardComponent implements OnInit {
   @Input()
   instructor: any;
 
   constructor() {}
 
+  ngOnInit() {
+    
+  }
 }
