@@ -10,4 +10,7 @@ export class EditCourseService {
     private apiService: ApiService
   ) {}
   
+  public getCourse = ({ slug }: { slug: string }) => {
+
+  };
 }

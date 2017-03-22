@@ -11,7 +11,7 @@ export class InstructorCourseService {
     private apiService: ApiService
   ) {}
 
-  fetchCourses() {
-    
+  public fetchCourses() {
+    return this.apiService.instructors.getCourses();
   }
 }

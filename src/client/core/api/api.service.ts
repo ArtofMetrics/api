@@ -8,6 +8,7 @@ import { AomHTTPService } from 'client/core/aom-http.service';
 
 import { authApi } from './auth';
 import { courses } from './courses';
+import { instructors } from './instructors';
 
 @Injectable()
 export class ApiService {
@@ -17,5 +18,5 @@ export class ApiService {
 
   public auth = authApi(this.API_ROOT, this.aomHttp, this.jwtService);
   public courses = courses(this.API_ROOT, this.aomHttp, this.jwtService);
-
+  public instructors = instructors(this.API_ROOT, this.aomHttp, this.jwtService);
 }

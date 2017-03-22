@@ -9,7 +9,7 @@ export function instructorsRouter(di): Router {
   const api = Router();
   const middleware = new Middleware(di);
 
-  api.use(middleware.jwtDecoder);
+  api.use(middleware.jwtDecoder, middleware.requireLogin);
 
   api.route(`/courses`)
     .get(di.invoke(getCourses));
