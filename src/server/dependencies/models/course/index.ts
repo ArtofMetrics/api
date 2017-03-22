@@ -14,6 +14,9 @@ export interface Course {
   isDeleted: boolean;
   status: string;
   slug: string;
+  instructors: (Schema.Types.ObjectId | string | {})[];
+
+  // 
   internal: {};
 
   admin: {
@@ -38,6 +41,7 @@ export const courseSchema: Schema = new Schema({
   isDeleted: { type: Boolean, default: false },
   status: { type: String, required: true, default: 'Incomplete' },
   slug: { type: String, required: true },
+  instructors: [{ type: Schema.Types.ObjectId, ref: 'users' }],
 
   // Should not really be touched by admins or instructors
   internal: {},
