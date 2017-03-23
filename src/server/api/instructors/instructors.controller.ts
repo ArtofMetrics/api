@@ -5,6 +5,7 @@ import * as status from 'http-status';
 
 // AOM Deps
 import { CustomErrorService } from '../../dependencies/custom-error.service';
+import { findCourseOrThrow } from './find-helpers';
 
 // AOM Models
 import { Course } from 'dependencies/models/course';
@@ -44,16 +45,3 @@ export function getOneCourse($customError: CustomErrorService, $Course: Model<an
   }
 }
 
-async function findCourseOrThrow({ $Course, slug, $customError, options }: { $Course: Model<any>, slug: string, $customError: CustomErrorService, options?: any }) {
-  const course = await $Course
-    .findOne({ slug })
-    .setOptions(options ? options : { skipVisibility: true });
-  if (!course) {
-    $customError.defaultError({
-      error: `Could not find course with slug ${ slug }`,
-      code: status.NOT_FOUND
-    });
-  }
-
-  return course;
-}
