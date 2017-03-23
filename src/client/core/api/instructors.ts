@@ -8,6 +8,7 @@ import { JWTService } from 'client/core/jwt.service';
 // AOM Interfaces
 import { CourseModule } from 'server/dependencies/models/module';
 import { GetCoursesResponse, GetOneCourseResponse } from 'server/api/instructors/models';
+import { AddModuleResponse } from 'server/api/instructors/modules/models';
 
 export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: JWTService) {
   const BASE_URL = `${ API_ROOT }/instructors`;
@@ -23,7 +24,7 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         .get(`${ BASE_URL }/courses`);
     },
 
-    addModule({ slug, module }: { slug: string, module }) {
+    addModule({ slug, module }: { slug: string, module }): Observable<AddModuleResponse> {
       return http
         .post(`${ BASE_URL }/course/${ slug }/module`, { module });
     },

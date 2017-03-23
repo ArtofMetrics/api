@@ -57,10 +57,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   fetchCourse = ({ slug }: { slug: string }) => {
     return this.editCourseService.getCourse({ slug })
       .subscribe(
-        (data) => {
-          this.course = data.course;
-          console.log(this.course); 
-        },
+        (data) => this.course = data.course,
         (error) => this.handleHttpError(error)
       )
   }
@@ -70,7 +67,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
       return this.apiService.instructors
         .addModule({ slug: this.slug, module: courseModule })
         .subscribe(
-          (data) => {},
+          (data) => this.course = data.course,
           (error) => this.handleHttpError(error)
         );
     } else {

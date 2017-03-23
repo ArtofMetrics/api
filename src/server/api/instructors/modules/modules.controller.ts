@@ -7,18 +7,20 @@ import { CustomErrorService } from '../../../dependencies/custom-error.service';
 import { findCourseOrThrow } from '../find-helpers';
 
 // AOM Interfaces
-import { AddModuleRequest } from './models';
+import { HTTPResponse } from '../../models';
 
-export function addModule($Course: Model<any>, $customError: CustomErrorService, $Module: Model<any>) {
+import { AddModuleRequest, AddModuleResponse } from './models';
+
+export function addModule($Course: Model<any>, $customError: CustomErrorService) {
   return async (req: AddModuleRequest, res: Response) => {
     try {
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
 
-      const newModule = new $Module({
+      const newModule = {
         name: req.body.module.name,
         description: req.body.module.description,
         isVisible: false
-      })
+      };
 
       const update = await $Course
         .findByIdAndUpdate(
@@ -27,7 +29,8 @@ export function addModule($Course: Model<any>, $customError: CustomErrorService,
           { new: true })
         .setOptions({ skipVisibility: true })
       
-      res.json({ data: { course: update } });
+      const data: HTTPResponse<AddModuleResponse> = { data: { course: update } };
+      res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);
     }
