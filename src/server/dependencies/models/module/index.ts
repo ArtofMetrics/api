@@ -2,6 +2,7 @@ import { Schema } from 'mongoose';
 import { Lesson, lessonSchema } from './lesson';
 
 export interface CourseModule {
+  _id?: string;
   name: string;
   description: string;
   isVisible: boolean;

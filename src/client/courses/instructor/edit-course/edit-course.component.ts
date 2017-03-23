@@ -63,13 +63,10 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   }
 
   persistModule = (courseModule: CourseModule & NewModule) => {
+    console.log('persisting', this.slug);
     if (courseModule.$isNew) {
       return this.apiService.instructors
-        .addModule({ slug: this.slug, module: courseModule })
-        .subscribe(
-          (data) => this.course = data.course,
-          (error) => this.handleHttpError(error)
-        );
+        .addModule({ slug: this.slug, module: courseModule });
     } else {
       console.log('need to add for editing module')
     }
@@ -77,20 +74,20 @@ export class EditCourseComponent implements OnInit, OnDestroy {
 
   addModule = (position: number) => {
     const data: NewModule = {
-      name: '',
+      name: `Module ${ this.course.data.modules.length + 1 } `,
       description: '',
       $isNew: true,
       isVisible: false,
       lessons: []
     };
 
-    if (position || position === 0) {
-      this.course.data.modules.splice(position, 0, data);
-    } else {
-      this.course.data.modules.push(data);
-    }
+    this.persistModule(data)
+      .subscribe(
+        (data) => this.course = data.course,
+        (error) => this.handleHttpError(error)
+      )
+  };
 
-  }
   handleHttpError = (error: Error) => {
     console.error(error);
     throw error;

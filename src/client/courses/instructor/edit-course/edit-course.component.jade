@@ -9,4 +9,4 @@ div.container(*ngIf="!!this.course")
   //- Modules
   div.row(*ngFor="let module of course.data.modules; let i = index")
     h3 {{ module.name }}
-    edit-module([module]="module" [idx]="i")
+    module-row([module]="module" [idx]="i" [course]="course")

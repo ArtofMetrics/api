@@ -10,6 +10,7 @@ import { isPublished } from '../helpers/isPublished';
 import { CourseModule, courseModuleSchema } from '../module';
 
 export interface Course {
+  _id: string;
   isVisible: boolean;
   isDeleted: boolean;
   status: string;

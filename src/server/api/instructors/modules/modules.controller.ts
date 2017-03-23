@@ -14,6 +14,7 @@ import { AddModuleRequest, AddModuleResponse } from './models';
 export function addModule($Course: Model<any>, $customError: CustomErrorService) {
   return async (req: AddModuleRequest, res: Response) => {
     try {
+      console.log('params.slug', req.params);
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
 
       const newModule = {
@@ -25,7 +26,7 @@ export function addModule($Course: Model<any>, $customError: CustomErrorService)
       const update = await $Course
         .findByIdAndUpdate(
           course._id, 
-          { $addToSet: { 'data.module': newModule } },
+          { $addToSet: { 'data.modules': newModule } },
           { new: true })
         .setOptions({ skipVisibility: true })
       
