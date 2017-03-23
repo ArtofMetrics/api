@@ -3,7 +3,7 @@ import { Router } from 'express';
 
 // AOM Deps
 import { Middleware } from '../middleware';
-import { getCourses } from './instructors.controller';
+import { getCourses, getOneCourse } from './instructors.controller';
 
 export function instructorsRouter(di): Router {
   const api = Router();
@@ -13,6 +13,8 @@ export function instructorsRouter(di): Router {
 
   api.route(`/courses`)
     .get(di.invoke(getCourses));
-    
+  
+  api.route(`/course/:slug`)
+    .get(di.invoke(getOneCourse));
   return api;
 }

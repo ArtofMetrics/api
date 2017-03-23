@@ -11,6 +11,6 @@ export class EditCourseService {
   ) {}
   
   public getCourse = ({ slug }: { slug: string }) => {
-
+    return this.apiService.instructors
   };
 }
