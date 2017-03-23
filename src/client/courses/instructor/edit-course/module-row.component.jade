@@ -1,8 +1,9 @@
 div
   button.btn.btn-waves((click)="editModule()") Edit Module
+  p Visible To Students: {{ module.isVisible }}
   p {{ module.name }}
 
-  p {{ Module.description }}
+  p {{ module.description }}
 //- div
 //-   form(#form="ngForm" novalidate (ngSubmit)="saveModule()")
 //-     button.btn.btn-waves(type="submit") Save {{ module.name }} Module

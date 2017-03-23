@@ -28,7 +28,8 @@ export class ModuleRowComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.module);
+    console.log('MODULE', this.module);
+    console.log('COURSE', this.course)
   }
 
   editModule = () => {
