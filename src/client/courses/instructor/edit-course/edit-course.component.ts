@@ -7,10 +7,15 @@ import * as each from 'lodash/each';
 // AOM Deps
 import { ViewReadyService } from 'client/shared/view-ready.service';
 import { ApiService } from 'client/core/api/api.service';
+import { EditCourseService } from './edit-course.service';
 
 // AOM Models
 import { Course } from 'server/dependencies/models/course';
 import { CourseModule } from 'server/dependencies/models/module';
+
+interface NewModule extends CourseModule {
+  $isNew: boolean;
+}
 
 @Component({
   selector: 'edit-course',
@@ -20,11 +25,13 @@ import { CourseModule } from 'server/dependencies/models/module';
 export class EditCourseComponent implements OnInit, OnDestroy {
   subscriptions: { slug?: Subscription } = {};
   course: Course;
+  slug: string;
 
   constructor(
     private viewState: ViewReadyService,
     private apiService: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private editCourseService: EditCourseService
   ) {}
   
   ngOnInit() {
@@ -33,9 +40,10 @@ export class EditCourseComponent implements OnInit, OnDestroy {
         if (!this.viewState.isLoading()) {
           this.viewState.emitLoading();
         }
-        
+        this.slug = params.slug;
+
         this
-          .fetchCourse({ slug: params.slug })
+          .fetchCourse({ slug: this.slug })
           .add(() => this.viewState.emitFinished());
       });
   }
@@ -47,17 +55,35 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   }
 
   fetchCourse = ({ slug }: { slug: string }) => {
-    return this.apiService.courses
-      .getCourseBySlug({ slug })
+    return this.editCourseService.getCourse({ slug })
       .subscribe(
-        data => this.course = data.course,
-        error => this.handleHttpError(error))
+        (data) => {
+          this.course = data.course;
+          console.log(this.course); 
+        },
+        (error) => this.handleHttpError(error)
+      )
+  }
+
+  persistModule = (courseModule: CourseModule & NewModule) => {
+    if (courseModule.$isNew) {
+      return this.apiService.instructors
+        .addModule({ slug: this.slug, module: courseModule })
+        .subscribe(
+          (data) => {},
+          (error) => this.handleHttpError(error)
+        );
+    } else {
+      console.log('need to add for editing module')
+    }
   }
 
   addModule = (position: number) => {
-    const data: CourseModule = {
+    const data: NewModule = {
       name: '',
       description: '',
+      $isNew: true,
+      isVisible: false,
       lessons: []
     };
 

@@ -44,10 +44,10 @@ export function getOneCourse($customError: CustomErrorService, $Course: Model<an
   }
 }
 
-async function findCourseOrThrow({ $Course, slug, $customError }: { $Course: Model<any>, slug: string, $customError: CustomErrorService }) {
+async function findCourseOrThrow({ $Course, slug, $customError, options }: { $Course: Model<any>, slug: string, $customError: CustomErrorService, options?: any }) {
   const course = await $Course
     .findOne({ slug })
-    .setOptions({ skipVisibility: true });
+    .setOptions(options ? options : { skipVisibility: true });
   if (!course) {
     $customError.defaultError({
       error: `Could not find course with slug ${ slug }`,
