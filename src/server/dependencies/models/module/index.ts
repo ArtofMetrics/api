@@ -2,13 +2,16 @@ import { Schema } from 'mongoose';
 import { Lesson, lessonSchema } from './lesson';
 
 export interface CourseModule {
+  _id?: string;
   name: string;
   description: string;
-  lessons: Lesson[]
+  isVisible: boolean;
+  lessons: Schema.Types.ObjectId | Lesson[]
 }
 
 export const courseModuleSchema = new Schema({
   name: String,
   description: String,
-  lessons: [lessonSchema]
+  isVisible: { type: Boolean, default: false },
+  lessons: [{ type: Schema.Types.ObjectId, ref: 'lessons' }]
 });

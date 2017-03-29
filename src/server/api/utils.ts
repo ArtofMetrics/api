@@ -10,3 +10,8 @@ export function isAdmin(user): boolean {
 export function isInstructor(user): boolean {
   return isAdmin(user) || includes(user.roles, 'instructor');
 }
+
+export function isInstructorOfCourse(course, user): boolean {
+  return isAdmin(user) || 
+    (course.instructors && some(course.instructors, instructorId => instructorId.toString() === user._id.toString()));
+}
