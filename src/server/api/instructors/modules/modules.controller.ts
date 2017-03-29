@@ -47,8 +47,6 @@ export function addModule($Course: Model<any>, $customError: CustomErrorService)
 export function getOneModule($Course: Model<any>, $Lesson: Model<any>, $customError: CustomErrorService) {
   return async (req: GetOneModuleRequest, res: Response) => {
     try {
-      
-      const 
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
       
       checkAuthorizedInstructor({ course, user: req.user });
