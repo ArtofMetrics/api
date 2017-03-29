@@ -82,16 +82,6 @@ export function getOneCourse($customError: CustomErrorService, $Course) {
   };
 }
 
-export function getOneModule($customError: CustomErrorService) {
-  return async (req, res: express.Response) => {
-    try {
-
-    } catch (error) {
-      return $customError.httpError(res)(error);
-    }
-  };
-}
-
 async function findCourseOrThrow({ $Course, slug, options }: { $Course: any, slug: string, options?: any }) {
   const course = await $Course
     .findOne({ slug })
