@@ -104,13 +104,6 @@ async function findCourseOrThrow({ $Course, slug, options }: { $Course: any, slu
 
 }
 
-function checkAuthorizedInstructor({ course, user }: { course: any, user: any }) {
-  const authorized = isInstructorOfCourse(course, user);
-  if (!authorized) {
-    throw new StandardError(`User ${ user._id } is not an instructor for course ${ course._id }`, { code: status.UNAUTHORIZED });
-  }
-}
-
 async function createSlug(name: string, $Course: any) {
   const kebabName = slugify(name);
   const exists = await $Course.count({ slug: kebabName });

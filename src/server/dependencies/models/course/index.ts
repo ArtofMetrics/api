@@ -1,5 +1,6 @@
 // NPM Dependencies
 import { Schema, Document, Model, model, DocumentQuery } from 'mongoose';
+import * as find from 'lodash/find';
 
 // AOM Plugins
 import { visibilityPlugin } from '../plugins/visibility';
@@ -35,6 +36,9 @@ export interface Course {
   
   createdAt: string;
   updatedAt: string;
+
+  // methods
+  getModule: (id: string | Schema.Types.ObjectId) => CourseModule;
 }
 
 export const courseSchema: Schema = new Schema({
@@ -71,3 +75,6 @@ export const courseSchema: Schema = new Schema({
   }
 }, { timestamps: true });
 
+courseSchema.methods.getModule = function(id) {
+  return find(this.modules, (m: CourseModule) => m._id.toString() === id.toString());
+}
