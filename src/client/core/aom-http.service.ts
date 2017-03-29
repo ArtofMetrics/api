@@ -24,7 +24,7 @@ export class AomHTTPService {
       .map(response => extractData(response));
   }
 
-  post = (url: string, params: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<any> => {
+  post = (url: string, params?: any, customOptions?: HttpCustomOptions): Observable<any> => {
     return this._http
       .post(url, params, { headers: this.defineHeaders() })
       .map(response => extractData(response));

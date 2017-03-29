@@ -1,35 +1,48 @@
 // NPM Dependencies
 import { Schema, Document, Model, model, DocumentQuery } from 'mongoose';
 
-// AOM Deps
+// AOM Plugins
 import { visibilityPlugin } from '../plugins/visibility';
 import { isVisible } from '../helpers/isVisible';
 import { isPublished } from '../helpers/isPublished';
 
-export interface ICourse {
-  status: String;
-  slug: String;
+// AOM Schemas
+import { CourseModule, courseModuleSchema } from '../module';
+
+export interface Course {
+  _id: string;
+  isVisible: boolean;
+  isDeleted: boolean;
+  status: string;
+  slug: string;
+  instructors: (Schema.Types.ObjectId | string | {})[];
+
+  // 
   internal: {};
 
   admin: {
-    readableId: Number;
+    readableId: number;
     subscription: { };
   };
 
   data: {
-    title: String;
-    description: String;
-    category: String;
-    photos: { url: String; caption: String; isCover: Boolean}[];
+    name: string;
+    description: string;
+    category: string;
+    photos: { url: string; caption: string; isCover: boolean}[];
+    modules: CourseModule[]
   }
   
-  createdAt: String;
-  updatedAt: String;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const courseSchema: Schema = new Schema({
+  isVisible: { type: Boolean, default: false },
+  isDeleted: { type: Boolean, default: false },
   status: { type: String, required: true, default: 'Incomplete' },
   slug: { type: String, required: true },
+  instructors: [{ type: Schema.Types.ObjectId, ref: 'users' }],
 
   // Should not really be touched by admins or instructors
   internal: {},
@@ -44,7 +57,7 @@ export const courseSchema: Schema = new Schema({
 
   // editable by instructors or admins
   data: {
-    title: { type: String, required: isPublished },
+    name: { type: String, required: true },
     description: { type: String, required: isPublished },
     category: { type: String },
     photos: [
@@ -53,7 +66,8 @@ export const courseSchema: Schema = new Schema({
         caption: { type: String },
         isCover: { type: Boolean, default: false, required: true }
       }
-    ]
+    ],
+    modules: [courseModuleSchema]
   }
 }, { timestamps: true });
 

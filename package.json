@@ -42,6 +42,7 @@
     "pug": "^2.0.0-beta6",
     "reflect-metadata": "^0.1.8",
     "rxjs": "^5.0.3",
+    "slug": "^0.9.1",
     "standard-error": "^1.1.0",
     "wagner-core": "^0.2.0",
     "zone.js": "^0.7.6"

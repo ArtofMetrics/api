@@ -1,0 +1,12 @@
+//- Course header
+div.container(*ngIf="!!this.course")
+  div.row
+    h3 {{ course.data.name }}
+  
+  div.row
+    div((click)="addModule()")
+      i.material-icons add
+  //- Modules
+  div.row(*ngFor="let module of course.data.modules; let i = index")
+    h3 {{ module.name }}
+    module-row([module]="module" [idx]="i" [course]="course")

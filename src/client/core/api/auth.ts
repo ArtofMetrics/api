@@ -5,7 +5,6 @@ import { Response } from '@angular/http';
 // AOM Deps
 import { AomHTTPService } from 'client/core/aom-http.service';
 import { JWTService } from 'client/core/jwt.service';
-import { extractData } from 'client/core/api/helpers';
 
 // Interfaces
 import { 

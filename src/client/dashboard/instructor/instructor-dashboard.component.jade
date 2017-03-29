@@ -1,0 +1,13 @@
+div.card-panel
+  div.section
+    instructor-description([instructor]="instructor")
+  div.divider
+  div.section
+    h4 My Courses
+    a.waves-effect.waves-circle.waves-light.btn-floating([routerLink]="'/course/new'")
+      i.material-icons add
+    div.divider
+
+    //- Loops over courses and displays them in a row
+    div(*ngFor="let course of courses")
+      a([routerLink]="'/course/' + course.slug + '/edit'") {{ course.data.name }}

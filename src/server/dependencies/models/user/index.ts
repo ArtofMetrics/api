@@ -37,7 +37,10 @@ export const userSchema: Schema = new Schema({
   
   // Courses
   courses: {
-    active: [{ type: ObjectId, ref: 'courses' }],
+    active: [{ 
+      course: { type: ObjectId, ref: 'courses' },
+      lastCompleted: { type: String, default: '0.0.0' }
+    }],
     completed: [{ type: ObjectId, ref: 'courses' }]
   },
 

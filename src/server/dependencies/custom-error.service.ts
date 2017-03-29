@@ -19,7 +19,7 @@ export class CustomErrorService {
     }
   }
 
-  public defaultError(obj: { error: Error | string, readableError: string, code?: number}) {
+  public defaultError(obj: { error: Error | string, readableError?: string, code?: number}) {
     throw new StandardError(obj);
   }
 }

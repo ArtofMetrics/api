@@ -8,6 +8,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import * as includes from 'lodash/includes';
 import * as some from 'lodash/some';
+import * as get from 'lodash/get';
+import * as isString from 'lodash/isString';
 
 // AOM Deps
 import { JWTService } from './jwt.service';
@@ -105,7 +107,7 @@ export class UserService {
    * @desc Determines if a user is a student
    */
   public isStudent = (): boolean => {
-    return this.hasRole(this.$, 'student');
+    return !get(this, '$.roles.length');
   }
 
   /**
@@ -113,7 +115,6 @@ export class UserService {
    */
   public setUser = (result: { user?: any, token?: string }) => {
     this.$ = result.user || null;
-    console.log('just got user', this.$);
     if (result.token) {
       this.jwtService.setToken(result.token);
     }
@@ -132,7 +133,7 @@ export class UserService {
       return false;
     }
 
-    if (role instanceof String) {
+    if (isString(role)) {
       return includes(user.roles, role);
     } else {
       return some(role, r => {

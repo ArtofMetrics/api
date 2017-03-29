@@ -12,6 +12,7 @@ import { UserService } from 'client/core/user.service';
 
 export class UserDashboardComponent implements OnInit {
   user: any;
+  isStudent: boolean;
   
   constructor(
     private viewState: ViewReadyService,
@@ -20,6 +21,7 @@ export class UserDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.userService.$;
+    this.isStudent = this.userService.isStudent();
     this.viewState.emitFinished();
   }
 
