@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CourseViewComponent } from 'client/courses/course-view.component';
 import { CreateCourseComponent } from 'client/courses/instructor/create-course';
 import { EditCourseComponent } from 'client/courses/instructor/edit-course/edit-course.component';
+import { EditModuleComponent } from 'client/courses/instructor/edit-module/edit-module.component';
 
 const coursesRoutes: Routes = [
   {
@@ -22,6 +23,10 @@ const coursesRoutes: Routes = [
       {
         path: ':slug/edit',
         component: EditCourseComponent
+      },
+      {
+        path: ':slug/module/:module/edit',
+        component: EditModuleComponent
       }
     ]
   }

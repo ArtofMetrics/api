@@ -33,7 +33,7 @@ export class ModuleRowComponent implements OnInit {
   }
 
   editModule = () => {
-    this.router.navigate([`course`, this.course.slug, 'module', this.module._id]);
+    this.router.navigate([`course`, this.course.slug, 'module', this.module._id, 'edit']);
   };
 
   generateId = (field: string): string => {
