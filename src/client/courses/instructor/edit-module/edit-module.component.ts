@@ -17,7 +17,7 @@ export class EditModuleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
+    this.apiService.instructors
   }
 
   getCourse() {

@@ -29,6 +29,10 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         .post(`${ BASE_URL }/course/${ slug }/module`, { module });
     },
 
+    getModule({ course, module }: { course: any, module: CourseModule }): Observable<any> {
+      return http
+        .get(`${ BASE_URL }/course/${ course.slug }/module/${ module._id }`);
+    }
     // saveModule({ slug, module }: { slug: string, module: CourseModule }): Observable<any> {
     //   return http
     //     .put(`${ BASE_URL }/course/${ slug }/module/${ module._id }`)

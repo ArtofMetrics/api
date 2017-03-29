@@ -8,7 +8,7 @@ import * as status from 'http-status';
 
 // AOM Deps
 import { CustomErrorService } from '../../dependencies/custom-error.service';
-import { isInstructor } from '../utils';
+import { isInstructor, isInstructorOfCourse } from '../utils';
 
 // AOM models
 import { HTTPResponse } from '../models';
@@ -72,17 +72,7 @@ export function getOneCourse($customError: CustomErrorService, $Course) {
   return async (req, res: express.Response) => {
     try {
       const options = { skipVisibility: isInstructor(req.user)}
-      const course = await $Course
-        .findOne({ slug: req.params.slug })
-        .setOptions({options});
-      
-      if (!course) {
-        $customError.defaultError({
-          readableError: `Could not find course with slug ${ req.params.slug }`,
-          error: `No course found with slug ${ req.params.slug }`,
-          code: status.NOT_FOUND
-        });
-      }
+      const course = await findCourseOrThrow({ $Course, slug: req.params.slug, options });
 
       const responseBody: HTTPResponse<GetOneCourseResponse> = { data: { course } };
       return res.json(responseBody);
@@ -90,6 +80,35 @@ export function getOneCourse($customError: CustomErrorService, $Course) {
       return $customError.httpError(res)(error);
     }
   };
+}
+
+export function getOneModule($customError: CustomErrorService) {
+  return async (req, res: express.Response) => {
+    try {
+
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  };
+}
+
+async function findCourseOrThrow({ $Course, slug, options }: { $Course: any, slug: string, options?: any }) {
+  const course = await $Course
+    .findOne({ slug })
+    .setOptions(options);
+  if (!course) {
+    throw new StandardError(`Could not find course with slug ${ slug }`, { code: status.NOT_FOUND });
+  }
+
+  return course;
+
+}
+
+function checkAuthorizedInstructor({ course, user }: { course: any, user: any }) {
+  const authorized = isInstructorOfCourse(course, user);
+  if (!authorized) {
+    throw new StandardError(`User ${ user._id } is not an instructor for course ${ course._id }`, { code: status.UNAUTHORIZED });
+  }
 }
 
 async function createSlug(name: string, $Course: any) {
