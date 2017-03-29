@@ -1,8 +1,25 @@
 $navFontFamily = Monaco, Roboto, sans-serif
 $brand-nav-bg = #fff;
+MaxSize = 64px
 
 #top-menu
   font-family $navFontFamily
   background-color $brand-nav-bg
   display block
-  height 50px
+  height MaxSize
+
+.nav-wrapper
+  height MaxSize
+  padding 0
+  margin 0 0 0 2px
+
+.navbar-fixed .nav-wrapper .brand-logo img
+  width auto
+  height auto
+  max-width MaxSize
+  max-height MaxSize
+  border 2px solid #000
+  border-radius 3px
+  padding 2px
+  margin 2px
+  vertical-align top
