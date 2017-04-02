@@ -55,7 +55,7 @@ export class EditModuleComponent implements OnInit {
   }
 
   editLesson = (lesson) => {
-    this.router.navigate(['course', this.course._id, 'module', this.module._id, 'lesson', lesson._id, 'edit']);
+    this.router.navigate(['course', this.course.slug, 'module', this.module._id, 'lesson', lesson._id, 'edit']);
   };
 
   canAddLesson = () => {

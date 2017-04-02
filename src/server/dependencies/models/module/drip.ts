@@ -10,7 +10,9 @@ export interface Drip {
 }
 
 const data = {
-  text: { type: String, required: true },
+  isVisible: { type: Boolean, default: false },
+  title: { type: String, required: true },
+  text: { type: String, required: function() { return this.isVisible } },
   consoleQuiz: consoleQuizSchema,
   questionQuiz: questionQuizSchema
 };

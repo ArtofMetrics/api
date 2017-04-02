@@ -41,9 +41,20 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
     },
 
     deleteLesson({ slug, moduleId, lessonId }: { slug: string, moduleId: string, lessonId: string }): Observable<any> {
-      console.log('calling delteLesson', arguments)
       return http
         .delete(`${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }`);
+    },
+    getLesson({ slug, moduleId, lessonId }: { slug: string, moduleId: string, lessonId: string }): Observable<any> {
+      return http
+        .get(`${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }`);
+    },
+    addDrip({ slug, moduleId, lessonId }: { slug: string, moduleId: string, lessonId: string }): Observable<any> {
+      return http
+        .post(`${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }/drip`);
+    },
+    deleteDrip({ slug, moduleId, lessonId, dripId }: { slug: string, moduleId: string, lessonId: string, dripId: string }): Observable<any> {
+      return http
+        .delete(`${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }/drip/${ dripId }`);
     }
     // saveModule({ slug, module }: { slug: string, module: CourseModule }): Observable<any> {
     //   return http
