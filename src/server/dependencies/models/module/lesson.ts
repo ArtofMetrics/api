@@ -8,6 +8,9 @@ export interface Lesson {
   drips: Drip[];
 }
 
+/**
+ * Embedded within a module. Does not persist to db
+ */
 export const lessonSchema: Schema = new Schema({
   isVisible: { type: Boolean, default: false },
   isDeleted: { type: Boolean, default: false },
