@@ -31,7 +31,8 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
 
     getModule({ slug, moduleId }: { slug: any, moduleId: string }): Observable<GetOneModuleResponse> {
       return http
-        .get(`${ BASE_URL }/course/${ slug }/module/${ moduleId }`);
+        .get(`${ BASE_URL }/course/${ slug }/module/${ moduleId }`)
+        .catch(error => Observable.throw(error));
     },
 
     addNewLesson({ slug, moduleId, newLesson }: { slug: any, moduleId: string, newLesson: any }): Observable<any> {

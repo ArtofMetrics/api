@@ -21,6 +21,7 @@ export class EditModuleComponent implements OnInit {
   slug: string;
   course: any;
   module: any;
+  moduleId: string;
 
   constructor(
     private apiService: ApiService,
@@ -34,15 +35,18 @@ export class EditModuleComponent implements OnInit {
         if (!this.viewState.isLoading()) {
           this.viewState.emitLoading();
         }
-
+        
         const { module: moduleId, slug } = params;
-
+        this.moduleId = moduleId;
+        this.slug = slug;
+        
         this.apiService.instructors
           .getModule({ slug, moduleId })
           .subscribe(
             (data) => {
               this.course = data.course;
               this.module = data.module;
+              this.module.lessons = this.module.lessons || [];
               this.viewState.emitFinished();
             },
             (error) => this.handleHttpError(error))
@@ -55,13 +59,12 @@ export class EditModuleComponent implements OnInit {
   }
 
   addLesson = () => {
-    console.log(this.module)
-    const name = `Lesson ${ this.module.lessons.length + 1 }`;
+    const name = `Lesson ${ (this.module.lessons).length + 1 }`;
     this.apiService.instructors
       .addNewLesson({ slug: this.slug, moduleId: this.module._id, newLesson: { name } })
-      .subscribe(data => {
-        this.module.lessons = data.lessons;
-      })
+      .subscribe(
+        data => this.module.lessons = data.lessons,
+        error => this.handleHttpError(error));
   }
 
   handleHttpError = (error: Error) => {
