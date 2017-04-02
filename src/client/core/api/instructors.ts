@@ -38,6 +38,12 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
     addNewLesson({ slug, moduleId, newLesson }: { slug: any, moduleId: string, newLesson: any }): Observable<any> {
       return http
         .post(`${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson`, { lesson: newLesson });
+    },
+
+    deleteLesson({ slug, moduleId, lessonId }: { slug: string, moduleId: string, lessonId: string }): Observable<any> {
+      console.log('calling delteLesson', arguments)
+      return http
+        .delete(`${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }`);
     }
     // saveModule({ slug, module }: { slug: string, module: CourseModule }): Observable<any> {
     //   return http

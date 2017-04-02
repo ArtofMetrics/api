@@ -4,7 +4,7 @@ import { Router } from 'express';
 // AOM Deps
 import { Middleware } from '../middleware';
 import { getCourses, getOneCourse } from './instructors.controller';
-import { addModule, getOneModule, addNewLesson } from './modules/modules.controller';
+import { addModule, getOneModule, addNewLesson, deleteLesson } from './modules/modules.controller';
 
 export function instructorsRouter(di): Router {
   const api = Router();
@@ -26,5 +26,9 @@ export function instructorsRouter(di): Router {
     
   api.route('/course/:slug/module/:module/lesson')
     .post(di.invoke(addNewLesson));
+  
+  api.route('/course/:slug/module/:module/lesson/:lesson')
+    .delete(di.invoke(deleteLesson));
+    
   return api;
 }

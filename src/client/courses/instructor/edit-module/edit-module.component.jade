@@ -4,6 +4,8 @@ div(*ngIf="module")
 
   div(*ngFor="let lesson of module.lessons")
     p {{ lesson.name }}
+    button.btn.btn-waves((click)="editLesson(lesson)") Edit Lesson
+    button.btn.btn-alert((click)="deleteLesson(lesson)") Delete Lesson
   
   button.btn.btn-waves(
     (click)="addLesson()"

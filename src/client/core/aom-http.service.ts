@@ -38,7 +38,7 @@ export class AomHTTPService {
   
   delete = (url: string, params?: RequestOptionsArgs): Observable<any> => {
     return this._http
-      .delete(url, Object.assign(params, { headers: this.defineHeaders() }))
+      .delete(url, { headers: this.defineHeaders() })
       .map(response => extractData(response));
   }
 
