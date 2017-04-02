@@ -1,6 +1,6 @@
 // External Deps
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import * as every from 'lodash/every';
 
@@ -26,7 +26,8 @@ export class EditModuleComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private viewState: ViewReadyService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -52,6 +53,10 @@ export class EditModuleComponent implements OnInit {
           (error) => this.handleHttpError(error))
       });
   }
+
+  editLesson = (lesson) => {
+    this.router.navigate(['course', this.course._id, 'module', this.module._id, 'lesson', lesson._id, 'edit']);
+  };
 
   canAddLesson = () => {
     return !this.module.lessons.length ||
