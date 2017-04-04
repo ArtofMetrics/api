@@ -2,6 +2,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import * as cloneDeep from 'lodash/cloneDeep';
 
 // AOM Deps
 import { ApiService } from 'client/core/api/api.service';
@@ -21,6 +22,8 @@ export class EditLessonComponent implements OnInit, OnDestroy {
   slug: string;
   moduleId: string;
   lessonId: string;
+  editState: { editing: boolean } = { editing: false };
+  editingDrip: any;
 
   lesson: any;
   constructor(
@@ -49,6 +52,11 @@ export class EditLessonComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscriptions.params.unsubscribe();
   }
+
+  startEditDrip = (drip) => {
+    this.editingDrip = cloneDeep(drip);
+    this.editState.editing = true;
+  };
 
   addDrip = () => {
     this.apiService.instructors

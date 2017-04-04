@@ -1,14 +1,19 @@
-
-div#edit-lesson-component(*ngIf="lesson")
-  //- Lesson Name
-  div#edit-lesson-name
-    h4 {{ lesson.name }}
-  
-  //- Drips
-  div#edit-lesson-drips
-    div(*ngFor="let drip of lesson.drips")
-      h6 {{ drip.title }}
-      button.btn.btn-waves((click)="editDrip(drip)") Edit Drip
-      button.btn.btn-waves((click)="deleteDrip(drip)") Delete Drip
-    div#add-drip
-      button.btn.btn-waves((click)="addDrip()") Add Drip
+div.container
+  div.row
+    div.col.s3
+      div#edit-lesson-component(*ngIf="lesson")
+        //- Lesson Name
+        div#edit-lesson-name
+          h4 {{ lesson.name }}
+        
+        //- Drips
+        div#view-lesson-drips
+          div(*ngFor="let drip of lesson.drips")
+            h6 {{ drip.title }}
+            button.btn.btn-waves((click)="startEditDrip(drip)") Edit Drip
+            button.btn.btn-waves((click)="deleteDrip(drip)") Delete Drip
+          div#add-drip([hidden]="editState.editing")
+            button.btn.btn-waves((click)="addDrip()") Add Drip
+    div.col.s9
+      div#edit-drip(*ngIf="editState.editing")
+        edit-drip([drip]="editingDrip")

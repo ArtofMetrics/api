@@ -1,0 +1,17 @@
+div.edit-drip-component
+  h3 Editing Drip
+  form(novalidate #form="ngForm")
+    //- Drip Title
+    div.input-field
+      input#drip-title(
+        type="text"
+        name="drip-title"
+        [(ngModel)]="drip.title")
+      label(for="drip-title") Title
+    //- Drip text
+    div.input-field
+      textarea([htmlEditor])#aom-text-editor
+    
+    //- Save
+    button.btn.btn-waves((click)="saveDrip()") Save
+  

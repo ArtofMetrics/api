@@ -1,9 +1,9 @@
 // NPM Deps
+import * as slugify from 'speakingurl';
 import * as express from 'express';
 import * as StandardError from 'standard-error';
 import * as kebabCase from 'lodash/kebabCase';
 import * as some from 'lodash/some';
-import * as slugify from 'slug';
 import * as status from 'http-status';
 
 // AOM Deps
