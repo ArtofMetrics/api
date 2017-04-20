@@ -94,6 +94,33 @@ export function deleteDrip($Course: Model<any>, $customError: CustomErrorService
   };
 }
 
+export function updateDrip($Course: Model<any>, $customError: CustomErrorService) {
+  return async (req, res) => {
+    try {
+      const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
+      checkAuthorizedInstructor({ course, user: req.user });
+
+      const moduleIdx = findWithinMongooseArrayOrThrow(course.data.modules, req.params.module, 'module');
+      const lessonIdx = findWithinMongooseArrayOrThrow(course.data.modules[moduleIdx].lessons, req.params.lesson, 'lesson');
+      const dripIdx = findWithinMongooseArrayOrThrow(course.data.modules[moduleIdx].lessons[lessonIdx].drips, req.body.drip._id, 'drip');
+      const op = { };
+
+      const pathToDrip = `data.modules.${ moduleIdx }.lessons.${ lessonIdx }.drips.${ dripIdx }`;
+      op[pathToDrip] = req.body.drip;
+
+      const update = await $Course
+        .findByIdAndUpdate(course._id, op, { new: true })
+        .setOptions({ skipVisibility: true });
+      
+      const updatedDrip = update.get(pathToDrip);
+
+      res.json({ data: { drip: updatedDrip } });
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  }
+}
+
 function findWithinMongooseArrayOrThrow(arr: any[], id: string, elemName: string): number {
   const idx = findIndex(arr, (m: any) => m._id.toString() === id);
   if (idx === -1) {

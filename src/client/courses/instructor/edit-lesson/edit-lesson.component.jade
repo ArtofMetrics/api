@@ -16,4 +16,4 @@ div.container
             button.btn.btn-waves((click)="addDrip()") Add Drip
     div.col.s9
       div#edit-drip(*ngIf="editState.editing")
-        edit-drip([drip]="editingDrip")
+        edit-drip([drip]="editingDrip" (saveDrip)="saveDrip($event)")

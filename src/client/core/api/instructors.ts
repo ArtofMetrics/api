@@ -55,7 +55,12 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
     deleteDrip({ slug, moduleId, lessonId, dripId }: { slug: string, moduleId: string, lessonId: string, dripId: string }): Observable<any> {
       return http
         .delete(`${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }/drip/${ dripId }`);
-    }
+    },
+    saveDrip({ slug, moduleId, lessonId, drip }: { slug: string, moduleId: string, lessonId: string, drip: any }): Observable<any> {
+      console.log('UPDATING', drip);
+      return http
+        .put(`${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }/drip/${ drip._id }`, { drip });
+    },
     // saveModule({ slug, module }: { slug: string, module: CourseModule }): Observable<any> {
     //   return http
     //     .put(`${ BASE_URL }/course/${ slug }/module/${ module._id }`)

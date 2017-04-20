@@ -5,7 +5,7 @@ import { Router } from 'express';
 import { Middleware } from '../middleware';
 import { getCourses, getOneCourse } from './instructors.controller';
 import { addModule, getOneModule, addNewLesson, deleteLesson } from './modules/modules.controller';
-import { getOneLesson, addDrip, deleteDrip } from './lessons/lessons.controller';
+import { getOneLesson, addDrip, deleteDrip, updateDrip } from './lessons/lessons.controller';
 
 export function instructorsRouter(di): Router {
   const api = Router();
@@ -40,6 +40,7 @@ export function instructorsRouter(di): Router {
   
   // Edit Drips
   api.route('/course/:slug/module/:module/lesson/:lesson/drip/:drip')
+    .put(di.invoke(updateDrip))
     .delete(di.invoke(deleteDrip));
     
   return api;

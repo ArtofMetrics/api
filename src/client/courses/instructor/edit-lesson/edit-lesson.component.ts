@@ -36,7 +36,6 @@ export class EditLessonComponent implements OnInit, OnDestroy {
     this.subscriptions.params = this.route.params
       .subscribe(
       (params: { slug: string, module: string, lesson: string }) => {
-        console.log(params)
         this.slug = params.slug;
         this.moduleId = params.module;
         this.lessonId = params.lesson;
@@ -54,7 +53,7 @@ export class EditLessonComponent implements OnInit, OnDestroy {
   }
 
   startEditDrip = (drip) => {
-    this.editingDrip = cloneDeep(drip);
+    this.editingDrip = drip;
     this.editState.editing = true;
   };
 
@@ -62,15 +61,30 @@ export class EditLessonComponent implements OnInit, OnDestroy {
     this.apiService.instructors
       .addDrip({ slug: this.slug, moduleId: this.moduleId, lessonId: this.lessonId })
       .subscribe(
-        (data) => {
-          console.log('data', data);
-          this.lesson.drips = data.drips
-        },
+        (data) => this.lesson.drips = data.drips,
         (error) => this.handleHttpError(error)
       )
   };
 
+  saveDrip = ($event) => {
+    const { drip } = $event;
+
+    this.apiService.instructors
+      .saveDrip({ slug: this.slug, moduleId: this.moduleId, lessonId: this.lessonId, drip })
+      .subscribe(
+        data => console.log(data),
+        error => this.handleHttpError(error)
+      )
+  }
+
+  endEditDrip = () => {
+    this.editingDrip = null;
+    this.editState.editing = false;
+  };
+
   deleteDrip = (drip) => {
+    this.endEditDrip();
+
     this.apiService.instructors
       .deleteDrip({ slug: this.slug, moduleId: this.moduleId, lessonId: this.lessonId, dripId: drip._id })
       .subscribe(
@@ -83,11 +97,7 @@ export class EditLessonComponent implements OnInit, OnDestroy {
     return this.apiService.instructors
       .getLesson({ slug: this.slug, moduleId: this.moduleId, lessonId })
       .subscribe(
-      data => {
-        console.log(data)
-        this.lesson = data.lesson;
-        console.log(this.lesson);
-      },
+      data => this.lesson = data.lesson,
       error => this.handleHttpError(error)
       )
   };

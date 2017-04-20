@@ -10,8 +10,8 @@ div.edit-drip-component
       label(for="drip-title") Title
     //- Drip text
     div.input-field
-      textarea([htmlEditor])#aom-text-editor
+      textarea([htmlEditor] (onDripText)="editDrip($event)" [dripText]="drip.text")#aom-text-editor
     
     //- Save
-    button.btn.btn-waves((click)="saveDrip()") Save
+    button.btn.btn-waves((click)="persist()") Save
   

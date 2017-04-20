@@ -30,7 +30,7 @@ export class AomHTTPService {
       .map(response => extractData(response));
   }
 
-  put = (url: string, params: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<any> => {
+  put = (url: string, params: any, customOptions?: HttpCustomOptions): Observable<any> => {
     return this._http
       .put(url, params, { headers: this.defineHeaders() })
       .map(response => extractData(response));
