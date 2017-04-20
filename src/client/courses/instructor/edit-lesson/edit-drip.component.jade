@@ -8,6 +8,11 @@ div.edit-drip-component
         name="drip-title"
         [(ngModel)]="drip.title")
       label(for="drip-title") Title
+    
+    //- Quiz
+    div((click)="addQuestionQuiz()")
+    div(*ngIf="drip.questionQuiz")
+      p {{ drip.questionQuiz}}
     //- Drip text
     div.input-field
       textarea(

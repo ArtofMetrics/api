@@ -25,11 +25,17 @@ export class EditDripComponent {
   ) {}
 
   ngOnInit() {
-    
+
   }
 
   editDrip = ($event: { text: string }): void => {
     this.drip.text = $event.text;
+  }
+
+  addQuiz = () => {
+    if (this.drip.quiz) {
+      return;
+    }
   }
 
   persist = () => {
