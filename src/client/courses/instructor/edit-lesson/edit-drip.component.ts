@@ -32,10 +32,19 @@ export class EditDripComponent {
     this.drip.text = $event.text;
   }
 
-  addQuiz = () => {
-    if (this.drip.quiz) {
+  addQuestionQuiz = () => {
+    if (this.drip.questionQuiz) {
       return;
     }
+
+    this.drip.questionQuiz = {
+      question: '',
+      answers: []
+    };
+  }
+
+  addQuestionQuizAnswer = () => {
+    this.drip.questionQuiz.answers.push('');
   }
 
   persist = () => {
