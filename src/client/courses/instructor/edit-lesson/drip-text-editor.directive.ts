@@ -22,11 +22,10 @@ export class DripTextEditor implements OnInit {
 
   ngOnInit() {
     const editor = CKEDITOR.replace('aom-text-editor');
-    console.log(CKEDITOR);
     if (this.dripText) {
       editor.setData(this.dripText);
     }
-    
+
     editor.on('change', (ev) => {
       this.onDripText.emit({ text: ev.editor.getData() });
     });

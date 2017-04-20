@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import * as cloneDeep from 'lodash/cloneDeep';
-
+import * as findIndex from 'lodash/findIndex';
 // AOM Deps
 import { ApiService } from 'client/core/api/api.service';
 import { ViewReadyService } from 'client/shared/view-ready.service';
@@ -72,7 +72,13 @@ export class EditLessonComponent implements OnInit, OnDestroy {
     this.apiService.instructors
       .saveDrip({ slug: this.slug, moduleId: this.moduleId, lessonId: this.lessonId, drip })
       .subscribe(
-        data => console.log(data),
+        data => {
+          const idx = findIndex(this.lesson.drips, 
+            (drip: any) => drip._id.toString() === data.drip._id.toString());
+          this.lesson.drips[idx] = data.drip;
+
+          this.endEditDrip();
+        },
         error => this.handleHttpError(error)
       )
   }
