@@ -11,5 +11,5 @@ export interface QuestionQuiz {
 export const questionQuizSchema = new Schema({
   question: { type: String, required: true },
   answers: [{ type: String, required: true }],
-  correctAnswer: { type: Number, required: true }
+  correctAnswers: [{ type: Number, required: true }]
 });

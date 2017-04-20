@@ -39,12 +39,44 @@ export class EditDripComponent {
 
     this.drip.questionQuiz = {
       question: '',
-      answers: []
+      answers: [],
+      correctAnswers: []
     };
   }
 
   addQuestionQuizAnswer = () => {
     this.drip.questionQuiz.answers.push('');
+  }
+
+  isCorrectMCAnswer = (idx: number): boolean => {
+    const isCorrect = this.drip.questionQuiz.correctAnswers
+      .filter((answerIdx: number) => answerIdx === idx)
+      .length > 0;
+    console.log('is correct', idx, isCorrect);
+
+    return isCorrect;
+  }
+
+  toggleMCAnswer = (idx: number) => {
+    if (this.isCorrectMCAnswer(idx)) {
+      // console.log('marking incorrect')
+      this.removeMCAnswer(idx)
+    } else {
+      // console.log('marking correct')
+      this.markCorrectMCAnswer(idx);
+    }
+    
+    // console.log(this.drip.questionQuiz);
+  }
+
+  markCorrectMCAnswer = (idx) => {
+    this.drip.questionQuiz.correctAnswers.push(idx);
+  }
+
+  removeMCAnswer = (idx: number) => {
+    this.drip.questionQuiz.correctAnswers =
+      this.drip.questionQuiz.correctAnswers
+        .filter((answerIdx: number) => answerIdx !== idx);
   }
 
   persist = () => {

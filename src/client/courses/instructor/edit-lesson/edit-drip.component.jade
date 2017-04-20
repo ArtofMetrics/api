@@ -20,12 +20,20 @@ div.edit-drip-component
         )
         label(for="drip-question-quiz") Multiple Choice Quiz
         div(*ngFor="let answer of drip.questionQuiz.answers; let i = index;")
+          p
+            input(name="qq-answer-{{ i }}" 
+              id="qq-answer-{{ i }}" 
+              type="checkbox"
+              checked="{{ isCorrectMCAnswer(i) ? 'checked' : null }}"
+              (click)="toggleMCAnswer(i)")
+            label(for="qq-answer-{{ i }}")
           div.input-field
             input(
-              name="qq-answer-{{i}}"
+              name="qq-answer-{{ i }}"
               type="text"
               [(ngModel)]="drip.questionQuiz.answers[i]"
             )
+
         div.btn.btn-waves((click)="addQuestionQuizAnswer()") Add Answer
     //- Drip text
     div.input-field
