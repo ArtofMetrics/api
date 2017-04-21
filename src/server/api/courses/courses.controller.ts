@@ -1,9 +1,9 @@
 // NPM Deps
+import * as slugify from 'speakingurl';
 import * as express from 'express';
 import * as StandardError from 'standard-error';
 import * as kebabCase from 'lodash/kebabCase';
 import * as some from 'lodash/some';
-import * as slugify from 'slug';
 import * as status from 'http-status';
 
 // AOM Deps
@@ -76,16 +76,6 @@ export function getOneCourse($customError: CustomErrorService, $Course) {
 
       const responseBody: HTTPResponse<GetOneCourseResponse> = { data: { course } };
       return res.json(responseBody);
-    } catch (error) {
-      return $customError.httpError(res)(error);
-    }
-  };
-}
-
-export function getOneModule($customError: CustomErrorService) {
-  return async (req, res: express.Response) => {
-    try {
-
     } catch (error) {
       return $customError.httpError(res)(error);
     }

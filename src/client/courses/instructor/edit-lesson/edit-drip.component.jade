@@ -1,0 +1,52 @@
+div.edit-drip-component
+  form(novalidate #form="ngForm")
+    //- Drip Title
+    div.section
+      h3 Title
+      div.input-field
+        input(
+          type="text"
+          name="drip-title"
+          [(ngModel)]="drip.title")
+
+    //- Quiz
+    div.section
+      h5 Multiple Choice Quiz
+      
+      div.btn.btn-waves((click)="addQuestionQuiz()" *ngIf="!drip.questionQuiz")
+        | Add Quiz
+      div(*ngIf="drip.questionQuiz")
+        div.input-field
+          textarea#drip-question-quiz.materialize-textarea(
+            [(ngModel)]="drip.questionQuiz.question"
+            name="drip-question-quiz"
+          )
+          label(class="{{ drip.questionQuiz.question ? 'active' : '' }}" for="drip-question-quiz") Question
+          div.correct-answer-edit(*ngFor="let answer of drip.questionQuiz.answers; let i = index;")
+            p
+              input(name="qq-answer-{{ i }}" 
+                id="qq-answer-{{ i }}" 
+                type="checkbox"
+                checked="{{ isCorrectMCAnswer(i) ? 'checked' : null }}"
+                (click)="toggleMCAnswer(i)")
+              label(for="qq-answer-{{ i }}")
+            div.input-field
+              input(
+                name="qq-answer-{{ i }}"
+                type="text"
+                [(ngModel)]="drip.questionQuiz.answers[i].text"
+              )
+
+          div.btn.btn-waves((click)="addQuestionQuizAnswer()") Add Answer
+    //- Drip text
+    div.section
+      h5 Explanatory Text / Images / Video
+      div.input-field
+        textarea(
+          [htmlEditor] 
+          (onDripText)="editDrip($event)" 
+          [dripText]="drip.text")#aom-text-editor
+    
+    //- Save
+    button.btn.btn-waves((click)="persist()") Save
+  

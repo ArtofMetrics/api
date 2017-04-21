@@ -33,5 +33,6 @@ export interface GetOneModuleRequest extends AuthenticatedRequest {
 }
 
 export interface GetOneModuleResponse {
-  course: CourseModule
+  course: any;
+  module: any;
 }
