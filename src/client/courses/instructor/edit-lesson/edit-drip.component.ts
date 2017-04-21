@@ -5,12 +5,14 @@ import { Observable } from 'rxjs/Observable';
 // AOM Deps
 import { DripTextEditor } from './drip-text-editor.directive';
 import { ApiService } from 'client/core/api/api.service';
+import { EditDripService } from './edit-drip.service';
 
 // AOM Interfaces
 declare var CKEDITOR;
 @Component({
   selector: 'edit-drip',
-  templateUrl: './edit-drip.component.jade'
+  templateUrl: './edit-drip.component.jade',
+  styleUrls: ['./edit-drip.component.styl']
 })
 
 export class EditDripComponent {
@@ -21,7 +23,8 @@ export class EditDripComponent {
   saveDrip: EventEmitter<any> = new EventEmitter<any>();
   
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private editDripService: EditDripService
   ) {}
 
   ngOnInit() {
@@ -45,32 +48,22 @@ export class EditDripComponent {
   }
 
   addQuestionQuizAnswer = () => {
-    this.drip.questionQuiz.answers.push('');
+    this.drip.questionQuiz.answers.push({ text: '' });
   }
 
   isCorrectMCAnswer = (idx: number): boolean => {
-    const isCorrect = this.drip.questionQuiz.correctAnswers
-      .filter((answerIdx: number) => answerIdx === idx)
-      .length > 0;
-    console.log('is correct', idx, isCorrect);
-
-    return isCorrect;
+    return this.editDripService
+      .isCorrectMCAnswer(this.drip.questionQuiz.correctAnswers, idx);
   }
 
   toggleMCAnswer = (idx: number) => {
-    if (this.isCorrectMCAnswer(idx)) {
-      // console.log('marking incorrect')
-      this.removeMCAnswer(idx)
-    } else {
-      // console.log('marking correct')
-      this.markCorrectMCAnswer(idx);
-    }
-    
-    // console.log(this.drip.questionQuiz);
+    this.drip.questionQuiz.correctAnswers = this.editDripService
+      .toggleMCAnswer(this.drip.questionQuiz.correctAnswers, idx);
   }
 
   markCorrectMCAnswer = (idx) => {
-    this.drip.questionQuiz.correctAnswers.push(idx);
+    this.drip.questionQuiz.correctAnswers = this.editDripService
+      .markCorrectAnswer(this.drip.questionQuiz.correctAnswers, idx);
   }
 
   removeMCAnswer = (idx: number) => {
