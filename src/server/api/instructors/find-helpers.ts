@@ -12,7 +12,7 @@ export async function findCourseOrThrow({ $Course, slug, $customError, options }
     .findOne({ slug })
     .setOptions(options ? options : { skipVisibility: true });
   if (!course) {
-    $customError.defaultError({
+    return $customError.defaultError({
       error: `Could not find course with slug ${ slug }`,
       code: status.NOT_FOUND
     });

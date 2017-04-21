@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
 import { Lesson, lessonSchema } from './lesson';
 
+
 export interface CourseModule {
   _id?: string;
   name: string;
@@ -13,5 +14,5 @@ export const courseModuleSchema = new Schema({
   name: String,
   description: String,
   isVisible: { type: Boolean, default: false },
-  lessons: [{ type: Schema.Types.ObjectId, ref: 'lessons' }]
+  lessons: [lessonSchema]
 });

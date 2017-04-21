@@ -1,9 +1,9 @@
 // NPM Deps
+import * as slugify from 'speakingurl';
 import * as express from 'express';
 import * as StandardError from 'standard-error';
 import * as kebabCase from 'lodash/kebabCase';
 import * as some from 'lodash/some';
-import * as slugify from 'slug';
 import * as status from 'http-status';
 
 // AOM Deps
@@ -82,16 +82,6 @@ export function getOneCourse($customError: CustomErrorService, $Course) {
   };
 }
 
-export function getOneModule($customError: CustomErrorService) {
-  return async (req, res: express.Response) => {
-    try {
-
-    } catch (error) {
-      return $customError.httpError(res)(error);
-    }
-  };
-}
-
 async function findCourseOrThrow({ $Course, slug, options }: { $Course: any, slug: string, options?: any }) {
   const course = await $Course
     .findOne({ slug })
@@ -102,13 +92,6 @@ async function findCourseOrThrow({ $Course, slug, options }: { $Course: any, slu
 
   return course;
 
-}
-
-function checkAuthorizedInstructor({ course, user }: { course: any, user: any }) {
-  const authorized = isInstructorOfCourse(course, user);
-  if (!authorized) {
-    throw new StandardError(`User ${ user._id } is not an instructor for course ${ course._id }`, { code: status.UNAUTHORIZED });
-  }
 }
 
 async function createSlug(name: string, $Course: any) {

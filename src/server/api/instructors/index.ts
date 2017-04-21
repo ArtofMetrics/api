@@ -4,7 +4,8 @@ import { Router } from 'express';
 // AOM Deps
 import { Middleware } from '../middleware';
 import { getCourses, getOneCourse } from './instructors.controller';
-import { addModule } from './modules/modules.controller';
+import { addModule, getOneModule, addNewLesson, deleteLesson } from './modules/modules.controller';
+import { getOneLesson, addDrip, deleteDrip, updateDrip } from './lessons/lessons.controller';
 
 export function instructorsRouter(di): Router {
   const api = Router();
@@ -21,5 +22,26 @@ export function instructorsRouter(di): Router {
   api.route(`/course/:slug/module`)
     .post(di.invoke(addModule));
   
+  api.route('/course/:slug/module/:module')
+    .get(di.invoke(getOneModule));
+    
+  // Create Lesson
+  api.route('/course/:slug/module/:module/lesson')
+    .post(di.invoke(addNewLesson));
+  
+  // Edit Lesson
+  api.route('/course/:slug/module/:module/lesson/:lesson')
+    .get(di.invoke(getOneLesson))
+    .delete(di.invoke(deleteLesson));
+  
+  // Create Drip
+  api.route('/course/:slug/module/:module/lesson/:lesson/drip')
+    .post(di.invoke(addDrip));
+  
+  // Edit Drips
+  api.route('/course/:slug/module/:module/lesson/:lesson/drip/:drip')
+    .put(di.invoke(updateDrip))
+    .delete(di.invoke(deleteDrip));
+    
   return api;
 }

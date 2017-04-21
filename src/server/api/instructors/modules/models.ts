@@ -22,3 +22,17 @@ export interface AddModuleRequest extends AuthenticatedRequest {
 export interface AddModuleResponse {
   course: Course;
 }
+
+// Get one Module Response
+
+export interface GetOneModuleRequest extends AuthenticatedRequest {
+  params: {
+    slug: string;
+    module: string;
+  };
+}
+
+export interface GetOneModuleResponse {
+  course: any;
+  module: any;
+}
