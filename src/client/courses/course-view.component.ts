@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 // AOM Deps
 import { ViewReadyService } from 'client/shared/view-ready.service';
+import { UserService } from 'client/core/user.service';
 
 @Component({
   selector: 'course-view',
@@ -10,8 +11,14 @@ import { ViewReadyService } from 'client/shared/view-ready.service';
 })
 
 export class CourseViewComponent {
-  constructor(viewReady: ViewReadyService) {
+  constructor(
+    viewReady: ViewReadyService, 
+    private userService: UserService) {
     viewReady.emitFinished();
    }
-  
+
+   handleHttpError = (error: Error) => {
+    console.error(error);
+    throw error;
+   };
 }

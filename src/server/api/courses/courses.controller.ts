@@ -1,5 +1,4 @@
 // NPM Deps
-import * as slugify from 'speakingurl';
 import * as express from 'express';
 import * as StandardError from 'standard-error';
 import * as kebabCase from 'lodash/kebabCase';
@@ -9,6 +8,7 @@ import * as status from 'http-status';
 // AOM Deps
 import { CustomErrorService } from '../../dependencies/custom-error.service';
 import { isInstructor, isInstructorOfCourse } from '../utils';
+import { findCourseOrThrow, createSlug } from './helpers';
 
 // AOM models
 import { HTTPResponse } from '../models';
@@ -57,7 +57,6 @@ export function createCourse($customError: CustomErrorService, $Course) {
         instructors: [req.user._id]
       };
 
-      
       const doc = await $Course.create(newCourse);
 
       const responseBody: CreateCourseResponse = { course: doc.toObject({ virtuals: false }) };
@@ -80,44 +79,4 @@ export function getOneCourse($customError: CustomErrorService, $Course) {
       return $customError.httpError(res)(error);
     }
   };
-}
-
-async function findCourseOrThrow({ $Course, slug, options }: { $Course: any, slug: string, options?: any }) {
-  const course = await $Course
-    .findOne({ slug })
-    .setOptions(options);
-  if (!course) {
-    throw new StandardError(`Could not find course with slug ${ slug }`, { code: status.NOT_FOUND });
-  }
-
-  return course;
-
-}
-
-async function createSlug(name: string, $Course: any) {
-  const kebabName = slugify(name);
-  const exists = await $Course.count({ slug: kebabName });
-  if (!exists) {
-    return kebabName;
-  }
-  
-  return await ensureUniqueSlug(`${ kebabName }-1`, $Course);
-}
-
-async function ensureUniqueSlug(slug: string, $Course: any) {
-  const numWithSlug = await $Course.count({ slug });
-  if (!numWithSlug) {
-    return slug;
-  }
-
-  return await ensureUniqueSlug(incrementSlug(slug), $Course);
-}
-
-function incrementSlug(slug: string): string {
-  const num = parseInt(slug[slug.length - 1], 10);
-  return slug
-    .split('')
-    .slice(0, slug.length - 1)
-    .concat([(num + 1).toFixed(0)])
-    .join('');
 }

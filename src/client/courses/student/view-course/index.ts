@@ -1,0 +1,1 @@
+export { PreviewCourseComponent } from './preview-course.component';

@@ -7,6 +7,9 @@ import { visibilityPlugin } from '../plugins/visibility';
 import { isVisible } from '../helpers/isVisible';
 import { isPublished } from '../helpers/isPublished';
 
+// AOM Dependencies
+import { commonCourseProps } from './common-course';
+
 // AOM Schemas
 import { CourseModule, courseModuleSchema } from '../module';
 
@@ -23,17 +26,17 @@ export interface Course {
 
   admin: {
     readableId: number;
-    subscription: { };
+    subscription: {};
   };
 
   data: {
     name: string;
     description: string;
     category: string;
-    photos: { url: string; caption: string; isCover: boolean}[];
+    photos: { url: string; caption: string; isCover: boolean }[];
     modules: CourseModule[]
   }
-  
+
   createdAt: string;
   updatedAt: string;
 
@@ -55,26 +58,17 @@ export const courseSchema: Schema = new Schema({
   admin: {
     readableId: { type: Number, required: true },
     subscription: {
-      
+
     }
   },
 
   // editable by instructors or admins
   data: {
-    name: { type: String, required: true },
-    description: { type: String, required: isPublished },
-    category: { type: String },
-    photos: [
-      { 
-        url: { type: String, required: true },
-        caption: { type: String },
-        isCover: { type: Boolean, default: false, required: true }
-      }
-    ],
-    modules: [courseModuleSchema]
+    ...commonCourseProps.data,
+    description: { type: String, required: isPublished }
   }
 }, { timestamps: true });
 
-courseSchema.methods.getModule = function(id) {
+courseSchema.methods.getModule = function (id) {
   return find(this.modules, (m: CourseModule) => m._id.toString() === id.toString());
 }

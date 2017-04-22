@@ -2,9 +2,11 @@
 import { NgModule } from '@angular/core';
 
 // AOM Dependencies
+import { PreviewCourseComponent } from './view-course';
 
 @NgModule({
-  imports: []
+  declarations: [PreviewCourseComponent],
+  exports: [PreviewCourseComponent]
 })
 
 export class StudentCourseModule { }
