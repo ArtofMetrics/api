@@ -27,4 +27,4 @@ div#subscribe-modal.modal
   div.modal-content
     h4 Subscribe to {{ course.data.name }}
     div.btn.btn-waves((click)="addCreditCard()") Add Credit Card
-    add-credit-card-form(*ngIf="state.addingCard" (onFormInit)="onFormInit($payload)")
+    add-credit-card-form(*ngIf="state.addingCard" (onSubmitCard)="onSubmitCard($payload)")

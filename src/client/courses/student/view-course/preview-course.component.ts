@@ -37,7 +37,7 @@ export class PreviewCourseComponent implements OnInit {
     this.state.addingCard = true;
   }
 
-  onFormInit = (payload) => {
+  onSubmitCard = (payload) => {
     console.log(payload);
   }
 }

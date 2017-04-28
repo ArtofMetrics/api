@@ -14,7 +14,7 @@ import { StripeService } from 'client/core/payment/stripe.service';
 
 export class AddCreditCardFormComponent implements OnInit {
   @Output()
-  onFormInit: EventEmitter<any> = new EventEmitter();
+  onSubmitCard: EventEmitter<any> = new EventEmitter();
   handler: any;
   elements: any;
   card: any;
@@ -29,5 +29,17 @@ export class AddCreditCardFormComponent implements OnInit {
     this.card = this.elements.create('card');
     this.card.mount('#card-element');
     // this.handler = stripeService;
+  }
+
+  submitCard = (event) => {
+    event.preventDefault();
+    this.stripeService.stripe.createToken(this.card)
+      .then(token => {
+        console.log('token', token);
+        this.onSubmitCard.emit({ token });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
 }
