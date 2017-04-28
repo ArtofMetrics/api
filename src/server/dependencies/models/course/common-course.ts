@@ -1,3 +1,6 @@
+// External Dependencies
+
+// AOM Dependencies
 import { courseModuleSchema } from '../module';
 
 export const commonCourseProps = {

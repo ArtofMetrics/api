@@ -10,7 +10,7 @@ import { ApiService } from 'client/core/api/api.service';
 import { EditCourseService } from './edit-course.service';
 
 // AOM Models
-import { Course } from 'server/dependencies/models/course';
+import { Course } from 'server/dependencies/models/course/course';
 import { CourseModule } from 'server/dependencies/models/module';
 
 interface NewModule extends CourseModule {

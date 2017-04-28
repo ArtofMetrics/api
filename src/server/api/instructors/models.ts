@@ -1,5 +1,5 @@
 // External Deps
-import { Course } from '../../dependencies/models/course';
+import { Course } from '../../dependencies/models/course/course';
 // AOM interfaces
 import { AuthenticatedRequest } from '../models';
 

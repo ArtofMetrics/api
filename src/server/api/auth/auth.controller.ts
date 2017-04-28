@@ -29,7 +29,6 @@ export class AuthController {
       try {
         if (req.user) {
           const user = req.user;
-          console.log('user', user);
           const clientUser = _.pick(user, CLIENT_USER_FIELDS);
           return res.json({ data: { user: clientUser } });
         } else {

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 // AOM Deps
 
 // AOM interfaces
-import { Course } from 'server/dependencies/models/course';
+import { Course } from 'server/dependencies/models/course/course';
 import { CourseModule } from 'server/dependencies/models/module';
 
 @Component({

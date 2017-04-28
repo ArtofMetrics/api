@@ -4,6 +4,7 @@ import * as StandardError from 'standard-error';
 import * as kebabCase from 'lodash/kebabCase';
 import * as some from 'lodash/some';
 import * as status from 'http-status';
+import { Model } from 'mongoose';
 
 // AOM Deps
 import { CustomErrorService } from '../../dependencies/custom-error.service';
@@ -12,10 +13,14 @@ import { findCourseOrThrow, createSlug } from './helpers';
 
 // AOM models
 import { HTTPResponse } from '../models';
-import { CreateCourseRequest, CreateCourseResponse, GetOneCourseResponse } from './models';
+import {
+  CreateCourseRequest,
+  CreateCourseResponse, 
+  GetOneCourseResponse
+} from './models';
 
 export function getCourses($customError: CustomErrorService, $Course) {
-  return async(req, res: express.Response) => {
+  return async (req, res: express.Response) => {
 
     const SAMPLE_URL = 'http://lorempixel.com/400/200';
     try {
@@ -67,10 +72,11 @@ export function createCourse($customError: CustomErrorService, $Course) {
   };
 }
 
-export function getOneCourse($customError: CustomErrorService, $Course) {
+export function getOneCourse($customError: CustomErrorService, $Course: Model<any>, $StudentCourse) {
   return async (req, res: express.Response) => {
     try {
-      const options = { skipVisibility: isInstructor(req.user)}
+      const options = { skipVisibility: isInstructor(req.user) }
+
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, options });
 
       const responseBody: HTTPResponse<GetOneCourseResponse> = { data: { course } };

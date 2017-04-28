@@ -1,4 +1,8 @@
+// External Dependencies
 import * as mongoose from 'mongoose';
+
+// AOM Dependencies
+import { commonCourseProps } from './common-course';
 
 /**
  * Copy of a course so that a student's version of a course does not change
@@ -10,9 +14,8 @@ export const studentCourseSchema = new mongoose.Schema({
   subscribed: { type: Boolean, required: true },
 
   data: {
-    name: { type: String, required: true },
+    ...commonCourseProps.data,
     description: { type: String, required: true },
-    category: { type: String },
-    photos: []
-  }
+    lastCompleted: { type: String }
+  },
 });

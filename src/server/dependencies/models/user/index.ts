@@ -1,6 +1,6 @@
 // NPM Dependencies
 import { Schema, Document, Model, model, DocumentQuery } from 'mongoose';
-import { studentCourseSchema } from '../student-course';
+import { studentCourseSchema } from '../course/student-course';
 
 import * as emailValidator from 'email-validator';
 
@@ -52,7 +52,7 @@ export const userSchema: Schema = new Schema({
 }, { timestamps: true });
 
 userSchema.methods.fullName = function() {
-  return `${ this.first.name.trim() } ${ this.last.name.trim() }`;
+  return `${ this.profile.name.first.trim() } ${ this.profile.name.last.trim() }`;
 }
 
 userSchema.methods.email = function() {

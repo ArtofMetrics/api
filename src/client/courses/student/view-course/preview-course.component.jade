@@ -1,2 +1,30 @@
 div.container
-  div.col.s8.offset-s4
+  div.row
+    div.col.m12.s8.offset-s4
+
+      //- Name and description
+      div.section
+        h5 {{ course.data.name }}
+        div
+      
+      //- Instructors
+      div.section
+        h6 Instructors
+        div(*ngFor="let instructor of instructors")
+          p {{ instructor.fullName() }}
+          //- p {{ instructor.fullName() }}
+          
+      //- Course description
+      div.section
+        h6 Course description
+        div {{ course.data.description }}
+
+      //- Subscribe
+      div.section
+        a.btn.btn-waves((click)="openSubscribeModal()") Subscribe
+      
+div#subscribe-modal.modal
+  div.modal-content
+    h4 Subscribe to {{ course.data.name }}
+    div.btn.btn-waves((click)="addCreditCard()") Add Credit Card
+    add-credit-card-form((onFormInit)="onFormInit($payload)")

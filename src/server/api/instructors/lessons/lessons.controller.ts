@@ -59,7 +59,6 @@ export function addDrip($Course: Model<any>, $customError: CustomErrorService) {
         .setOptions({ skipVisibility: true });
 
       const drips = update.get(pathToDrips);
-      console.log('drips', drips);
       res.json({ data: { drips } });
     } catch (error) {
       return $customError.httpError(res)(error);

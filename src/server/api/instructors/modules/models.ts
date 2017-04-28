@@ -2,7 +2,7 @@
 import { AuthenticatedRequest } from '../../models';
 
 // AOM Deps
-import { Course } from '../../../dependencies/models/course';
+import { Course } from '../../../dependencies/models/course/course';
 import { CourseModule } from '../../../dependencies/models/module';
 
 // AOM Interfaces

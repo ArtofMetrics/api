@@ -8,6 +8,7 @@ import { SharedModule } from 'client/shared/shared.module';
 import { ViewWrapperModule } from './view-wrapper/view-wrapper.module';
 import TopMenuModule from './top-menu/top-menu.module';
 import { HttpModule, Http, ConnectionBackend, RequestOptions } from '@angular/http';
+import { PaymentModule } from './payment/payment.module';
 
 // AOM Services
 import { JWTService } from './jwt.service';
@@ -28,7 +29,7 @@ import { CarouselDirective } from './carousel.directive';
 
 @NgModule({
   imports: [CommonModule, SharedModule, TopMenuModule, ViewWrapperModule],
-  exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective, SharedModule, FooterComponent],
+  exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective, SharedModule, FooterComponent, PaymentModule],
   declarations: [CarouselDirective, FooterComponent],
   providers: [
     AUTH_PROVIDERS,
