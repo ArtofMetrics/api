@@ -9,9 +9,8 @@ export class StripeService {
   stripe: any;
   
   constructor(
-    config: Config
   ) {
-    this.stripe = (window as any).Stripe((config as any).stripe.apiKey);
+    this.stripe = (window as any).Stripe(Config.stripe.apiKey);
   }
 
 }

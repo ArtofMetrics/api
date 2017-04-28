@@ -17,6 +17,7 @@ export class PreviewCourseComponent implements OnInit {
   @Input() course: any;
   doc: Course;
   instructors: any[];
+  state: { addingCard: boolean } = { addingCard: false };
 
   constructor(
     private apiService: ApiService,
@@ -33,6 +34,7 @@ export class PreviewCourseComponent implements OnInit {
   }
 
   addCreditCard = () => {
+    this.state.addingCard = true;
   }
 
   onFormInit = (payload) => {

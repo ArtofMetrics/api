@@ -16,6 +16,8 @@ export class AddCreditCardFormComponent implements OnInit {
   @Output()
   onFormInit: EventEmitter<any> = new EventEmitter();
   handler: any;
+  elements: any;
+  card: any;
 
   constructor(
     private config: Config,
@@ -23,6 +25,9 @@ export class AddCreditCardFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.elements = this.stripeService.stripe.elements();
+    this.card = this.elements.create('card');
+    this.card.mount('#card-element');
     // this.handler = stripeService;
   }
 }
