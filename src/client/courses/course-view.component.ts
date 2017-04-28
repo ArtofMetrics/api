@@ -56,4 +56,8 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     console.error(error);
     throw error;
    };
+
+   isSubscribed = () => {
+     return true;
+   }
 }

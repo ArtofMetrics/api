@@ -19,6 +19,9 @@ import { AomHTTPService } from './aom-http.service';
 // AOM Configs
 import { Config } from './config';
 
+// AOM Services
+import { ErrorService } from './error.service';
+
 // AOM Components
 import TopMenuComponent from './top-menu/top-menu.component';
 import { ViewWrapperComponent } from './view-wrapper/view-wrapper.component';
@@ -37,7 +40,8 @@ import { CarouselDirective } from './carousel.directive';
     UserService,
     ApiService,
     AomHTTPService,
-    Config]
+    Config,
+    ErrorService]
 })
 
 export default class CoreModule {
