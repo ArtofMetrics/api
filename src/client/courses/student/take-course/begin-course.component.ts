@@ -1,5 +1,5 @@
 // External Dependencies
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 // AOM Dependencies
 import { ApiService } from 'client/core/api/api.service';
@@ -12,6 +12,9 @@ import { ApiService } from 'client/core/api/api.service';
 })
 
 export class BeginCourseComponent implements OnInit {
+  @Input()
+  course: any;
+  
   constructor(
     private apiService: ApiService
   ) {}

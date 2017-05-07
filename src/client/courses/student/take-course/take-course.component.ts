@@ -18,7 +18,7 @@ export class TakeCourseComponent implements OnInit {
   @Input()
   course: any;
 
-  state: string;
+  state: 'CONTINUE' | 'BEGIN';
   constructor(
     private apiService: ApiService,
     private errorService: ErrorService
