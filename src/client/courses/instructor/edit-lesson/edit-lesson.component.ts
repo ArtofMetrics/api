@@ -24,8 +24,9 @@ export class EditLessonComponent implements OnInit, OnDestroy {
   lessonId: string;
   editState: { editing: boolean } = { editing: false };
   editingDrip: any;
-
+  language: string;
   lesson: any;
+  
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
@@ -33,6 +34,9 @@ export class EditLessonComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // TODO: Change
+    this.language = 'R';
+
     this.subscriptions.params = this.route.params
       .subscribe(
       (params: { slug: string, module: string, lesson: string }) => {
@@ -58,8 +62,9 @@ export class EditLessonComponent implements OnInit, OnDestroy {
   };
 
   addDrip = () => {
+    const { slug, moduleId, lessonId, language } = this;
     this.apiService.instructors
-      .addDrip({ slug: this.slug, moduleId: this.moduleId, lessonId: this.lessonId })
+      .addDrip({ slug, moduleId, lessonId, language })
       .subscribe(
         (data) => this.lesson.drips = data.drips,
         (error) => this.handleHttpError(error)
@@ -68,9 +73,9 @@ export class EditLessonComponent implements OnInit, OnDestroy {
 
   saveDrip = ($event) => {
     const { drip } = $event;
-
+    const { slug, moduleId, lessonId, language } = this;
     this.apiService.instructors
-      .saveDrip({ slug: this.slug, moduleId: this.moduleId, lessonId: this.lessonId, drip })
+      .saveDrip({ slug, moduleId, lessonId, drip, language })
       .subscribe(
         data => {
           const idx = findIndex(this.lesson.drips, 
@@ -90,9 +95,9 @@ export class EditLessonComponent implements OnInit, OnDestroy {
 
   deleteDrip = (drip) => {
     this.endEditDrip();
-
+    const { slug, moduleId, lessonId, language } = this;
     this.apiService.instructors
-      .deleteDrip({ slug: this.slug, moduleId: this.moduleId, lessonId: this.lessonId, dripId: drip._id })
+      .deleteDrip({ slug, moduleId, lessonId, dripId: drip._id, language })
       .subscribe(
         (data) => this.lesson.drips = data.drips,
         (error) => this.handleHttpError(error)
@@ -100,8 +105,10 @@ export class EditLessonComponent implements OnInit, OnDestroy {
   }
 
   getLesson = ({ lessonId }: { lessonId: string }) => {
+    const { slug, moduleId, language } = this;
+
     return this.apiService.instructors
-      .getLesson({ slug: this.slug, moduleId: this.moduleId, lessonId })
+      .getLesson({ slug, moduleId, lessonId, language })
       .subscribe(
       data => this.lesson = data.lesson,
       error => this.handleHttpError(error)

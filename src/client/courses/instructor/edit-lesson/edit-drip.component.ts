@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 
 // AOM Deps
 import { DripTextEditor } from './drip-text-editor.directive';
-import { ApiService } from 'client/core/api/api.service';
 import { EditDripService } from './edit-drip.service';
 
 // AOM Interfaces
@@ -23,12 +22,10 @@ export class EditDripComponent {
   saveDrip: EventEmitter<any> = new EventEmitter<any>();
   
   constructor(
-    private apiService: ApiService,
     private editDripService: EditDripService
   ) {}
 
   ngOnInit() {
-
   }
 
   editDrip = ($event: { text: string }): void => {
