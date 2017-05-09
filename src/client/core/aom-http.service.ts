@@ -18,7 +18,7 @@ export class AomHTTPService {
               defaultOptions: RequestOptions ) { 
   }
 
-  get = (url: string, params?: RequestOptionsArgs, customOptions?: HttpCustomOptions): Observable<any> => {
+  get = (url: string, params?: any, customOptions?: HttpCustomOptions): Observable<any> => {
     return this._http
       .get(url, Object.assign({}, params, { headers: this.defineHeaders() }))
       .map(response => extractData(response));
@@ -36,7 +36,7 @@ export class AomHTTPService {
       .map(response => extractData(response));
   }
   
-  delete = (url: string, params?: RequestOptionsArgs): Observable<any> => {
+  delete = (url: string, params?: any): Observable<any> => {
     return this._http
       .delete(url, { headers: this.defineHeaders() })
       .map(response => extractData(response));

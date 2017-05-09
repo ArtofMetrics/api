@@ -71,7 +71,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   persistModule = (courseModule: CourseModule & NewModule) => {
     if (courseModule.$isNew) {
       return this.apiService.instructors
-        .addModule({ slug: this.slug, module: courseModule });
+        .addModule({ slug: this.slug, module: courseModule, language: this.language });
     } else {
       console.log('need to add for editing module')
     }
