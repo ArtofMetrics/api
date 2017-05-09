@@ -69,6 +69,6 @@ export const courseSchema: Schema = new Schema({
   }
 }, { timestamps: true });
 
-courseSchema.methods.getModule = function (id, language) {
-  return find(this.modules[language], (m: CourseModule) => m._id.toString() === id.toString());
+courseSchema.methods.getModule = function (id, language: string) {
+  return this.data.modules[language].id(id);
 }

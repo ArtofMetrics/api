@@ -8,71 +8,84 @@ import { JWTService } from 'client/core/jwt.service';
 // AOM Interfaces
 import { CourseModule } from 'server/dependencies/models/module';
 import { GetCoursesResponse, GetOneCourseResponse } from 'server/api/instructors/models';
-import { AddModuleResponse, GetOneModuleResponse } from 'server/api/instructors/modules/models';
+import {
+  AddModuleResponse,
+  GetOneModuleResponse,
+  AddNewLessonRequestBody,
+  AddNewLessonResponse
+} from 'server/api/instructors/modules/models';
+import {
+  GetOneLessonQuery, GetOneLessonResponse,
+  AddDripRequestBody, AddDripResponse,
+  UpdateDripRequestBody, UpdateDripResponse
+} from 'server/api/instructors/lessons/models';
 
 export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: JWTService) {
-  const BASE_URL = `${ API_ROOT }/instructors`;
+  const BASE_URL = `${API_ROOT}/instructors`;
 
   return {
     getCourse({ slug }): Observable<GetOneCourseResponse> {
       return http
-        .get(`${ BASE_URL }/course/${ slug }`);
+        .get(`${BASE_URL}/course/${slug}`);
     },
 
     getCourses(): Observable<GetCoursesResponse> {
       return http
-        .get(`${ BASE_URL }/courses`);
+        .get(`${BASE_URL}/courses`);
     },
 
     addModule({ slug, module, language }: { slug: string, module, language: string }): Observable<AddModuleResponse> {
       return http
-        .post(`${ BASE_URL }/course/${ slug }/module`, { module, language });
+        .post(`${BASE_URL}/course/${slug}/module`, { module, language });
     },
 
     getModule({ slug, moduleId, language }: { slug: any, moduleId: string, language: string }): Observable<GetOneModuleResponse> {
       return http
-        .get(`${ BASE_URL }/course/${ slug }/module/${ moduleId }`, 
-          { language })
+        .get(`${BASE_URL}/course/${slug}/module/${moduleId}`,
+        { language })
         .catch(error => Observable.throw(error));
     },
 
-    addNewLesson({ slug, moduleId, newLesson, language }: { slug: any, moduleId: string, newLesson: any, language: string }): Observable<any> {
+    addNewLesson({ slug, moduleId, newLesson, language }: { slug: any, moduleId: string, newLesson: any, language: string }): Observable<AddNewLessonResponse> {
+      const data: AddNewLessonRequestBody = { lesson: newLesson, language };
       return http
         .post(
-          `${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson`, 
-          { lesson: newLesson, language });
+        `${BASE_URL}/course/${slug}/module/${moduleId}/lesson`,
+        data);
     },
 
     deleteLesson({ slug, moduleId, lessonId, language }: { slug: string, moduleId: string, lessonId: string, language: string }): Observable<any> {
       return http
         .delete(
-          `${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }`,
-          { language });
+        `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}`,
+        { language });
     },
-    getLesson({ slug, moduleId, lessonId, language }: { slug: string, moduleId: string, lessonId: string, language: string }): Observable<any> {
+    getLesson({ slug, moduleId, lessonId, language }: { slug: string, moduleId: string, lessonId: string, language: string }): Observable<GetOneLessonResponse> {
+      const query: GetOneLessonQuery = { language };
       return http
         .get(
-          `${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }`,
-          { language });
+        `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}`,
+        query);
     },
-    addDrip({ slug, moduleId, lessonId, language }: { slug: string, moduleId: string, lessonId: string, language: string }): Observable<any> {
+    addDrip({ slug, moduleId, lessonId, language }: { slug: string, moduleId: string, lessonId: string, language: string }): Observable<AddDripResponse> {
+      const data: AddDripRequestBody = { language };
       return http
         .post(
-          `${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }/drip`,
-          { language });
+        `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}/drip`,
+        { language });
     },
     deleteDrip({ slug, moduleId, lessonId, dripId, language }: { slug: string, moduleId: string, lessonId: string, dripId: string, language: string }): Observable<any> {
       return http
         .delete(
-          `${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }/drip/${ dripId }`,
-          { language });
+        `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}/drip/${dripId}`,
+        { language });
     },
-    saveDrip({ slug, moduleId, lessonId, drip, language }: { slug: string, moduleId: string, lessonId: string, drip: any, language: string }): Observable<any> {
-      console.log('UPDATING', drip);
+    saveDrip({ slug, moduleId, lessonId, drip, language }: { slug: string, moduleId: string, lessonId: string, drip: any, language: string }): Observable<UpdateDripResponse> {
+      const data: UpdateDripRequestBody = { drip, language };
       return http
         .put(
-          `${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lessonId }/drip/${ drip._id }`,
-          { drip, language });
+        `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}/drip/${drip._id}`,
+        data);
     },
     // saveModule({ slug, module }: { slug: string, module: CourseModule }): Observable<any> {
     //   return http

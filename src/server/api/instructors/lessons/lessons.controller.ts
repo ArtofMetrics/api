@@ -11,14 +11,21 @@ import { findCourseOrThrow } from '../find-helpers';
 import { checkAuthorizedInstructor } from '../permissions-helpers';
 
 // AOM Interfaces
+import { Course } from '../../../dependencies/models/course/course';
+import { HTTPResponse } from '../../models';
+import {
+  GetOneLessonRequest, GetOneLessonResponse,
+  AddDripRequest, AddDripResponse,
+  UpdateDripRequest, UpdateDripResponse
+} from './models';
 
 export function getOneLesson($Course: Model<any>, $customError: CustomErrorService) {
-  return async (req, res: Response) => {
+  return async (req: GetOneLessonRequest, res: Response) => {
     try {
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
       checkAuthorizedInstructor({ course, user: req.user });
 
-      const module = course.data.modules.id(req.params.module);
+      const module = course.getModule(req.params.module, req.query.language);
       if (!module) {
         throw new StandardError({
           error: `Could not find module ${req.params.module}`,
@@ -34,7 +41,14 @@ export function getOneLesson($Course: Model<any>, $customError: CustomErrorServi
         });
       }
 
-      res.json({ data: { lesson } });
+      const data: HTTPResponse<GetOneLessonResponse> = {
+        data: {
+          lesson,
+          language: req.query.language
+        }
+      };
+
+      res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);
     }
@@ -42,24 +56,38 @@ export function getOneLesson($Course: Model<any>, $customError: CustomErrorServi
 }
 
 export function addDrip($Course: Model<any>, $customError: CustomErrorService) {
-  return async (req, res: Response) => {
+  return async (req: AddDripRequest, res: Response) => {
     try {
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
       checkAuthorizedInstructor({ course, user: req.user });
 
-      const moduleIdx = findWithinMongooseArrayOrThrow(course.data.modules, req.params.module, 'module');
-      const lessonIdx = findWithinMongooseArrayOrThrow(course.data.modules[moduleIdx].lessons, req.params.lesson, 'lesson');
+      const { language } = req.body;
+      const moduleIdx = findWithinMongooseArrayOrThrow(
+        course.data.modules[language],
+        req.params.module,
+        'module');
+      const lessonIdx = findWithinMongooseArrayOrThrow(
+        course.data.modules[language][moduleIdx].lessons,
+        req.params.lesson,
+        'lesson');
 
-      const op = { $addToSet: {} };
-      const pathToDrips = `data.modules.${moduleIdx}.lessons.${lessonIdx}.drips`;
-      op.$addToSet[pathToDrips] = { isVisible: false, title: 'Incomplete Drip' };
+      const pathToDrips = `data.modules.${language}.${moduleIdx}.lessons.${lessonIdx}.drips`;
+      const op = {
+        $addToSet: {
+          [pathToDrips]: {
+            isVisible: false, title: 'Incomplete Drip'
+          }
+        }
+      };
 
       const update = await $Course
         .findByIdAndUpdate(course._id, op, { new: true })
         .setOptions({ skipVisibility: true });
 
       const drips = update.get(pathToDrips);
-      res.json({ data: { drips } });
+
+      const data: HTTPResponse<AddDripResponse> = { data: { drips, language: req.body.language } };
+      res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);
     }
@@ -72,17 +100,18 @@ export function deleteDrip($Course: Model<any>, $customError: CustomErrorService
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
       checkAuthorizedInstructor({ course, user: req.user });
 
+      const { language } = req.body;
       const moduleIdx = findWithinMongooseArrayOrThrow(course.data.modules, req.params.module, 'module');
       const lessonIdx = findWithinMongooseArrayOrThrow(course.data.modules[moduleIdx].lessons, req.params.lesson, 'lesson');
       // const dripidx = findWithinMongooseArrayOrThrow(course.data.modules[moduleIdx].lessons[lessonIdx].drips, req.params.drip, 'drip');
-      const op = { $pull: { } };
+      const op = { $pull: {} };
       const pathToDrips = `data.modules.${moduleIdx}.lessons.${lessonIdx}.drips`;
       op.$pull[pathToDrips] = { _id: req.params.drip };
 
       const update = await $Course
         .findByIdAndUpdate(course._id, op, { new: true })
         .setOptions({ skipVisibility: true });
-      
+
       const drips = update.get(pathToDrips);
 
       res.json({ data: { drips } });
@@ -94,26 +123,31 @@ export function deleteDrip($Course: Model<any>, $customError: CustomErrorService
 }
 
 export function updateDrip($Course: Model<any>, $customError: CustomErrorService) {
-  return async (req, res) => {
+  return async (req: UpdateDripRequest, res: Response) => {
     try {
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
       checkAuthorizedInstructor({ course, user: req.user });
 
-      const moduleIdx = findWithinMongooseArrayOrThrow(course.data.modules, req.params.module, 'module');
-      const lessonIdx = findWithinMongooseArrayOrThrow(course.data.modules[moduleIdx].lessons, req.params.lesson, 'lesson');
-      const dripIdx = findWithinMongooseArrayOrThrow(course.data.modules[moduleIdx].lessons[lessonIdx].drips, req.body.drip._id, 'drip');
-      const op = { };
+      const { language } = req.body;
+      const modules = course.data.modules[language];
+      const moduleIdx = findWithinMongooseArrayOrThrow(modules, req.params.module, 'module');
+      const lessonIdx = findWithinMongooseArrayOrThrow(modules[moduleIdx].lessons, req.params.lesson, 'lesson');
+      const dripIdx = findWithinMongooseArrayOrThrow(modules[moduleIdx].lessons[lessonIdx].drips, req.body.drip._id, 'drip');
+      const op = {};
 
-      const pathToDrip = `data.modules.${ moduleIdx }.lessons.${ lessonIdx }.drips.${ dripIdx }`;
+      const pathToDrip = `data.modules.${ language }.${moduleIdx}.lessons.${lessonIdx}.drips.${dripIdx}`;
       op[pathToDrip] = req.body.drip;
 
       const update = await $Course
         .findByIdAndUpdate(course._id, op, { new: true })
         .setOptions({ skipVisibility: true });
-      
+
       const updatedDrip = update.get(pathToDrip);
 
-      res.json({ data: { drip: updatedDrip } });
+      const data: HTTPResponse<UpdateDripResponse> = {
+        data: { drip: updatedDrip, language }
+      };
+      res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);
     }
