@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RequestOptions, RequestOptionsArgs, Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import * as qs from 'qs';
 
 // AOM Deps
 import { JWTService } from 'client/core/jwt.service';
@@ -19,8 +20,10 @@ export class AomHTTPService {
   }
 
   get = (url: string, params?: any, customOptions?: HttpCustomOptions): Observable<any> => {
+    const urlQuery = params ? `${url}?${qs.stringify(params)}` : url;
+
     return this._http
-      .get(url, Object.assign({}, params, { headers: this.defineHeaders() }))
+      .get(urlQuery, Object.assign({}, params, { headers: this.defineHeaders() }))
       .map(response => extractData(response));
   }
 

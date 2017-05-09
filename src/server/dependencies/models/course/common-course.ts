@@ -15,8 +15,8 @@ export const commonCourseProps = {
       }
     ],
     modules: {
-      R: [courseModuleSchema],
-      STATA: [courseModuleSchema]
+      R: { type: [courseModuleSchema], default: [] },
+      STATA: { type: [courseModuleSchema], default: [] }
     }
   }
 };

@@ -79,7 +79,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
 
   addModule = (position: number) => {
     const data: NewModule = {
-      name: `Module ${ this.course.data.modules.length + 1 } `,
+      name: `Module ${ this.course.data.modules[this.language].length + 1 } `,
       description: '',
       $isNew: true,
       isVisible: false,

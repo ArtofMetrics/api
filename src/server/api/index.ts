@@ -10,6 +10,7 @@ import { studentsRouter } from './students';
 export function Api(di) {
   const api = express.Router();
   api.use(bodyParser.json());
+  api.use(bodyParser.urlencoded({ extended: true }));
   
   api.use('/auth', AuthRouter(di));
   api.use('/courses', coursesRouter(di));

@@ -49,6 +49,7 @@ export class EditModuleComponent implements OnInit {
           .getModule({ slug, moduleId, language: this.language })
           .subscribe(
           (data) => {
+            console.log('data', data);
             this.course = data.course;
             this.module = data.module;
             this.module.lessons = this.module.lessons || [];
