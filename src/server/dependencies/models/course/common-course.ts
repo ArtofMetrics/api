@@ -14,6 +14,9 @@ export const commonCourseProps = {
         isCover: { type: Boolean, default: false, required: true }
       }
     ],
-    modules: [courseModuleSchema]
+    modules: {
+      R: [courseModuleSchema],
+      STATA: [courseModuleSchema]
+    }
   }
 };

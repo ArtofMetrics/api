@@ -41,7 +41,7 @@ export interface Course {
   updatedAt: string;
 
   // methods
-  getModule: (id: string | Schema.Types.ObjectId) => CourseModule;
+  getModule: (id: string | Schema.Types.ObjectId, language: string) => CourseModule;
 }
 
 export const courseSchema: Schema = new Schema({
@@ -69,6 +69,6 @@ export const courseSchema: Schema = new Schema({
   }
 }, { timestamps: true });
 
-courseSchema.methods.getModule = function (id) {
-  return find(this.modules, (m: CourseModule) => m._id.toString() === id.toString());
+courseSchema.methods.getModule = function (id, language) {
+  return find(this.modules[language], (m: CourseModule) => m._id.toString() === id.toString());
 }

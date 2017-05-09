@@ -13,9 +13,13 @@ import { EditCourseService } from './edit-course.service';
 import { Course } from 'server/dependencies/models/course/course';
 import { CourseModule } from 'server/dependencies/models/module';
 
+// AOM Interfaces
 interface NewModule extends CourseModule {
   $isNew: boolean;
 }
+
+// Constants
+const DEFAULT_LANGUAGE = 'R';
 
 @Component({
   selector: 'edit-course',
@@ -26,6 +30,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   subscriptions: { slug?: Subscription } = {};
   course: Course;
   slug: string;
+  language: string;
 
   constructor(
     private viewState: ViewReadyService,
@@ -35,6 +40,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   ) {}
   
   ngOnInit() {
+    this.language = DEFAULT_LANGUAGE;
     this.subscriptions.slug = this.route.params
       .subscribe((params: { slug: string }) => {
         if (!this.viewState.isLoading()) {
@@ -63,7 +69,6 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   }
 
   persistModule = (courseModule: CourseModule & NewModule) => {
-    console.log('persisting', this.slug);
     if (courseModule.$isNew) {
       return this.apiService.instructors
         .addModule({ slug: this.slug, module: courseModule });
