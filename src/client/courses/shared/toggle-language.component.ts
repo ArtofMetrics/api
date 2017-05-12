@@ -8,19 +8,19 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 type Language = 'R' | 'STATA';
 
 @Component({
-  selector: `toggle-language`,
-  templateUrl: `./toggle-language.component.jade`
+  selector: 'toggle-language',
+  templateUrl: './toggle-language.component.jade'
 })
 
 export class ToggleLanguageComponent implements OnInit{
   @Input()
-  languages: Language[] = ['R', 'STATA'];
+  languages: Language[] = ['STATA', 'R'];
 
   @Input()
   default: Language;
 
   @Output()
-  toggleLanguage: EventEmitter<string> = new EventEmitter();
+  toggleLanguage: EventEmitter<{ language: string }> = new EventEmitter();
 
   language: Language;
   constructor(
@@ -28,10 +28,11 @@ export class ToggleLanguageComponent implements OnInit{
   ) {}
 
   ngOnInit() {
-    this.language = this.default || this.languages[0];
+    this.language = this.default || this.languages[1];
   }
 
   toggle() {
     this.language = this.language === 'STATA' ? 'R' : 'STATA';
+    this.toggleLanguage.emit({ language: this.language });
   }
 }

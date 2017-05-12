@@ -6,11 +6,10 @@ import { InstructorCourseModule } from 'client/courses/instructor/instructor-cou
 import { StudentCourseModule } from 'client/courses/student/student-course.module';
 import { CoursesRoutingModule } from 'client/courses/courses-routing.module';
 import { CourseViewComponent } from 'client/courses/course-view.component';
-import { ToggleLanguageComponent } from './toggle-language.component';
 
 @NgModule({
   imports: [CoursesRoutingModule, InstructorCourseModule, StudentCourseModule, CommonModule],
-  declarations: [CourseViewComponent, ToggleLanguageComponent],
+  declarations: [CourseViewComponent],
   exports: [CoursesRoutingModule]
 })
 

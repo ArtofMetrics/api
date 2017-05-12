@@ -1,5 +1,5 @@
 // External Deps
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import * as each from 'lodash/each';
@@ -96,5 +96,10 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   handleHttpError = (error: Error) => {
     console.error(error);
     throw error;
+  }
+
+  @Input()
+  setLanguage = ({ language }) => {
+    this.language = language;
   }
 }

@@ -1,5 +1,5 @@
 // External Deps
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import * as every from 'lodash/every';
@@ -13,9 +13,10 @@ import { ViewReadyService } from 'client/shared/view-ready.service';
   templateUrl: './edit-module.component.jade'
 })
 
-export class EditModuleComponent implements OnInit {
+export class EditModuleComponent implements OnInit, OnDestroy {
   subscriptions: {
-    course?: Subscription
+    course?: Subscription,
+    language?: Subscription,
   } = {};
 
   slug: string;
@@ -32,8 +33,10 @@ export class EditModuleComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // TODO CHange
-    this.language = 'R';
+    this.subscriptions.language = this.route.queryParams
+      .subscribe(({ language }: { language: string }) => {
+        this.language = language;
+      });
 
     this.subscriptions.course = this.route.params
       .subscribe((params: { slug: string, module: string }) => {
@@ -49,7 +52,6 @@ export class EditModuleComponent implements OnInit {
           .getModule({ slug, moduleId, language: this.language })
           .subscribe(
           (data) => {
-            console.log('data', data);
             this.course = data.course;
             this.module = data.module;
             this.module.lessons = this.module.lessons || [];
@@ -59,8 +61,15 @@ export class EditModuleComponent implements OnInit {
       });
   }
 
+  ngOnDestroy() {
+    this.subscriptions.course.unsubscribe();
+    this.subscriptions.language.unsubscribe();
+  }
+  
   editLesson = (lesson) => {
-    this.router.navigate(['course', this.course.slug, 'module', this.module._id, 'lesson', lesson._id, 'edit']);
+    this.router.navigate(
+      ['course', this.course.slug, 'module', this.module._id, 'lesson', lesson._id, 'edit'],
+      { queryParams: { language: this.language } });
   };
 
   canAddLesson = () => {
@@ -87,6 +96,10 @@ export class EditModuleComponent implements OnInit {
         data => this.module.lessons = data.lessons,
         error => this.handleHttpError(error)
       )
+  }
+
+  goBack = () => {
+    this.router.navigate(['course', this.course.slug, 'edit']);
   }
 
   handleHttpError = (error: Error) => {

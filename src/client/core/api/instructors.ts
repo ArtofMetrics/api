@@ -39,7 +39,7 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         .post(`${BASE_URL}/course/${slug}/module`, { module, language });
     },
 
-    getModule({ slug, moduleId, language }: { slug: any, moduleId: string, language: string }): Observable<GetOneModuleResponse> {
+    getModule({ slug, moduleId, language }: { slug: any, moduleId: string, language?: string }): Observable<GetOneModuleResponse> {
       return http
         .get(`${BASE_URL}/course/${slug}/module/${moduleId}`,
         { language })
@@ -54,11 +54,11 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         data);
     },
 
-    deleteLesson({ slug, moduleId, lessonId, language }: { slug: string, moduleId: string, lessonId: string, language: string }): Observable<any> {
+    deleteLesson({ slug, moduleId, lessonId, language }: 
+      { slug: string, moduleId: string, lessonId: string, language: string }): Observable<any> {
       return http
         .delete(
-        `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}`,
-        { language });
+          `${BASE_URL}/course/${slug}/language/${ language }/module/${moduleId}/lesson/${lessonId}`);
     },
     getLesson({ slug, moduleId, lessonId, language }: { slug: string, moduleId: string, lessonId: string, language: string }): Observable<GetOneLessonResponse> {
       const query: GetOneLessonQuery = { language };
@@ -74,11 +74,10 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}/drip`,
         { language });
     },
-    deleteDrip({ slug, moduleId, lessonId, dripId, language }: { slug: string, moduleId: string, lessonId: string, dripId: string, language: string }): Observable<any> {
+    deleteDrip({ slug, moduleId, lessonId, dripId, language }: 
+      { slug: string, moduleId: string, lessonId: string, dripId: string, language: string }): Observable<any> {
       return http
-        .delete(
-        `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}/drip/${dripId}`,
-        { language });
+        .delete(`${BASE_URL}/course/${slug}/language/${language}/module/${moduleId}/lesson/${lessonId}/drip/${dripId}`);
     },
     saveDrip({ slug, moduleId, lessonId, drip, language }: { slug: string, moduleId: string, lessonId: string, drip: any, language: string }): Observable<UpdateDripResponse> {
       const data: UpdateDripRequestBody = { drip, language };

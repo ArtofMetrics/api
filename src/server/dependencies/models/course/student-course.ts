@@ -1,5 +1,5 @@
 // External Dependencies
-import * as mongoose from 'mongoose';
+import { Schema, Model } from 'mongoose';
 
 // AOM Dependencies
 import { commonCourseProps } from './common-course';
@@ -9,8 +9,8 @@ import { commonCourseProps } from './common-course';
  * while an instructor is editing it. Since the slug can be dynamic, queries
  * for these should be by `_id`
  */
-export const studentCourseSchema = new mongoose.Schema({
-  course: { type: mongoose.Schema.Types.ObjectId, ref: 'courses', required: true },
+export const studentCourseSchema = new Schema({
+  course: { type: Schema.Types.ObjectId, ref: 'courses', required: true },
   subscribed: { type: Boolean, required: true },
 
   data: {

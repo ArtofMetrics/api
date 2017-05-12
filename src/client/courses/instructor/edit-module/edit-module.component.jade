@@ -1,6 +1,8 @@
 
 div(*ngIf="module")
+
   p {{ module.name }}
+  div.btn.btn-waves.floating-effect((click)="goBack()") Back
 
   div(*ngFor="let lesson of module.lessons")
     p {{ lesson.name }}

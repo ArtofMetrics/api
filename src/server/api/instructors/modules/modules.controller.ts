@@ -123,25 +123,22 @@ export function deleteLesson($Course: Model<any>, $customError: CustomErrorServi
 
       checkAuthorizedInstructor({ course, user: req.user });
       
-      $customError.defaultError({ 
-        readableError: `Need to figure out delete`,
-        error: `need to figure out delete`,
-        code: status.BAD_REQUEST });
-
-      const moduleIdx = findIndex(course.data.modules, m => m._id.toString() === req.params.module);
+      const { language } = req.params;
+      const modules = course.data.modules[language];
+      const moduleIdx = findIndex(modules, (m: any) => m._id.toString() === req.params.module);
 
       if (moduleIdx === -1) {
         $customError.defaultError({ error: `Could not find module ${req.params.module}`, code: status.NOT_FOUND });
       }
 
       const op = { $pull: {} };
-      op.$pull[`data.modules.${moduleIdx}.lessons`] = { _id: req.params.lesson };
+      op.$pull[`data.modules.${ language }.${ moduleIdx }.lessons`] = { _id: req.params.lesson };
 
       const update = await $Course
         .findByIdAndUpdate(course._id, op, { new: true })
         .setOptions({ skipVisibility: true });
 
-      res.json({ data: { lessons: update.data.modules[moduleIdx].lessons } });
+      res.json({ data: { lessons: update.data.modules[language][moduleIdx].lessons, language } });
     } catch (error) {
       return $customError.httpError(res)(error);
     }
@@ -149,8 +146,8 @@ export function deleteLesson($Course: Model<any>, $customError: CustomErrorServi
 }
 
 function findModule({ course, moduleId, $customError, language }: { course: any, moduleId: string, $customError: CustomErrorService, language: string }) {
-  const module = find(course.data.modules[language],
-    (m: any) => m._id.toString() === moduleId);
+  let module = find(course.data.modules[language],
+      (m: any) => m._id.toString() === moduleId);
 
   if (!module) {
     $customError.defaultError({

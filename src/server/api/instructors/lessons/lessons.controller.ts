@@ -62,12 +62,13 @@ export function addDrip($Course: Model<any>, $customError: CustomErrorService) {
       checkAuthorizedInstructor({ course, user: req.user });
 
       const { language } = req.body;
+      const modules = course.data.modules[language];
       const moduleIdx = findWithinMongooseArrayOrThrow(
-        course.data.modules[language],
+        modules,
         req.params.module,
         'module');
       const lessonIdx = findWithinMongooseArrayOrThrow(
-        course.data.modules[language][moduleIdx].lessons,
+        modules[moduleIdx].lessons,
         req.params.lesson,
         'lesson');
 
@@ -100,12 +101,12 @@ export function deleteDrip($Course: Model<any>, $customError: CustomErrorService
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
       checkAuthorizedInstructor({ course, user: req.user });
 
-      const { language } = req.body;
-      const moduleIdx = findWithinMongooseArrayOrThrow(course.data.modules, req.params.module, 'module');
-      const lessonIdx = findWithinMongooseArrayOrThrow(course.data.modules[moduleIdx].lessons, req.params.lesson, 'lesson');
-      // const dripidx = findWithinMongooseArrayOrThrow(course.data.modules[moduleIdx].lessons[lessonIdx].drips, req.params.drip, 'drip');
+      const { language } = req.params;
+      const modules = course.data.modules[language];
+      const moduleIdx = findWithinMongooseArrayOrThrow(modules, req.params.module, 'module');
+      const lessonIdx = findWithinMongooseArrayOrThrow(modules[moduleIdx].lessons, req.params.lesson, 'lesson');
       const op = { $pull: {} };
-      const pathToDrips = `data.modules.${moduleIdx}.lessons.${lessonIdx}.drips`;
+      const pathToDrips = `data.modules.${ language }.${ moduleIdx }.lessons.${lessonIdx}.drips`;
       op.$pull[pathToDrips] = { _id: req.params.drip };
 
       const update = await $Course
@@ -114,7 +115,7 @@ export function deleteDrip($Course: Model<any>, $customError: CustomErrorService
 
       const drips = update.get(pathToDrips);
 
-      res.json({ data: { drips } });
+      res.json({ data: { drips, language } });
 
     } catch (error) {
       return $customError.httpError(res)(error);

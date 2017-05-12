@@ -1,6 +1,6 @@
 // External Deps
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import * as cloneDeep from 'lodash/cloneDeep';
 import * as findIndex from 'lodash/findIndex';
@@ -17,7 +17,8 @@ import { ViewReadyService } from 'client/shared/view-ready.service';
 
 export class EditLessonComponent implements OnInit, OnDestroy {
   subscriptions: {
-    params?: Subscription
+    params?: Subscription,
+    query?: Subscription
   } = {};
   slug: string;
   moduleId: string;
@@ -30,12 +31,15 @@ export class EditLessonComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
+    private router: Router,
     private viewState: ViewReadyService
   ) { }
 
   ngOnInit() {
-    // TODO: Change
-    this.language = 'R';
+    this.subscriptions.query = this.route.queryParams
+      .subscribe(({ language }: { language: string }) => {
+        this.language = language;
+      });
 
     this.subscriptions.params = this.route.params
       .subscribe(
@@ -54,6 +58,7 @@ export class EditLessonComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.params.unsubscribe();
+    this.subscriptions.query.unsubscribe();
   }
 
   startEditDrip = (drip) => {
@@ -113,6 +118,12 @@ export class EditLessonComponent implements OnInit, OnDestroy {
       data => this.lesson = data.lesson,
       error => this.handleHttpError(error)
       )
+  };
+
+  goBack = () => {
+    this.router.navigate(
+      ['course', this.slug, 'module', this.moduleId, 'edit'],
+      { queryParams: { language: this.language } });
   };
 
   handleHttpError = (error: Error) => {

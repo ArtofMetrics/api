@@ -51,6 +51,19 @@ export const userSchema: Schema = new Schema({
   }]
 }, { timestamps: true });
 
+userSchema.methods.isActivelySubscribedToCourse = function({ id }: { id: any }) {
+  return this.courses.active
+    .map(activeCourse => activeCourse.course.toString())
+    .includes(id);
+};
+
+userSchema.methods.wasEverSubscribedToCourse = function({ id }: { id: any }) {
+  return this.courses.active
+    .map(activeCourse => activeCourse.course.toString())
+    .concat(this.courses.completed.map(course => course.toString()))
+    .includes(id);
+};
+
 userSchema.methods.fullName = function() {
   return `${ this.profile.name.first.trim() } ${ this.profile.name.last.trim() }`;
 }

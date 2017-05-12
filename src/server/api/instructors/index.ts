@@ -34,8 +34,7 @@ export function instructorsRouter(di): Router {
   
   // Edit Lesson
   api.route('/course/:slug/module/:module/lesson/:lesson')
-    .get(di.invoke(getOneLesson))
-    .delete(di.invoke(deleteLesson));
+    .get(di.invoke(getOneLesson));
   
   // Create Drip
   api.route('/course/:slug/module/:module/lesson/:lesson/drip')
@@ -43,7 +42,13 @@ export function instructorsRouter(di): Router {
   
   // Edit Drips
   api.route('/course/:slug/module/:module/lesson/:lesson/drip/:drip')
-    .put(di.invoke(updateDrip))
+    .put(di.invoke(updateDrip));
+
+  // Delete routes
+  api.route('/course/:slug/language/:language/module/:module/lesson/:lesson')
+    .delete(di.invoke(deleteLesson));
+
+  api.route('/course/:slug/language/:language/module/:module/lesson/:lesson/drip/:drip')
     .delete(di.invoke(deleteDrip));
     
   return api;

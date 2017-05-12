@@ -6,10 +6,15 @@ import * as status from 'http-status';
 
 // AOM Dependencies
 import { CustomErrorService } from '../../dependencies/custom-error.service';
+import { findCourseBySlugOrThrow, findCourseByIdOrThrow, throwIfSubscribed } from './course-helpers';
 
 // AOM Interfaces
 import { HTTPResponse } from '../models';
-import { GetOneCourseRequest, GetOneCourseResponse } from './models';
+import {
+  GetOneCourseRequest, GetOneCourseResponse,
+  SubscribeToCourseRequest, SubscribeToCourseResponse,
+} from './models';
+import { IUser } from '../../dependencies/models/user/user.model';
 
 export function getOneCourse($customError: CustomErrorService, $StudentCourse: Model<any>, $Course: Model<any>, $User: Model<any>) {
   return async (req: GetOneCourseRequest, res: Response) => {
@@ -21,23 +26,23 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
       };
 
       let course = await $StudentCourse
-        .findOne({ slug: req.params.slug })
+        .findOne({ slug: req.params.identifier })
         .setOptions(options);
 
       if (!course) {
-        course = await $Course.findOne({ 
+        course = await $Course.findOne({
           $or: [
-            { slug: req.params.slug },
-            { 'internal.previousSlugs': req.params.slug }
+            { slug: req.params.identifier },
+            { 'internal.previousSlugs': req.params.identifier }
           ]
         })
-        .setOptions(options);
+          .setOptions(options);
       }
 
       console.log('course', course);
 
       if (!course) {
-        throw new StandardError(`Could not find course with slug ${req.params.slug}`, { code: status.NOT_FOUND });
+        throw new StandardError(`Could not find course with slug ${req.params.identifier}`, { code: status.NOT_FOUND });
       }
 
       const data: HTTPResponse<GetOneCourseResponse> = { data: { course } };
@@ -45,5 +50,32 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
     } catch (error) {
       return $customError.httpError(res)(error);
     }
+  }
+}
+
+export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any>, $customError: CustomErrorService) {
+  return async (req: SubscribeToCourseRequest, res: Response) => {
+    try {
+      validateParams(req.body);
+
+      const course = await findCourseByIdOrThrow({ $Course, courseId: req.params.identifier });
+      await throwIfSubscribed({ $StudentCourse, user: req.user, courseId: course._id.toString() });
+
+      const data: HTTPResponse<SubscribeToCourseResponse> = { data: { } };
+
+      return res.json(data);
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  };
+}
+
+function validateParams({ token }: { token: string }) {
+  if (!token) {
+    throw new StandardError({
+      error: `Token is required to subscribe to course`,
+      readableError: `Token is required to subscribe to course`,
+      code: status.BAD_REQUEST
+    });
   }
 }

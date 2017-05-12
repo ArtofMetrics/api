@@ -15,6 +15,7 @@ import { userSchema } from 'server/dependencies/models/user';
 
 export class PreviewCourseComponent implements OnInit {
   @Input() course: any;
+  
   doc: Course;
   instructors: any[];
   state: { addingCard: boolean } = { addingCard: false };
@@ -38,6 +39,12 @@ export class PreviewCourseComponent implements OnInit {
   }
 
   onSubmitCard = (payload) => {
-    console.log(payload);
+    if (payload.data.error) {
+      (<any>window).Materialize.toast(payload.data.error.message, 4000);
+    } else {
+      const { data: { token } } = payload;
+      
+      console.log('token', token);
+    }
   }
 }
