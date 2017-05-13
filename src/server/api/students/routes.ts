@@ -52,7 +52,7 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
 }
 
 export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any>, $customError: CustomErrorService,
-  $stripe, $subscription: SubscriptionService, $Payment: Model<any> ) {
+  $stripe, $subscription: SubscriptionService ) {
   return async (req: SubscribeToCourseRequest, res: Response) => {
     try {
       validateParams(req.body);

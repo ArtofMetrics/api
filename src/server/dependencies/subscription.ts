@@ -14,14 +14,16 @@ export class SubscriptionService {
     private $stripe) {}
 
   public createSubscriptionPayment = async ({ course, token, user }: { course: Course, token: string, user: IUser }): Promise<any> => {
-    const payment = await this.$stripe.charges.create(Object.assign({
-      currency: course.subscription.currency || this.DEFAULT_CURRENCY,
-      amount: course.subscription.costCents,
-      source: token,
-      description: `Subscription payment for ${ user.email() } charged`,
-    }, user.stripeId ? {
-      customer: user.stripeId
-    } : {});
+    const payment = await this.$stripe.charges.create(
+      Object.assign({
+        currency: course.subscription.currency || this.DEFAULT_CURRENCY,
+        amount: course.subscription.costCents,
+        source: token,
+        description: `Subscription payment for ${ user.email() } charged`,
+      }, user.stripeId ? {
+        customer: user.stripeId
+      } : {}
+    );
 
     return payment;
   }
