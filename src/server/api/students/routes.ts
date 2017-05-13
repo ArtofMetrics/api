@@ -7,6 +7,7 @@ import * as status from 'http-status';
 // AOM Dependencies
 import { CustomErrorService } from '../../dependencies/custom-error.service';
 import { findCourseBySlugOrThrow, findCourseByIdOrThrow, throwIfSubscribed } from './course-helpers';
+import { SubscriptionService } from '../../dependencies/subscription';
 
 // AOM Interfaces
 import { HTTPResponse } from '../models';
@@ -35,11 +36,8 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
             { slug: req.params.identifier },
             { 'internal.previousSlugs': req.params.identifier }
           ]
-        })
-          .setOptions(options);
+        }).setOptions(options);
       }
-
-      console.log('course', course);
 
       if (!course) {
         throw new StandardError(`Could not find course with slug ${req.params.identifier}`, { code: status.NOT_FOUND });
@@ -53,7 +51,8 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
   }
 }
 
-export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any>, $customError: CustomErrorService) {
+export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any>, $customError: CustomErrorService,
+  $stripe, $subscription: SubscriptionService, $Payment: Model<any> ) {
   return async (req: SubscribeToCourseRequest, res: Response) => {
     try {
       validateParams(req.body);
@@ -61,8 +60,17 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any
       const course = await findCourseByIdOrThrow({ $Course, courseId: req.params.identifier });
       await throwIfSubscribed({ $StudentCourse, user: req.user, courseId: course._id.toString() });
 
-      const data: HTTPResponse<SubscribeToCourseResponse> = { data: { } };
+      const { token } = req.body;
 
+      const payment = await $subscription.createSubscriptionPayment({
+        course,
+        token,
+        user: req.user
+      });
+
+
+
+      const data: HTTPResponse<SubscribeToCourseResponse> = { data: { } };
       return res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);

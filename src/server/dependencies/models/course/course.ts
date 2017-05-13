@@ -13,7 +13,7 @@ import { commonCourseProps } from './common-course';
 // AOM Schemas
 import { CourseModule, courseModuleSchema } from '../module';
 
-export interface Course {
+export interface Course extends Document {
   _id: string;
   isVisible: boolean;
   isDeleted: boolean;
@@ -21,12 +21,17 @@ export interface Course {
   slug: string;
   instructors: (Schema.Types.ObjectId | string | {})[];
 
-  // 
+  //
   internal: {};
 
   admin: {
     readableId: number;
-    subscription: {};
+  };
+
+  subscription: {
+    currency?: string;
+    costCents: number;
+    length: string;
   };
 
   data: {
@@ -57,15 +62,26 @@ export const courseSchema: Schema = new Schema({
   // Should only be editable by admins
   admin: {
     readableId: { type: Number, required: true },
-    subscription: {
-
-    }
   },
 
   // editable by instructors or admins
   data: {
     ...commonCourseProps.data,
     description: { type: String, required: isPublished }
+  },
+
+  // subscription information
+  subscription: {
+    currency: { type: String, default: 'usd' },
+    costCents: {
+      type: Number,
+      required: [isPublished, `Please select a price for your course`]
+    },
+    length: {
+      type: String,
+      enum: ['semester', 'annual'],
+      required: [isPublished, `Please select a course length`]
+    }
   }
 }, { timestamps: true });
 

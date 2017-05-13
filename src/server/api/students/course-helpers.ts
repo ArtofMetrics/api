@@ -6,10 +6,11 @@ import * as status from 'http-status';
 // AOM Dependencies
 
 // AOM interfaces
+import { Course } from '../../dependencies/models/course/course';
 
-export const findCourseBySlugOrThrow = async ({ $Course, slug }: { $Course: Model<any>, slug: string }) => {
+export const findCourseBySlugOrThrow = async ({ $Course, slug }: { $Course: Model<any>, slug: string }): Promise<Course> => {
   const course = await $Course.findOne({ slug });
-  
+
   if (!course) {
     throw new StandardError({
       error: `Could not find course with slug ${ slug }`,
@@ -21,7 +22,7 @@ export const findCourseBySlugOrThrow = async ({ $Course, slug }: { $Course: Mode
   return course;
 };
 
-export const findCourseByIdOrThrow = async ({ $Course, courseId }: { $Course: Model<any>, courseId: string }) => {
+export const findCourseByIdOrThrow = async ({ $Course, courseId }: { $Course: Model<any>, courseId: string }): Promise<Course> => {
   const course = await $Course.findOne({ _id: courseId });
   if (!course) {
     throw new StandardError({

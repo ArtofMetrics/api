@@ -2,10 +2,11 @@
 import * as jwt from 'jwt-simple';
 import { Request, Response, NextFunction } from 'express';
 import * as status from 'http-status';
-import { Document } from 'mongoose';
+import { Document, Model } from 'mongoose';
 import { pick } from 'lodash';
 
 // AOM Deps
+import { IUser } from '../../dependencies/models/user/user.model';
 import { Config } from '../../dependencies/config';
 import { CustomErrorService } from '../../dependencies/custom-error.service';
 
@@ -30,12 +31,14 @@ interface Decoded {
 export class Middleware {
   private $config: Config;
   private $customError: CustomErrorService;
+  private $User: Model<any>;
 
   constructor(di) {
     const self = this;
-    di.invoke(function ($config, $customError) {
+    di.invoke(function ($config, $customError, $User) {
       self.$config = $config;
       self.$customError = $customError;
+      self.$User = di.get('$User');
     });
   }
 
@@ -54,7 +57,7 @@ export class Middleware {
           });
         }
 
-        req.user = { _id: decoded._id, profile: decoded.profile, roles: decoded.roles };
+        req.user = new this.$User(decoded);
       }
 
       next();
@@ -82,8 +85,8 @@ export class Middleware {
   private getDecoded = (token: string, secret: string): any => {
     try {
       const decoded = jwt.decode(token, secret);
-      
-      return pick(decoded, ['_id', 'profile', 'roles', 'courses']);
+
+      return pick(decoded, ['_id', 'profile', 'roles', 'courses', 'internal.stripeId']);
     } catch (error) {
       this.$customError.defaultError({
         error: error,

@@ -12,9 +12,12 @@ export const userSchema: Schema = new Schema({
   // Internal
   internal: {
     password: { type: ObjectId, select: false, ref: 'passwords' },
-    
+
     // machines
-    machines: [String]
+    machines: [String],
+
+    // stripe
+    stripeId: { type: String, required: false },
   },
 
   // Profile
@@ -34,10 +37,10 @@ export const userSchema: Schema = new Schema({
       zipcode: { type: String }
     }
   },
-  
+
   // Courses
   courses: {
-    active: [{ 
+    active: [{
       course: { type: ObjectId, ref: 'courses' },
       lastCompleted: { type: String, default: '0.0.0' }
     }],
@@ -51,6 +54,13 @@ export const userSchema: Schema = new Schema({
   }]
 }, { timestamps: true });
 
+
+// Virtuals
+userSchema.virtual('customerId').get(function() {
+  return this.internal.stripeId;
+});
+
+// Methods
 userSchema.methods.isActivelySubscribedToCourse = function({ id }: { id: any }) {
   return this.courses.active
     .map(activeCourse => activeCourse.course.toString())

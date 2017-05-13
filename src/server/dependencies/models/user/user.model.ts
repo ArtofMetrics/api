@@ -8,7 +8,8 @@ export interface IUser extends Document {
 
   internal: {
     password?: Schema.Types.ObjectId;
-    machines?: string[]
+    machines?: string[],
+    stripeId?: string;
   };
 
   profile: {
@@ -45,6 +46,9 @@ export interface IUser extends Document {
 
   created_at: string;
   updated_at: string;
+
+  // Getters
+  readonly stripeId: string;
   
   // Methods
   isActivelySubscribedToCourse: ({ id }: { id: mongoId }) => boolean;

@@ -4,6 +4,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
+    "lib": ["es2015"],
     "module": "commonjs",
     "sourceMap": true,
     "removeComments": true,

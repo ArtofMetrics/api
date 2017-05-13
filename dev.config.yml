@@ -1,2 +1,5 @@
 log:
   dev: false
+stripe:
+  secret: sk_test_P84JOD8KzBkCfpTOxoq83dKo
+  apiVersion: !!str 2016-03-07
