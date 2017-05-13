@@ -8,20 +8,20 @@ import { CustomErrorService } from '../../dependencies/custom-error.service';
 import { findCourseOrThrow } from './find-helpers';
 
 // AOM Models
-import { Course } from 'dependencies/models/course';
+import { Course } from 'dependencies/models/course/course';
 import { HTTPResponse } from '../models';
-import { 
-  GetCoursesResponse, 
-  GetCoursesRequest, 
-  GetOneCourseRequest, 
+import {
+  GetCoursesResponse,
+  GetCoursesRequest,
+  GetOneCourseRequest,
   GetOneCourseResponse } from './models';
 
 export function getCourses($customError: CustomErrorService, $Course) {
   return async (req: GetCoursesRequest, res: Response) => {
-    try { 
+    try {
       const courses = await $Course
         .find({ instructors: req.user._id });
-      
+
       const data: HTTPResponse<GetCoursesResponse> = { data: { courses } };
 
       return res.json({ data: { courses } });
@@ -44,4 +44,3 @@ export function getOneCourse($customError: CustomErrorService, $Course: Model<an
     }
   }
 }
-

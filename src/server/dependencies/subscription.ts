@@ -23,7 +23,7 @@ export class SubscriptionService {
       }, user.stripeId ? {
         customer: user.stripeId
       } : {}
-    );
+    ));
 
     return payment;
   }
