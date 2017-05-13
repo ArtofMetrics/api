@@ -33,7 +33,7 @@ export class AddCreditCardFormComponent implements OnInit {
   submitCard = (event) => {
     event.preventDefault();
     this.stripeService.stripe.createToken(this.card)
-      .then(token => this.onSubmitCard.emit({ data }))
+      .then(token => this.onSubmitCard.emit({ data: { token } }))
       .catch(error => console.error(error));
   }
 }

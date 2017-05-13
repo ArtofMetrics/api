@@ -10,10 +10,11 @@ import { SharedCourseModule } from 'client/courses/shared/shared.module';
 import { EditCourseComponent } from './edit-course.component';
 import { ModuleRowComponent } from './module-row.component';
 import { EditCourseService } from './edit-course.service';
+import { EditPriceComponent } from './edit-price.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, SharedCourseModule],
-  declarations: [EditCourseComponent, ModuleRowComponent],
+  declarations: [EditCourseComponent, ModuleRowComponent, EditPriceComponent],
   providers: [EditCourseService],
   exports: [EditCourseComponent]
 })

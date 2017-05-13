@@ -44,17 +44,19 @@
   dependencies:
     "@types/express" "*"
 
-"@types/core-js":
-  version "0.9.34"
-  resolved "https://registry.yarnpkg.com/@types/core-js/-/core-js-0.9.34.tgz#72c521d8e59fdaa8b65f76db71fa53c82c7c21c5"
+"@types/bson@*":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/bson/-/bson-1.0.3.tgz#6c26f0876bf9d8cbb06edd4019e29354bf3a03e0"
+  dependencies:
+    "@types/node" "*"
+
+"@types/core-js@^0.9.34":
+  version "0.9.41"
+  resolved "https://registry.yarnpkg.com/@types/core-js/-/core-js-0.9.41.tgz#cfeceb63c2beaa29f882252c7c18e0e9471ff4e2"
 
 "@types/email-validator@^1.0.30":
   version "1.0.30"
   resolved "https://registry.yarnpkg.com/@types/email-validator/-/email-validator-1.0.30.tgz#82c2922859c0525e83a3dc1b555b69ea846d1e69"
-
-"@types/es6-promise@^0.0.32":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@types/es6-promise/-/es6-promise-0.0.32.tgz#3bcf44fb1e429f3df76188c8c6d874463ba371fd"
 
 "@types/express", "@types/express@*":
   version "4.0.34"
@@ -95,15 +97,16 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-0.0.29.tgz#fbcfd330573b912ef59eeee14602bface630754b"
 
-"@types/mongodb@*":
-  version "2.1.37"
-  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-2.1.37.tgz#7f5748582a742dfe9a56955c68fa2aa53ae216f3"
+"@types/mongodb@*", "@types/mongodb@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-2.2.2.tgz#3edd247936c2fdb4e1cbeca6a0affec9fa656b56"
   dependencies:
+    "@types/bson" "*"
     "@types/node" "*"
 
-"@types/mongoose@^4.7.3":
-  version "4.7.3"
-  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-4.7.3.tgz#25bde76deae90ea2acb1b0b0a92496ed4f0e764d"
+"@types/mongoose@^4.7.12":
+  version "4.7.12"
+  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-4.7.12.tgz#6fef99328f25508810d757beaa6a30af6e325ecb"
   dependencies:
     "@types/mongodb" "*"
     "@types/node" "*"
@@ -114,7 +117,7 @@
   dependencies:
     "@types/express" "*"
 
-"@types/node@*", "@types/node@^7.0.18":
+"@types/node@*":
   version "7.0.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.18.tgz#cd67f27d3dc0cfb746f0bdd5e086c4c5d55be173"
 
@@ -1484,6 +1487,10 @@ error-ex@^1.2.0:
 es6-promise@3.2.1, es6-promise@^3.0.2:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.2.1.tgz#ec56233868032909207170c39448e24449dd1fc4"
+
+es6-promise@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.1.0.tgz#dda03ca8f9f89bc597e689842929de7ba8cebdf0"
 
 escape-html@~1.0.3:
   version "1.0.3"

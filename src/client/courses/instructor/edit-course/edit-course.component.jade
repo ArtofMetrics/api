@@ -3,6 +3,7 @@ div.container(*ngIf="!!this.course")
   div.row
     h3 {{ course.data.name }}
     toggle-language((toggleLanguage)="setLanguage($event)")
+    edit-price([course]="course")
   div.row
     div((click)="addModule()")
       i.material-icons add
