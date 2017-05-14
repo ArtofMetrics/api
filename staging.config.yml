@@ -2,7 +2,7 @@ log:
   dev: false
 
 database:
-  uri: mongodb://app:UjQuR48XqwZVb7B62Sc3geYtnv9hrmfP@localhost:27017/aom
+  uri: mongodb://app:3XKaEgtpUmh553MEm8UQvScc23w9u73Q@localhost:27017/art-of-metrics
 
 # Simply for refernce
 mongodb:
