@@ -2,11 +2,16 @@
 div.container(*ngIf="!!this.course")
   div.row
     h3 {{ course.data.name }}
-  
+    toggle-language((toggleLanguage)="setLanguage($event)")
+    edit-price(
+      [course]="course"
+      (changeCourseLength)="setCourseLength($event)"
+      (changeCoursePrice)="setCoursePrice($event)")
+    button.btn.btn-waves.floating-effect((click)="saveCourse()") Save
   div.row
     div((click)="addModule()")
       i.material-icons add
   //- Modules
-  div.row(*ngFor="let module of course.data.modules; let i = index")
+  div.row(*ngFor="let module of course.data.modules[language]; let i = index")
     h3 {{ module.name }}
-    module-row([module]="module" [idx]="i" [course]="course")
+    module-row([module]="module" [idx]="i" [course]="course" [language]="language")

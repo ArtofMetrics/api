@@ -8,6 +8,7 @@ import { SharedModule } from 'client/shared/shared.module';
 import { ViewWrapperModule } from './view-wrapper/view-wrapper.module';
 import TopMenuModule from './top-menu/top-menu.module';
 import { HttpModule, Http, ConnectionBackend, RequestOptions } from '@angular/http';
+import { PaymentModule } from './payment/payment.module';
 
 // AOM Services
 import { JWTService } from './jwt.service';
@@ -17,6 +18,9 @@ import { AomHTTPService } from './aom-http.service';
 
 // AOM Configs
 import { Config } from './config';
+
+// AOM Services
+import { ErrorService } from './error.service';
 
 // AOM Components
 import TopMenuComponent from './top-menu/top-menu.component';
@@ -28,7 +32,7 @@ import { CarouselDirective } from './carousel.directive';
 
 @NgModule({
   imports: [CommonModule, SharedModule, TopMenuModule, ViewWrapperModule],
-  exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective, SharedModule, FooterComponent],
+  exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective, SharedModule, FooterComponent, PaymentModule],
   declarations: [CarouselDirective, FooterComponent],
   providers: [
     AUTH_PROVIDERS,
@@ -36,7 +40,8 @@ import { CarouselDirective } from './carousel.directive';
     UserService,
     ApiService,
     AomHTTPService,
-    Config]
+    Config,
+    ErrorService]
 })
 
 export default class CoreModule {

@@ -1,5 +1,5 @@
 // External Deps
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import * as every from 'lodash/every';
@@ -13,15 +13,17 @@ import { ViewReadyService } from 'client/shared/view-ready.service';
   templateUrl: './edit-module.component.jade'
 })
 
-export class EditModuleComponent implements OnInit {
+export class EditModuleComponent implements OnInit, OnDestroy {
   subscriptions: {
-    course?: Subscription
+    course?: Subscription,
+    language?: Subscription,
   } = {};
 
   slug: string;
   course: any;
   module: any;
   moduleId: string;
+  language: string;
 
   constructor(
     private apiService: ApiService,
@@ -31,6 +33,11 @@ export class EditModuleComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.subscriptions.language = this.route.queryParams
+      .subscribe(({ language }: { language: string }) => {
+        this.language = language;
+      });
+
     this.subscriptions.course = this.route.params
       .subscribe((params: { slug: string, module: string }) => {
         if (!this.viewState.isLoading()) {
@@ -42,7 +49,7 @@ export class EditModuleComponent implements OnInit {
         this.slug = slug;
 
         this.apiService.instructors
-          .getModule({ slug, moduleId })
+          .getModule({ slug, moduleId, language: this.language })
           .subscribe(
           (data) => {
             this.course = data.course;
@@ -54,8 +61,15 @@ export class EditModuleComponent implements OnInit {
       });
   }
 
+  ngOnDestroy() {
+    this.subscriptions.course.unsubscribe();
+    this.subscriptions.language.unsubscribe();
+  }
+  
   editLesson = (lesson) => {
-    this.router.navigate(['course', this.course.slug, 'module', this.module._id, 'lesson', lesson._id, 'edit']);
+    this.router.navigate(
+      ['course', this.course.slug, 'module', this.module._id, 'lesson', lesson._id, 'edit'],
+      { queryParams: { language: this.language } });
   };
 
   canAddLesson = () => {
@@ -65,24 +79,27 @@ export class EditModuleComponent implements OnInit {
 
   addLesson = () => {
     const name = `Lesson ${(this.module.lessons).length + 1}`;
+    const { slug, module: { _id: moduleId }, language } = this;
+
     this.apiService.instructors
-      .addNewLesson({ slug: this.slug, moduleId: this.module._id, newLesson: { name } })
+      .addNewLesson({ slug, moduleId, newLesson: { name }, language })
       .subscribe(
       data => this.module.lessons = data.lessons,
       error => this.handleHttpError(error));
   }
 
   deleteLesson = (lesson) => {
-    console.log('lesson', lesson);
+    const { slug, language } = this;
     return this.apiService.instructors
-      .deleteLesson({ slug: this.slug, moduleId: this.module._id, lessonId: lesson._id })
+      .deleteLesson({ slug, moduleId: this.module._id, lessonId: lesson._id, language })
       .subscribe(
-      data => {
-        console.log('data', data);
-        this.module.lessons = data.lessons
-      },
-      error => this.handleHttpError(error)
+        data => this.module.lessons = data.lessons,
+        error => this.handleHttpError(error)
       )
+  }
+
+  goBack = () => {
+    this.router.navigate(['course', this.course.slug, 'edit']);
   }
 
   handleHttpError = (error: Error) => {

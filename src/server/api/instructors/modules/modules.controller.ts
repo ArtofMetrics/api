@@ -15,13 +15,20 @@ import { checkAuthorizedInstructor } from '../permissions-helpers';
 // AOM Interfaces
 import { HTTPResponse } from '../../models';
 
-import { AddModuleRequest, AddModuleResponse, GetOneModuleRequest, GetOneModuleResponse } from './models';
+import {
+  AddModuleRequest,
+  AddModuleResponse,
+  GetOneModuleRequest,
+  GetOneModuleResponse,
+  AddNewLessonRequest,
+  AddNewLessonResponse
+} from './models';
 
 export function addModule($Course: Model<any>, $customError: CustomErrorService) {
   return async (req: AddModuleRequest, res: Response) => {
     try {
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
-      
+
       checkAuthorizedInstructor({ course, user: req.user });
 
       const newModule = {
@@ -32,12 +39,12 @@ export function addModule($Course: Model<any>, $customError: CustomErrorService)
 
       const update = await $Course
         .findByIdAndUpdate(
-          course._id, 
-          { $addToSet: { 'data.modules': newModule } },
-          { new: true })
+        course._id,
+        { $addToSet: { [`data.modules.${req.body.language}`]: newModule } },
+        { new: true })
         .setOptions({ skipVisibility: true })
-      
-      const data: HTTPResponse<AddModuleResponse> = { data: { course: update } };
+
+      const data: HTTPResponse<AddModuleResponse> = { data: { course: update, language: req.body.language } };
       res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);
@@ -49,10 +56,11 @@ export function getOneModule($Course: Model<any>, $customError: CustomErrorServi
   return async (req: GetOneModuleRequest, res: Response) => {
     try {
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
-      
+
       checkAuthorizedInstructor({ course, user: req.user });
-      
-      const module = findModule({ course, moduleId: req.params.module, $customError });
+
+      console.log('req.query', req.originalUrl);
+      const module = findModule({ course, moduleId: req.params.module, $customError, language: req.query.language });
 
       const courseData = omit(course.toObject(), ['data.modules'])
       const data: HTTPResponse<GetOneModuleResponse> = { data: { course: courseData, module } };
@@ -65,31 +73,43 @@ export function getOneModule($Course: Model<any>, $customError: CustomErrorServi
 }
 
 export function addNewLesson($Course: Model<any>, $customError: CustomErrorService) {
-  return async (req, res) => {
+  return async (req: AddNewLessonRequest, res: Response) => {
     try {
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
 
       checkAuthorizedInstructor({ course, user: req.user });
 
-      const moduleIdx = findIndex(course.data.modules, m => m._id.toString() === req.params.module);
+      const modules = course.data.modules[req.body.language];
+      const moduleIdx = findIndex(modules, m => m._id.toString() === req.params.module);
 
       if (moduleIdx === -1) {
-        $customError.defaultError({ error: `Could not find module ${ req.params.module }`, code: status.NOT_FOUND });
+        $customError.defaultError({ error: `Could not find module ${req.params.module}`, code: status.NOT_FOUND });
       }
 
       const newLesson = {
-        name: get(req, 'body.lesson.name') || `Lesson ${ course.data.modules[moduleIdx].lessons.length + 1 }`,
+        name: get(req, 'body.lesson.name') || `Lesson ${modules[moduleIdx].lessons.length + 1}`,
         isVisible: false
       };
 
-      const op = { $addToSet: { } };
-      op.$addToSet[`data.modules.${ moduleIdx }.lessons`] = newLesson;
-
+      const op = {
+        $addToSet: {
+          [`data.modules.${req.body.language}.${moduleIdx}.lessons`]: newLesson
+        }
+      };
+      
+      
       const update = await $Course
         .findByIdAndUpdate(course._id, op, { new: true })
         .setOptions({ skipVisibility: true });
 
-      res.json({ data: { lessons: update.data.modules[moduleIdx].lessons } });
+      const data: HTTPResponse<AddNewLessonResponse> = {
+        data: {
+          lessons: update.data.modules[req.body.language][moduleIdx].lessons,
+          language: req.body.language
+        }
+      };
+
+      res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);
     }
@@ -102,34 +122,36 @@ export function deleteLesson($Course: Model<any>, $customError: CustomErrorServi
       const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
 
       checkAuthorizedInstructor({ course, user: req.user });
-
-      const moduleIdx = findIndex(course.data.modules, m => m._id.toString() === req.params.module);
+      
+      const { language } = req.params;
+      const modules = course.data.modules[language];
+      const moduleIdx = findIndex(modules, (m: any) => m._id.toString() === req.params.module);
 
       if (moduleIdx === -1) {
-        $customError.defaultError({ error: `Could not find module ${ req.params.module }`, code: status.NOT_FOUND });
+        $customError.defaultError({ error: `Could not find module ${req.params.module}`, code: status.NOT_FOUND });
       }
 
-      const op = { $pull: { } };
-      op.$pull[`data.modules.${ moduleIdx }.lessons`] = { _id: req.params.lesson };
+      const op = { $pull: {} };
+      op.$pull[`data.modules.${ language }.${ moduleIdx }.lessons`] = { _id: req.params.lesson };
 
       const update = await $Course
         .findByIdAndUpdate(course._id, op, { new: true })
         .setOptions({ skipVisibility: true });
-      
-      res.json({ data: { lessons: update.data.modules[moduleIdx].lessons } });
-      
+
+      res.json({ data: { lessons: update.data.modules[language][moduleIdx].lessons, language } });
     } catch (error) {
       return $customError.httpError(res)(error);
     }
   };
 }
 
-function findModule({ course, moduleId, $customError }: { course: any, moduleId: string, $customError: CustomErrorService}) {
-  const module = find(course.data.modules, (m: any) => m._id.toString() === moduleId);
+function findModule({ course, moduleId, $customError, language }: { course: any, moduleId: string, $customError: CustomErrorService, language: string }) {
+  let module = find(course.data.modules[language],
+      (m: any) => m._id.toString() === moduleId);
 
   if (!module) {
     $customError.defaultError({
-      error: `Could not find module with id ${ moduleId }`,
+      error: `Could not find module with id ${moduleId}`,
       code: status.NOT_FOUND
     });
   }

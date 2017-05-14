@@ -6,7 +6,7 @@ import { defaultsDeep, cloneDeep } from 'lodash';
 export interface Config {
   serve: string;
 
-  log?: { 
+  log?: {
     dev?: boolean;
     prod?: boolean;
   };
@@ -22,6 +22,10 @@ export interface Config {
 
   domain: string;
 
+  stripe?: {
+    secret: string;
+    apiVersion: string;
+  };
 }
 
 export function config() {
@@ -31,10 +35,10 @@ export function config() {
 
   const merged = recursiveMerge(contents, {
     serve: './dist',
-    
+
     // DB Config
     database: {
-      uri: `mongodb://localhost:27017/art-of-metrics`
+      uri: `mongodb://localhost:27017/art-of-metrics`,
     },
 
     // Auth Config
@@ -49,7 +53,7 @@ export function config() {
     },
 
     // domain
-    domain: `http://localhost:${ PORT }`
+    domain: `http://localhost:${ PORT }`,
   });
 
   return merged;

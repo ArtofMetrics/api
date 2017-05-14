@@ -5,7 +5,7 @@ div.container
         //- Lesson Name
         div#edit-lesson-name
           h4 {{ lesson.name }}
-        
+          div.btn.btn-waves.floating-effect((click)="goBack()") Back
         //- Drips
         div#view-lesson-drips
           div(*ngFor="let drip of lesson.drips")

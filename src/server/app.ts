@@ -14,7 +14,6 @@ export function app(di) {
   
   const config: Config = di.get('$config');
   
-  console.log(config.log.dev);
   if (config.log.dev) {
     app.use(morgan('combined'));
   }

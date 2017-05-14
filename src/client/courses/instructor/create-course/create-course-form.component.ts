@@ -6,6 +6,9 @@ import { NgForm } from '@angular/forms';
 // AOM Deps
 import { ViewReadyService } from 'client/shared/view-ready.service';
 import { ApiService } from 'client/core/api/api.service';
+import { ErrorService } from 'client/core/error.service';
+
+// AOM Interfaces/Models
 
 @Component({
   selector: 'create-course-form',
@@ -21,7 +24,8 @@ export class CreateCourseFormComponent implements OnInit {
   constructor(
     private viewState: ViewReadyService,
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private errorService: ErrorService
   ) { }
 
   ngOnInit() {
@@ -36,13 +40,8 @@ export class CreateCourseFormComponent implements OnInit {
       .createCourse({ course: this.course })
       .map(data => data.course)
       .subscribe(
-        course => this.onCreateCourse.emit({ course }),
-        error => this.handleHttpError(error)
+        (course) => this.onCreateCourse.emit({ course }),
+        (error: Error) => this.errorService.handleHttpError(error)
       );
   };
-
-  handleHttpError = (error: Error) => {
-    console.error(`Error`, error);
-    throw error;
-  }
 }

@@ -1,6 +1,6 @@
 // NPM Dependencies
 import { Schema, Document, Model, model, DocumentQuery } from 'mongoose';
-import { studentCourseSchema } from '../student-course';
+import { studentCourseSchema } from '../course/student-course';
 
 import * as emailValidator from 'email-validator';
 
@@ -12,9 +12,12 @@ export const userSchema: Schema = new Schema({
   // Internal
   internal: {
     password: { type: ObjectId, select: false, ref: 'passwords' },
-    
+
     // machines
-    machines: [String]
+    machines: [String],
+
+    // stripe
+    stripeId: { type: String, required: false },
   },
 
   // Profile
@@ -34,10 +37,10 @@ export const userSchema: Schema = new Schema({
       zipcode: { type: String }
     }
   },
-  
+
   // Courses
   courses: {
-    active: [{ 
+    active: [{
       course: { type: ObjectId, ref: 'courses' },
       lastCompleted: { type: String, default: '0.0.0' }
     }],
@@ -51,8 +54,28 @@ export const userSchema: Schema = new Schema({
   }]
 }, { timestamps: true });
 
+
+// Virtuals
+userSchema.virtual('customerId').get(function() {
+  return this.internal.stripeId;
+});
+
+// Methods
+userSchema.methods.isActivelySubscribedToCourse = function({ id }: { id: any }) {
+  return this.courses.active
+    .map(activeCourse => activeCourse.course.toString())
+    .includes(id);
+};
+
+userSchema.methods.wasEverSubscribedToCourse = function({ id }: { id: any }) {
+  return this.courses.active
+    .map(activeCourse => activeCourse.course.toString())
+    .concat(this.courses.completed.map(course => course.toString()))
+    .includes(id);
+};
+
 userSchema.methods.fullName = function() {
-  return `${ this.first.name.trim() } ${ this.last.name.trim() }`;
+  return `${ this.profile.name.first.trim() } ${ this.profile.name.last.trim() }`;
 }
 
 userSchema.methods.email = function() {

@@ -1,1 +1,4 @@
-div hi
+
+div.loaded(*ngIf="course")
+  preview-course([course]="course" *ngIf="!isSubscribed()")
+  take-course([course]="course" *ngIf="isSubscribed()")

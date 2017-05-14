@@ -8,3 +8,5 @@ yarn-error*
 npm-debug*
 temp
 
+
+.sensitive-config.yml

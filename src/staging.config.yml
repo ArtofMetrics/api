@@ -1,0 +1,20 @@
+database:
+  uri: mongodb://app:UjQuR48XqwZVb7B62Sc3geYtnv9hrmfP@localhost:27017/aom
+
+# Simply for refernce
+mongodb:
+  admin:
+    username: admin
+    password: QYfdEBQF2rFsRH9FAF2DrwQ4wU5X9NY9
+    db: admin
+    roles:
+      - userAdminAnyDatabase
+      - readWriteAnyDatabase
+      - clusterAdmin
+  app:
+    username: app
+    password: 3XKaEgtpUmh553MEm8UQvScc23w9u73Q
+    db: aom
+    roles:
+      - dbAdmin
+      - readWrite
