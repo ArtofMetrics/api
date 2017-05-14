@@ -1,3 +1,6 @@
+log:
+  dev: false
+
 database:
   uri: mongodb://app:UjQuR48XqwZVb7B62Sc3geYtnv9hrmfP@localhost:27017/aom
 
