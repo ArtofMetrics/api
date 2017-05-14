@@ -1,0 +1,8 @@
+log:
+  dev: false
+stripe:
+  secret: sk_live_ngGuWPQoGCme0rKARDepmea7
+  apiVersion: !!str 2016-03-07
+
+database:
+  uri: mongodb://app:dsZU:;#T9E^QAk3=52LXx!peHr8gn$>Vlocalhost:27017/

@@ -7,7 +7,9 @@ import { JWTService } from 'client/core/jwt.service';
 
 // AOM Interfaces
 import { CourseModule } from 'server/dependencies/models/module';
-import { GetCoursesResponse, GetOneCourseResponse } from 'server/api/instructors/models';
+import {
+  GetCoursesResponse, GetOneCourseResponse,
+  UpdateCourseRequestBody, UpdateCourseResponse} from 'server/api/instructors/models';
 import {
   AddModuleResponse,
   GetOneModuleResponse,
@@ -54,7 +56,7 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         data);
     },
 
-    deleteLesson({ slug, moduleId, lessonId, language }: 
+    deleteLesson({ slug, moduleId, lessonId, language }:
       { slug: string, moduleId: string, lessonId: string, language: string }): Observable<any> {
       return http
         .delete(
@@ -74,7 +76,7 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}/drip`,
         { language });
     },
-    deleteDrip({ slug, moduleId, lessonId, dripId, language }: 
+    deleteDrip({ slug, moduleId, lessonId, dripId, language }:
       { slug: string, moduleId: string, lessonId: string, dripId: string, language: string }): Observable<any> {
       return http
         .delete(`${BASE_URL}/course/${slug}/language/${language}/module/${moduleId}/lesson/${lessonId}/drip/${dripId}`);
@@ -86,9 +88,14 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}/drip/${drip._id}`,
         data);
     },
-    // saveModule({ slug, module }: { slug: string, module: CourseModule }): Observable<any> {
-    //   return http
-    //     .put(`${ BASE_URL }/course/${ slug }/module/${ module._id }`)
-    // }
+    saveCourse({ course, slug }: { course: any, slug: string }): Observable<UpdateCourseResponse> {
+      const data: UpdateCourseRequestBody = { course };
+
+      return http
+        .put(
+          `${ BASE_URL }/course/${ slug }`,
+          data
+        );
+    }
   };
 }

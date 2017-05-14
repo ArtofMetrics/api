@@ -11,10 +11,10 @@ import { findCourseOrThrow } from './find-helpers';
 import { Course } from 'dependencies/models/course/course';
 import { HTTPResponse } from '../models';
 import {
-  GetCoursesResponse,
-  GetCoursesRequest,
-  GetOneCourseRequest,
-  GetOneCourseResponse } from './models';
+  GetCoursesResponse, GetCoursesRequest,
+  GetOneCourseRequest, GetOneCourseResponse,
+  UpdateCourseRequest, UpdateCourseResponse
+} from './models';
 
 export function getCourses($customError: CustomErrorService, $Course) {
   return async (req: GetCoursesRequest, res: Response) => {
@@ -43,4 +43,23 @@ export function getOneCourse($customError: CustomErrorService, $Course: Model<an
       return $customError.httpError(res)(error);
     }
   }
+}
+
+export function updateCourse($customError: CustomErrorService, $Course: Model<any>, $docUpdate) {
+  return async (req: UpdateCourseRequest, res: Response) => {
+    try {
+      const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
+
+      const { course: update } = req.body;
+
+      $docUpdate(course, update, [/^subscription/]);
+
+      await course.save();
+      
+      const data: HTTPResponse<UpdateCourseResponse> = { data: { course } };
+      res.json(data);
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  };
 }

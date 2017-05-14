@@ -16,7 +16,7 @@ import { EditPriceComponent } from './edit-price.component';
   imports: [CommonModule, FormsModule, SharedCourseModule],
   declarations: [EditCourseComponent, ModuleRowComponent, EditPriceComponent],
   providers: [EditCourseService],
-  exports: [EditCourseComponent]
+  exports: [EditCourseComponent, EditPriceComponent]
 })
 
 export class EditCourseModule {}

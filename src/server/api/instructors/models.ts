@@ -14,7 +14,7 @@ export interface GetSpecificCourseRequest extends AuthenticatedRequest {
 
 // Get one course
 export interface GetOneCourseRequestBody {
-  
+
 }
 
 export interface GetOneCourseRequest extends GetSpecificCourseRequest{
@@ -30,4 +30,17 @@ export interface GetCoursesRequest extends AuthenticatedRequest {
 
 export interface GetCoursesResponse {
   courses: any[];
+}
+
+// Update course
+export interface UpdateCourseRequestBody {
+  course: any;
+}
+
+export interface UpdateCourseRequest extends AuthenticatedRequest {
+  body: UpdateCourseRequestBody;
+}
+
+export interface UpdateCourseResponse {
+  course: any;
 }

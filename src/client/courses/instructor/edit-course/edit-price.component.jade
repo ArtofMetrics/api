@@ -1,6 +1,22 @@
 form(#form="ngForm")
-  div.input-field
-    input(
-      type="text"
-      name="course-price"
-      (change)="setPrice($event)")
+  //- Course Length
+  div#edit-course-length
+    h5 Course Length
+    p(*ngFor="let length of lengths; let i = index;" )
+      input(
+        name="course-length"
+        type="radio"
+        checked="{{ length === course.subscription.length ? 'true' : null }}"
+        value="length"
+        (click)="setLength(length)"
+        id="length-{{i}}")
+      label(for="length-{{i}}") {{ lengthTypes[length] }}
+  
+  //- Course Price
+  div#edit-course-price
+    div.input-field
+      input(
+        type="number"
+        name="course-price"
+        (change)="setPrice($event)")
+      label Price

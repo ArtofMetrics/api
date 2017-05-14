@@ -11,6 +11,7 @@ import * as wagner from 'wagner-core';
 import { stripeService } from './stripe';
 import { createSubscriptionService } from './subscription';
 import { createPaymentService } from './payment';
+import { DocUpdate } from './doc-update';
 
 export function dependencies() {
   const di = wagner.module('server.api');
@@ -38,6 +39,7 @@ export function dependencies() {
 
   di.factory('$subscription', createSubscriptionService);
   di.factory('$payment', createPaymentService);
+  di.factory('$docUpdate', DocUpdate);
   
   db(di);
 

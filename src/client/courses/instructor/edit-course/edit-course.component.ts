@@ -38,7 +38,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private editCourseService: EditCourseService
   ) {}
-  
+
   ngOnInit() {
     this.language = DEFAULT_LANGUAGE;
     this.subscriptions.slug = this.route.params
@@ -97,6 +97,23 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     console.error(error);
     throw error;
   }
+
+  setCourseLength = (length: string) => {
+    this.course.subscription.length = length;
+  }
+
+  setCoursePrice = (costCents: number) => {
+    this.course.subscription.costCents = costCents;
+  };
+
+  saveCourse = () => {
+    this.apiService.instructors
+      .saveCourse({ course: { subscription: this.course.subscription }, slug: this.course.slug })
+      .subscribe(
+        (data) => this.course = data.course,
+        (error) => this.handleHttpError(error)
+      );
+  };
 
   @Input()
   setLanguage = ({ language }) => {
