@@ -108,7 +108,7 @@ module.exports = {
       onBuildStart: 'rm -rf ./dist'
     })
   ],
-  devServer: {
+  devServer: process.env.NODE_ENV === 'development' ? {
     historyApiFallback: true,
     proxy: {
       '/api/*': 'http://localhost:3000'
@@ -116,5 +116,5 @@ module.exports = {
     host: '0.0.0.0',
     headers: { "Access-Control-Allow-Origin": "*" },
     publicPath: '/'
-  }
+  } : false
 };
