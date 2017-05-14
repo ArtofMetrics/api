@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc --rootDir src --outDir dist",
-    "build-prod": "cross-env APP_ENVIRONMENT=production webpack -p --progress",
-    "serve": "cross-env APP_ENVIRONMENT=development webpack-dev-server --inline",
+    "build-prod": "tsc --rootDir src --outDir dist && cross-env NODE_ENV=production APP_ENVIRONMENT=production webpack -p --progress",
+    "serve": "cross-env NODE_ENV=development APP_ENVIRONMENT=development webpack-dev-server --inline",
     "test-api": "NODE_PATH=./ mocha --compilers js:babel-core/register test/api/*.js",
     "ttab": "ttab -w",
     "watch-server": "gulp",
