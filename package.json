@@ -9,7 +9,7 @@
     "build-server": "gulp transpile-server",
     "build-staging": "gulp transpile-server && cross-env NODE_ENV=staging APP_ENVIRONMENT=staging webpack",
     "serve": "cross-env NODE_ENV=development APP_ENVIRONMENT=development webpack-dev-server --inline",
-    "start-staging": "sudo env NODE_ENV=staging CONFIG=staging.config.yml pm2 start dist/server/index.js --name api",
+    "start-staging": "sudo env NODE_ENV=staging CONFIG=staging.config.yml, pm2 start dist/server/index.js --name api",
     "test-api": "NODE_PATH=./ mocha --compilers js:babel-core/register test/api/*.js",
     "ttab": "ttab -w",
     "watch-server": "gulp",
