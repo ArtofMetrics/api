@@ -27,6 +27,7 @@
     "@types/body-parser": "^0.0.33",
     "angular2-jwt": "^0.1.25",
     "angular2-template-loader": "^0.6.0",
+    "async": "2.1.4",
     "bcrypt": "^1.0.2",
     "body-parser": "^1.15.2",
     "core-js": "^2.4.1",
