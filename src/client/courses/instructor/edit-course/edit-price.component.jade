@@ -2,6 +2,7 @@ form(#form="ngForm")
   //- Course Length
   div#edit-course-length
     h5 Course Length
+    div.divider
     p(*ngFor="let length of lengths; let i = index;" )
       input(
         name="course-length"
@@ -18,5 +19,6 @@ form(#form="ngForm")
       input(
         type="number"
         name="course-price"
+        [(ngModel)]="priceCents"
         (change)="setPrice($event)")
       label Price

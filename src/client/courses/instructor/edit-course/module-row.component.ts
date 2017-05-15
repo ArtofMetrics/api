@@ -1,5 +1,5 @@
 // External Deps
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 
 // AOM Deps
@@ -19,12 +19,15 @@ export class ModuleRowComponent {
 
   @Input()
   module: CourseModule;
-  
+
   @Input()
   course: Course;
 
   @Input()
   idx: number;
+
+  @Output()
+  onDeleteModule: EventEmitter<{ module: any }> = new EventEmitter();
 
   constructor(
     private router: Router
@@ -36,8 +39,12 @@ export class ModuleRowComponent {
       { queryParams: { language: this.language } });
   };
 
+  deleteModule = () => {
+    this.onDeleteModule.emit({ module: this.module });
+  }
+  
   generateId = (field: string): string => {
     return `module-${ this.idx }-${ field }`;
   }
-  
+
 }

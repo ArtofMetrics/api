@@ -1,17 +1,30 @@
 //- Course header
 div.container(*ngIf="!!this.course")
   div.row
-    h3 {{ course.data.name }}
-    toggle-language((toggleLanguage)="setLanguage($event)")
-    edit-price(
-      [course]="course"
-      (changeCourseLength)="setCourseLength($event)"
-      (changeCoursePrice)="setCoursePrice($event)")
-    button.btn.btn-waves.floating-effect((click)="saveCourse()") Save
+    div.col.s3
+      h2 {{ course.data.name }}
+      button.btn.btn-waves.floating-effect((click)="saveCourse()") Save Course
+    div.col.s3
+      h5 Language
+      div.divider
+      toggle-language((toggleLanguage)="setLanguage($event)")
+    div.col.s3
+      edit-price(
+        [course]="course"
+        (changeCourseLength)="setCourseLength($event)"
+        (changeCoursePrice)="setCoursePrice($event)")
+        
+  div.divider
+  
+  //- Add Module Section
   div.row
-    div((click)="addModule()")
+    div.btn-floating.btn-large.waves-effect.waves-light.red((click)="addModule()")
       i.material-icons add
   //- Modules
   div.row(*ngFor="let module of course.data.modules[language]; let i = index")
-    h3 {{ module.name }}
-    module-row([module]="module" [idx]="i" [course]="course" [language]="language")
+    module-row(
+      [module]="module" 
+      [idx]="i" 
+      [course]="course" 
+      [language]="language"
+      (onDeleteModule)="deleteModule($event)")

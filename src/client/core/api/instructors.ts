@@ -9,12 +9,12 @@ import { JWTService } from 'client/core/jwt.service';
 import { CourseModule } from 'server/dependencies/models/module';
 import {
   GetCoursesResponse, GetOneCourseResponse,
-  UpdateCourseRequestBody, UpdateCourseResponse} from 'server/api/instructors/models';
+  UpdateCourseRequestBody, UpdateCourseResponse } from 'server/api/instructors/models';
 import {
   AddModuleResponse,
+  DeleteModuleRequest, DeleteModuleResponse,
   GetOneModuleResponse,
-  AddNewLessonRequestBody,
-  AddNewLessonResponse
+  AddNewLessonRequestBody, AddNewLessonResponse
 } from 'server/api/instructors/modules/models';
 import {
   GetOneLessonQuery, GetOneLessonResponse,
@@ -46,6 +46,11 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         .get(`${BASE_URL}/course/${slug}/module/${moduleId}`,
         { language })
         .catch(error => Observable.throw(error));
+    },
+
+    deleteModule({ slug, moduleId, language }: { slug: string, moduleId: string, language: string }): Observable<DeleteModuleResponse> {
+      return http
+        .delete(`${ BASE_URL }/course/${ slug }/language/${ language }/module/${ moduleId }`);
     },
 
     addNewLesson({ slug, moduleId, newLesson, language }: { slug: any, moduleId: string, newLesson: any, language: string }): Observable<AddNewLessonResponse> {

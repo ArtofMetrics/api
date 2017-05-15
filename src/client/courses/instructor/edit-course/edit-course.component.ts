@@ -93,6 +93,28 @@ export class EditCourseComponent implements OnInit, OnDestroy {
       )
   };
 
+  deleteModule = (payload): void => {
+    const { slug, language } = this;
+    const { module: { _id: moduleId } } = payload;
+
+    this.apiService.instructors
+      .deleteModule({ moduleId, language, slug })
+      .subscribe(
+        data => {
+          this.course = data.course;
+          this.toast(`${ payload.module.name } deleted `);
+        },
+        error => {
+          this.toast(`Oops, there was an error deleting ${ payload.module.name }`);
+          this.handleHttpError(error);
+        }
+      );
+  }
+
+  toast = (message) => {
+    (<any>window).Materialize.toast(message, 4000);
+  }
+
   handleHttpError = (error: Error) => {
     console.error(error);
     throw error;
@@ -110,8 +132,14 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     this.apiService.instructors
       .saveCourse({ course: { subscription: this.course.subscription }, slug: this.course.slug })
       .subscribe(
-        (data) => this.course = data.course,
-        (error) => this.handleHttpError(error)
+        (data) => {
+          this.course = data.course;
+          this.toast(`Course saved successfully`);
+        },
+        (error) => {
+          this.toast(`Oops, there was an error saving your course`);
+          this.handleHttpError(error);
+        }
       );
   };
 
