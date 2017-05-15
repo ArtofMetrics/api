@@ -3,6 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Document } from 'mongoose';
 
 // AOM Dependencies
+import { ErrorService } from 'client/core/error.service';
 import { ApiService } from 'client/core/api/api.service';
 import { courseSchema, Course } from 'server/dependencies/models/course/course';
 import { userSchema } from 'server/dependencies/models/user';
@@ -15,13 +16,14 @@ import { userSchema } from 'server/dependencies/models/user';
 
 export class PreviewCourseComponent implements OnInit {
   @Input() course: any;
-  
+
   doc: Course;
   instructors: any[];
   state: { addingCard: boolean } = { addingCard: false };
 
   constructor(
     private apiService: ApiService,
+    private errorService: ErrorService
   ) {
   }
 
@@ -43,8 +45,16 @@ export class PreviewCourseComponent implements OnInit {
       (<any>window).Materialize.toast(payload.data.error.message, 4000);
     } else {
       const { data: { token } } = payload;
-      
-      console.log('token', token);
+      this.apiService.students
+        .subscribeToCourse({ courseId: this.course._id, cardDetails: token.token })
+        .subscribe(
+          data => console.log(data),
+          error => this.handleHttpError(error)
+        )
     }
-  }
+  };
+
+  handleHttpError = (error: Error) => {
+    this.errorService.handleHttpError(error);
+  };
 }

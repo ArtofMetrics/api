@@ -14,7 +14,7 @@ export interface GetOneCourseResponse {
 
 // Subscribe to course
 export interface SubscribeToCourseRequestBody {
-  token: string;
+  cardDetails: any;
 }
 
 export interface SubscribeToCourseRequest extends AuthenticatedRequest {

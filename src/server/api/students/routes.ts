@@ -60,15 +60,13 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any
       const course = await findCourseByIdOrThrow({ $Course, courseId: req.params.identifier });
       await throwIfSubscribed({ $StudentCourse, user: req.user, courseId: course._id.toString() });
 
-      const { token } = req.body;
+      const { cardDetails } = req.body;
 
       const payment = await $subscription.createSubscriptionPayment({
         course,
-        token,
+        token: cardDetails.id,
         user: req.user
       });
-
-
 
       const data: HTTPResponse<SubscribeToCourseResponse> = { data: { } };
       return res.json(data);
@@ -78,8 +76,8 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any
   };
 }
 
-function validateParams({ token }: { token: string }) {
-  if (!token) {
+function validateParams({ cardDetails }: { cardDetails: string }) {
+  if (!cardDetails) {
     throw new StandardError({
       error: `Token is required to subscribe to course`,
       readableError: `Token is required to subscribe to course`,

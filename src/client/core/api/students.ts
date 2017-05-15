@@ -14,6 +14,11 @@ export function students(API_ROOT: string, http: AomHTTPService) {
     getCourseBySlug({ slug }: { slug: string }): Observable<GetOneCourseResponse> {
       return http
         .get(`${ BASE_URL }/course/${ slug }`);
+    },
+
+    subscribeToCourse({ courseId, cardDetails }: { courseId: string, cardDetails: any }) {
+      return http
+        .post(`${ BASE_URL }/course/${ courseId }`, { cardDetails });
     }
   };
 }
