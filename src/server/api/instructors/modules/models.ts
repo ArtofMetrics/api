@@ -36,13 +36,29 @@ export interface GetOneModuleRequest extends AuthenticatedRequest {
     slug: string;
     module: string;
   };
-  
+
   query: GetOneModuleQuery;
 }
 
 export interface GetOneModuleResponse {
   course: any;
   module: any;
+}
+
+// Delete module
+export interface DeleteModuleParams {
+  slug: string;
+  module: string;
+  language: string;
+}
+
+export interface DeleteModuleRequest extends AuthenticatedRequest {
+  params: DeleteModuleParams;
+}
+
+export interface DeleteModuleResponse {
+  course: Course;
+  language: string;
 }
 
 // Add new Lesson

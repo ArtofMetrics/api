@@ -31,8 +31,12 @@ export class EditPriceComponent implements OnInit {
     annual: 'Annual'
   };
 
+  priceCents: number;
+
   ngOnInit() {
-    console.log('HIS.COURSE', this.course);
+    this.priceCents = this.course.subscription.costCents > -1 ?
+      (this.course.subscription.costCents / 100) :
+      null;
     $('#course-length').material_select();
   }
 

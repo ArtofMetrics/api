@@ -1,30 +1,15 @@
-div
-  button.btn.btn-waves((click)="editModule()") Edit Module
-  p Visible To Students: {{ module.isVisible }}
-  p {{ module.name }}
+div.card.horizontal.col.s6.offset-s3
+  div.card-stacked
+    div.card-content
+      div.card-title
+        h3 {{ module.name }}
+      p Visible To Students: {{ module.isVisible }}
+      p {{ module.name }}
 
-  p {{ module.description }}
-//- div
-//-   form(#form="ngForm" novalidate (ngSubmit)="saveModule()")
-//-     button.btn.btn-waves(type="submit") Save {{ module.name }} Module
-
-//-     //- Module Name
-//-     div.input-field
-//-       i.material-icons.prefix mode_edit
-//-       input(
-//-         type="text"
-//-         [attr.id]="generateId('name')"
-//-         name="module-name"
-//-         [(ngModel)]="module.name")
-//-       label([attr.for]="generateId('name')" [class.active]="!!module.name" validate) Name
+      p {{ module.description }}
+  div.card-action
+    div.btn-floating.btn-large.yellow((click)="editModule()")
+      i.material-icons mode_edit
+    div.btn-floating.btn-large.red((click)="deleteModule()")
+      i.material-icons delete
     
-//-     //- Module Description
-//-     div.input-field
-//-       i.material-icons.prefix mode_edit
-//-       textarea.materialize-textarea(
-//-         [attr.id]="generateId('description')"
-//-         name="module-description"
-//-         [(ngModel)]="module.description")
-//-       label([attr.for]="generateId('description')" [class.active]="!!module.description" validate) Description
-
-      //- Lessons

@@ -9,7 +9,14 @@ import {
   updateCourse
 } from './instructors.controller';
 
-import { addModule, getOneModule, addNewLesson, deleteLesson } from './modules/modules.controller';
+import {
+  addModule,
+  getOneModule,
+  addNewLesson,
+  deleteLesson,
+  deleteModule
+} from './modules/modules.controller';
+
 import {
   getOneLesson,
   addDrip,
@@ -56,6 +63,9 @@ export function instructorsRouter(di): Router {
     .put(di.invoke(updateDrip));
 
   // Delete routes
+  api.route('/course/:slug/language/:language/module/:module')
+    .delete(di.invoke(deleteModule));
+
   api.route('/course/:slug/language/:language/module/:module/lesson/:lesson')
     .delete(di.invoke(deleteLesson));
 
