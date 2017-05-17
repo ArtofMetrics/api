@@ -11,19 +11,17 @@ export class SubscriptionService {
   private DEFAULT_CURRENCY = `usd`;
 
   constructor(
-    private $stripe) {}
+    private $stripe) { }
 
-  public createSubscriptionPayment = async ({ course, token, user }: { course: Course, token: string, user: IUser }): Promise<any> => {
+  public createSubscriptionPayment = async ({ course, token, user, customer }: { course: Course, token: string, user: IUser, customer }): Promise<any> => {
     const payment = await this.$stripe.charges.create(
-      Object.assign({
+      {
         currency: course.subscription.currency || this.DEFAULT_CURRENCY,
         amount: course.subscription.costCents,
         source: token,
-        description: `Subscription payment for ${ user.email() } charged`,
-      }, user.stripeId ? {
+        description: `Subscription payment for ${user.email()} charged`,
         customer: user.stripeId
-      } : {}
-    ));
+      });
 
     return payment;
   }

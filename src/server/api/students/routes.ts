@@ -8,6 +8,7 @@ import * as status from 'http-status';
 import { CustomErrorService } from '../../dependencies/custom-error.service';
 import { findCourseBySlugOrThrow, findCourseByIdOrThrow, throwIfSubscribed } from './course-helpers';
 import { SubscriptionService } from '../../dependencies/subscription';
+import { PaymentService } from '../../dependencies/payment';
 
 // AOM Interfaces
 import { HTTPResponse } from '../models';
@@ -16,6 +17,7 @@ import {
   SubscribeToCourseRequest, SubscribeToCourseResponse,
 } from './models';
 import { IUser } from '../../dependencies/models/user/user.model';
+import { Payment } from '../../dependencies/models/payment';
 
 export function getOneCourse($customError: CustomErrorService, $StudentCourse: Model<any>, $Course: Model<any>, $User: Model<any>) {
   return async (req: GetOneCourseRequest, res: Response) => {
@@ -52,7 +54,7 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
 }
 
 export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any>, $customError: CustomErrorService,
-  $stripe, $subscription: SubscriptionService ) {
+  $stripe, $subscription: SubscriptionService, $Payment: Model<any>, $payment: PaymentService) {
   return async (req: SubscribeToCourseRequest, res: Response) => {
     try {
       validateParams(req.body);
@@ -62,18 +64,73 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any
 
       const { cardDetails } = req.body;
 
-      const payment = await $subscription.createSubscriptionPayment({
-        course,
-        token: cardDetails.id,
-        user: req.user
+      const sourceToken = cardDetails.id;
+      const stripeCustomer = await getOrCreateCustomer({ token: sourceToken, user: req.user });
+      if (!stripeCustomer) {
+        throw new StandardError({
+          error: `Could not create stripe customer`,
+          readableError: `Could not create stripe customer`,
+          code: status.INTERNAL_SERVER_ERROR
+        });
+      }
+
+      let stripePayment;
+      try {
+        stripePayment = await $subscription.createSubscriptionPayment({
+          course,
+          token: cardDetails.id,
+          user: req.user,
+          customer: stripeCustomer
+        });
+      } catch (error) {
+        await $Payment.create({
+          status: 'FAILED',
+          course: course._id,
+          student: req.user._id,
+          response: error,
+        });
+
+        throw new StandardError({ error, code: status.BAD_REQUEST });
+      }
+
+      const studentCourse = await $StudentCourse.create({
+        course: course._id,
+
+        data: course.data,
+
+        subscription: {
+          costCents: course.subscription.costCents,
+          length: course.subscription.length,
+          currency: course.subscription.currency
+        }
       });
 
-      const data: HTTPResponse<SubscribeToCourseResponse> = { data: { } };
+      const payment: Payment = await $Payment.create({
+        response: stripePayment,
+        status: 'COMPLETED',
+        course: course._id,
+        student: req.user._id,
+        studentCourse: studentCourse._id
+      });
+
+      const data: HTTPResponse<SubscribeToCourseResponse> = { data: { studentCourse } };
       return res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);
     }
   };
+
+  /**
+   * For the time being, users can only have one credit card on file
+   */
+  async function getOrCreateCustomer({ token, user }: { token: string, user: IUser }) {
+    const existingCustomer = await $payment.getCustomer({ user });
+    if (existingCustomer) {
+      return await $payment.updateCustomerSource({ user, newSource: token });
+    } else {
+      return await $payment.createCustomer({ user, source: token });
+    }
+  }
 }
 
 function validateParams({ cardDetails }: { cardDetails: string }) {
