@@ -66,6 +66,9 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any
 
       const sourceToken = cardDetails.id;
       const stripeCustomer = await getOrCreateCustomer({ token: sourceToken, user: req.user });
+
+      console.log(`======= STRIPE CUSTOMER ========= `);
+      console.log(stripeCustomer);
       if (!stripeCustomer) {
         throw new StandardError({
           error: `Could not create stripe customer`,

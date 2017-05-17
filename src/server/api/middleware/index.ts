@@ -86,7 +86,7 @@ export class Middleware {
     try {
       const decoded = jwt.decode(token, secret);
 
-      return pick(decoded, ['_id', 'profile', 'roles', 'courses', 'internal.stripeId']);
+      return pick(decoded, ['_id', 'profile', 'roles', 'courses', 'internal']);
     } catch (error) {
       this.$customError.defaultError({
         error: error,

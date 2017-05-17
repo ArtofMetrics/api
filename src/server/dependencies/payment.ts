@@ -21,8 +21,8 @@ export class PaymentService {
   };
 
   public updateCustomerSource = async ({ user, newSource }: { user: IUser, newSource: string }): Promise<any> => {
-    return await this.$stripe.update(user.stripeId, {
-      source: 'newSource'
+    return await this.$stripe.customers.update(user.stripeId, {
+      source: newSource
     });
   };
 

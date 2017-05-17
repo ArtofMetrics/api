@@ -23,5 +23,8 @@ export function AuthRouter(di) {
   api.route('/login/email')
     .post(di.invoke(AuthRoutes.loginEmail));
     
+  api.route('/cards')
+    .get(di.invoke(AuthRoutes.getCreditCards));
+    
   return api;
 }

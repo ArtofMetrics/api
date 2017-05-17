@@ -56,7 +56,7 @@ export const userSchema: Schema = new Schema({
 
 
 // Virtuals
-userSchema.virtual('customerId').get(function() {
+userSchema.virtual('stripeId').get(function() {
   return this.internal.stripeId;
 });
 

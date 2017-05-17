@@ -3,21 +3,25 @@ import * as express from 'express';
 import * as _ from 'lodash';
 import * as status from 'http-status';
 import * as bcrypt from 'bcrypt';
+import { Model } from 'mongoose';
 
 // AOM Deps
 import { Config } from '../../dependencies/config';
 import { CustomErrorService } from '../../dependencies/custom-error.service';
 import { AuthenticationService } from '../../dependencies/authentication';
+import { PaymentService } from '../../dependencies/payment';
 
 // AOM Models
 import { AuthenticatedRequest } from '../interfaces/authenticated-request.model';
 import { RegistrationParams } from 'shared/interfaces/user-registration.model';
 import { HTTPResponse } from '../models';
-import { 
-  LoginEmailRequestBody, 
-  LoginEmailResponse, 
-  RegistrationEmailRequestBody, 
-  RegistrationEmailResponse } from './models';
+import {
+  LoginEmailRequestBody,
+  LoginEmailResponse,
+  RegistrationEmailRequestBody,
+  RegistrationEmailResponse,
+  StripeCard, GetCreditCardsRequest, GetCreditCardsResponse
+} from './models';
 
 // Constants
 const CLIENT_USER_FIELDS = ['_id', 'profile', 'roles', 'status', 'courses'];
@@ -71,7 +75,7 @@ export class AuthController {
         if (!user) {
           $customError.defaultError({
             readableError: `No user with that email exists!`,
-            error: `User with email ${ req.body.email } not found`,
+            error: `User with email ${req.body.email} not found`,
             code: status.BAD_REQUEST
           });
         }
@@ -80,7 +84,7 @@ export class AuthController {
         if (!currentPassword) {
           $customError.defaultError({
             error: `User has no password set!`,
-            readableError: `User ${ user._id } has no password`,
+            readableError: `User ${user._id} has no password`,
             code: status.BAD_REQUEST
           });
         }
@@ -95,7 +99,7 @@ export class AuthController {
         }
 
         const doc = user.toObject();
-        _.unset(doc, 'internal');
+        _.unset(doc, 'internal.password');
 
         const token = $authentication.encodeToken(doc);
 
@@ -162,6 +166,34 @@ export class AuthController {
           });
         }
       }
+    }
+  }
+
+  public getCreditCards($customError: CustomErrorService, $payment: PaymentService) {
+    return async (req: GetCreditCardsRequest, res: express.Response) => {
+      try {
+        const customer = await $payment.getCustomer({ user: req.user });
+
+        const cards = customer ?
+          await mapCards(customer.sources) :
+          [];
+
+        const data: HTTPResponse<GetCreditCardsResponse> = { data: { cards } };
+        res.json(data);
+      } catch (error) {
+        return $customError.httpError(res)(error);
+      }
+    };
+
+    function mapCards(sources: any[]): StripeCard[] {
+      return sources.map((source): StripeCard => {
+        return {
+          id: source.id,
+          last4: source.last4,
+          exp_month: source.exp_month,
+          exp_year: source.exp_year
+        };
+      });
     }
   }
 }

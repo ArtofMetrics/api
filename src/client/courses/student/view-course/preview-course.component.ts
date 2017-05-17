@@ -7,7 +7,9 @@ import { ErrorService } from 'client/core/error.service';
 import { ApiService } from 'client/core/api/api.service';
 import { courseSchema, Course } from 'server/dependencies/models/course/course';
 import { userSchema } from 'server/dependencies/models/user';
+
 // Interfaces
+import { StripeCard } from 'server/api/auth/models';
 
 @Component({
   selector: 'preview-course',
@@ -20,7 +22,8 @@ export class PreviewCourseComponent implements OnInit {
   doc: Course;
   instructors: any[];
   state: { addingCard: boolean } = { addingCard: false };
-
+  cards: StripeCard[];
+  
   constructor(
     private apiService: ApiService,
     private errorService: ErrorService
@@ -34,6 +37,14 @@ export class PreviewCourseComponent implements OnInit {
 
   openSubscribeModal = () => {
     $('#subscribe-modal').modal();
+    this.apiService.auth.getCreditCards()
+      .subscribe(
+        data => {
+          this.cards = data.cards;
+          console.log(this.cards);
+        },
+        error => this.handleHttpError(error)
+      );
   }
 
   addCreditCard = () => {
