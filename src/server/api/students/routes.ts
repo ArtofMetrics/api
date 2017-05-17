@@ -99,6 +99,7 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any
         data: course.data,
 
         subscription: {
+          subscribed: true,
           costCents: course.subscription.costCents,
           length: course.subscription.length,
           currency: course.subscription.currency
