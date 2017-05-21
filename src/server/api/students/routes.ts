@@ -16,8 +16,9 @@ import {
   GetOneCourseRequest, GetOneCourseResponse,
   SubscribeToCourseRequest, SubscribeToCourseResponse,
 } from './models';
+import { StudentCourseModel, StudentCourse } from '../../dependencies/models/course/student-course';
 import { IUser } from '../../dependencies/models/user/user.model';
-import { Payment } from '../../dependencies/models/payment';
+import { Payment, PaymentModel } from '../../dependencies/models/payment';
 
 export function getOneCourse($customError: CustomErrorService, $StudentCourse: Model<any>, $Course: Model<any>, $User: Model<any>) {
   return async (req: GetOneCourseRequest, res: Response) => {
@@ -53,8 +54,12 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
   }
 }
 
-export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any>, $customError: CustomErrorService,
-  $stripe, $subscription: SubscriptionService, $Payment: Model<any>, $payment: PaymentService) {
+/**
+ * Subscribes a user to a given course, creates a payment object and stores in db
+ * with reference to the `studentCourse` and `course` objects
+ */
+export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCourseModel, $customError: CustomErrorService,
+  $stripe, $subscription: SubscriptionService, $Payment: PaymentModel, $payment: PaymentService, $User: Model<any>) {
   return async (req: SubscribeToCourseRequest, res: Response) => {
     try {
       validateParams(req.body);
@@ -79,44 +84,22 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any
 
       let stripePayment;
       try {
-        stripePayment = await $subscription.createSubscriptionPayment({
-          course,
-          token: cardDetails.id,
-          user: req.user,
-          customer: stripeCustomer
-        });
+        stripePayment = await $subscription
+          .createSubscriptionPayment({ course, token: cardDetails.id, user: req.user, customer: stripeCustomer });
       } catch (error) {
-        await $Payment.create({
-          status: 'FAILED',
-          course: course._id,
-          student: req.user._id,
-          response: error,
-        });
+        const failedPayment = await $Payment
+          .createFailedPayment({ course, user: req.user, response: error });
 
         throw new StandardError({ error, code: status.BAD_REQUEST });
       }
 
-      const studentCourse = await $StudentCourse.create({
-        course: course._id,
-
-        data: course.data,
-
-        subscription: {
-          subscribed: true,
-          costCents: course.subscription.costCents,
-          length: course.subscription.length,
-          currency: course.subscription.currency
-        }
-      });
-
-      const payment: Payment = await $Payment.create({
-        response: stripePayment,
-        status: 'COMPLETED',
-        course: course._id,
-        student: req.user._id,
-        studentCourse: studentCourse._id
-      });
-
+      const studentCourse = await $StudentCourse.createFromCourse({ course });
+      
+      await Promise.all([
+        addStudentCourseToCoursesArray({ studentCourse, user: req.user, $User }),
+        $Payment.createSuccessfulPayment({ course, studentCourse, user: req.user, response: stripePayment })
+      ]);
+      
       const data: HTTPResponse<SubscribeToCourseResponse> = { data: { studentCourse } };
       return res.json(data);
     } catch (error) {
@@ -135,6 +118,14 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: Model<any
       return await $payment.createCustomer({ user, source: token });
     }
   }
+}
+
+async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {
+  return await $User.findByIdAndUpdate(
+    user._id,
+    { $addToSet: { 'courses.active': { course: studentCourse._id } } },
+    { new: true }
+  );
 }
 
 function validateParams({ cardDetails }: { cardDetails: string }) {

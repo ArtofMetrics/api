@@ -61,27 +61,29 @@ userSchema.virtual('stripeId').get(function() {
 });
 
 // Methods
-userSchema.methods.isActivelySubscribedToCourse = function({ id }: { id: any }) {
+userSchema.methods.isActivelySubscribedToCourse = function({ id }: { id: any }): boolean {
   return this.courses.active
     .map(activeCourse => activeCourse.course.toString())
     .includes(id);
 };
 
-userSchema.methods.wasEverSubscribedToCourse = function({ id }: { id: any }) {
+userSchema.methods.wasEverSubscribedToCourse = function({ id }: { id: any }): boolean {
   return this.courses.active
     .map(activeCourse => activeCourse.course.toString())
     .concat(this.courses.completed.map(course => course.toString()))
     .includes(id);
 };
 
-userSchema.methods.fullName = function() {
+userSchema.methods.fullName = function(): string {
   return `${ this.profile.name.first.trim() } ${ this.profile.name.last.trim() }`;
-}
+};
 
-userSchema.methods.email = function() {
+userSchema.methods.email = function(): string {
   return this.get('profile.email');
-}
+};
 
-userSchema.methods.firstName = function() {
+userSchema.methods.firstName = function(): string {
   return this.get('profile.name.first');
-}
+};
+
+

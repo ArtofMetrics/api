@@ -37,3 +37,22 @@ export const studentCourseSchema = new Schema({
     lastCompleted: { type: String }
   },
 });
+
+export interface StudentCourseModel extends Model<StudentCourse> {
+  createFromCourse: ({ course }: { course: Course }) => Promise<StudentCourse>;
+}
+
+studentCourseSchema.statics.createFromCourse = function({ course }: { course: Course }): Promise<StudentCourse> {
+  return this.create({
+    course: course._id,
+
+    data: course.data,
+    
+    subscription: {
+      subscribed: true,
+      costCents: course.subscription.costCents,
+      length: course.subscription.length,
+      currency: course.subscription.currency
+    }
+  });
+};

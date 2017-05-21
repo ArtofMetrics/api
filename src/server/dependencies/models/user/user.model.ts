@@ -30,16 +30,14 @@ export interface IUser extends Document {
       country: string;
       zipcode: string;
     };
+  };
 
-    courses: {
-      active: {
-        course: mongoId;
-        lastCompleted: string;
-      }[];
-      completed: mongoId[];
-    };
-
-    roles: string[]
+  courses: {
+    active: {
+      course: mongoId;
+      lastCompleted: string;
+    }[];
+    completed: mongoId[];
   };
 
   roles: role[];
@@ -49,7 +47,7 @@ export interface IUser extends Document {
 
   // Getters
   readonly stripeId: string;
-  
+
   // Methods
   isActivelySubscribedToCourse: ({ id }: { id: mongoId }) => boolean;
   wasEverSubscribedToCourse: ({ id }: { id: mongoId }) => boolean;
