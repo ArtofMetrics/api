@@ -6,8 +6,11 @@ import { Subscription } from 'rxjs/Subscription';
 // AOm Dependencies
 import { ApiService } from 'client/core/api/api.service';
 import { ErrorService } from 'client/core/error.service';
+import { studentCourseSchema, StudentCourse} from 'server/dependencies/models/course/student-course';
+import { userSchema } from 'server/dependencies/models/user';
 
 // AOM Interfaces
+import { IUser } from 'server/dependencies/models/user/user.model';
 
 @Component({
   selector: 'take-course',
@@ -17,6 +20,8 @@ import { ErrorService } from 'client/core/error.service';
 export class TakeCourseComponent implements OnInit {
   @Input()
   course: any;
+  studentCourse: StudentCourse;
+  instructors: IUser[];
 
   state: 'CONTINUE' | 'BEGIN';
   constructor(
@@ -25,12 +30,20 @@ export class TakeCourseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-   if (this.course.data.lastCompleted === '0.0.0') {
+    this.instructors = this.course.course
+      .instructors
+      .map(instructor => new mongoose.Document(instructor, userSchema));
+    this.studentCourse = new mongoose.Document(this.course, studentCourseSchema);
+   if (this.studentCourse.data.lastCompleted === '0.0.0') {
      this.state = 'BEGIN';
    } else {
      this.state = 'CONTINUE';
    }
 
-   console.log('THE STATE', this.state);
+   console.log(this.state)
+  }
+
+  startCourse = () => {
+    this.state = 'CONTINUE';
   }
 }

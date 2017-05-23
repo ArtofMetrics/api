@@ -40,7 +40,7 @@ export interface Course extends Document {
     category: string;
     photos: { url: string; caption: string; isCover: boolean }[];
     modules: CourseModule[],
-    lastCompleted?: boolean;
+    lastCompleted?: string;
   }
 
   createdAt: string;

@@ -1,5 +1,5 @@
 // External Dependencies
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 // AOm Dependencies
 
@@ -12,7 +12,7 @@ import { Component, Input } from '@angular/core';
 
 export class ContinueCourseComponent {
   @Input()
-  course: any;
-  
+  studentCourse: any;
+
   constructor() {}
 }

@@ -1,12 +1,11 @@
 // External Dependencies
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 // AOM Dependencies
 import { ApiService } from 'client/core/api/api.service';
-import { studentCourseSchema, StudentCourse} from 'server/dependencies/models/course/student-course';
-import { userSchema } from 'server/dependencies/models/user';
 
 // AOM interfaces
+import { StudentCourse} from 'server/dependencies/models/course/student-course';
 import { IUser } from 'server/dependencies/models/user/user.model';
 
 @Component({
@@ -14,20 +13,19 @@ import { IUser } from 'server/dependencies/models/user/user.model';
   templateUrl: './begin-course.component.jade'
 })
 
-export class BeginCourseComponent implements OnInit {
+export class BeginCourseComponent {
   @Input()
-  course: any;
-  instructors: IUser[];
   studentCourse: StudentCourse;
+
+  @Input()
+  instructors: IUser[];
+
+  @Output()
+  startCourse: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private apiService: ApiService
   ) {}
 
-  ngOnInit() {
-    this.instructors = this.course.course
-      .instructors
-      .map(instructor => new mongoose.Document(instructor, userSchema));
-    this.studentCourse = new mongoose.Document(this.course, studentCourseSchema);
-  }
+  sendStartCourse = () => this.startCourse.emit();
 }
