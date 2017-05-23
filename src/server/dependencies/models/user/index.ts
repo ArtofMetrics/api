@@ -40,11 +40,8 @@ export const userSchema: Schema = new Schema({
 
   // Courses
   courses: {
-    active: [{
-      course: { type: ObjectId, ref: 'courses' },
-      lastCompleted: { type: String, default: '0.0.0' }
-    }],
-    completed: [{ type: ObjectId, ref: 'courses' }]
+    active: [{ type: ObjectId, ref: 'studentcourses' }],
+    completed: [{ type: ObjectId, ref: 'studentcourses' }]
   },
 
   // Roles
@@ -62,16 +59,11 @@ userSchema.virtual('stripeId').get(function() {
 
 // Methods
 userSchema.methods.isActivelySubscribedToCourse = function({ id }: { id: any }): boolean {
-  return this.courses.active
-    .map(activeCourse => activeCourse.course.toString())
-    .includes(id);
+  return this.courses.active.id(id);
 };
 
 userSchema.methods.wasEverSubscribedToCourse = function({ id }: { id: any }): boolean {
-  return this.courses.active
-    .map(activeCourse => activeCourse.course.toString())
-    .concat(this.courses.completed.map(course => course.toString()))
-    .includes(id);
+  return this.courses.active.id(id) || this.courses.completed.id(id);
 };
 
 userSchema.methods.fullName = function(): string {
@@ -85,5 +77,3 @@ userSchema.methods.email = function(): string {
 userSchema.methods.firstName = function(): string {
   return this.get('profile.name.first');
 };
-
-

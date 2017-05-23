@@ -11,6 +11,7 @@ export interface StudentCourse extends Course {
     length: string;
     currency: string;
     subscribed: boolean;
+    subscribedOn: Date;
   };
 }
 /**
@@ -19,6 +20,8 @@ export interface StudentCourse extends Course {
  * for these should be by `_id`
  */
 export const studentCourseSchema = new Schema({
+  slug: String,
+
   course: { type: Schema.Types.ObjectId, ref: 'courses', required: true },
 
   /**
@@ -27,6 +30,7 @@ export const studentCourseSchema = new Schema({
    */
   subscription: {
     subscribed: { type: Boolean, required: true },
+    subscribedOn: { type: Date, default: Date.now },
     costCents: { type: Number, required: true },
     length: { type: String, enum: ['semester', 'annual'], required: true }
   },
@@ -34,7 +38,7 @@ export const studentCourseSchema = new Schema({
   data: {
     ...commonCourseProps.data,
     description: { type: String, required: true },
-    lastCompleted: { type: String }
+    lastCompleted: { type: String, required: true }
   },
 });
 
@@ -43,13 +47,17 @@ export interface StudentCourseModel extends Model<StudentCourse> {
 }
 
 studentCourseSchema.statics.createFromCourse = function({ course }: { course: Course }): Promise<StudentCourse> {
+  const courseData: any = (course.toObject() as any).data;
+
   return this.create({
+    slug: course.slug,
     course: course._id,
 
-    data: course.data,
-    
+    data: Object.assign({}, courseData, { lastCompleted: '0.0.0' }),
+
     subscription: {
       subscribed: true,
+      subscribedOn: Date.now(),
       costCents: course.subscription.costCents,
       length: course.subscription.length,
       currency: course.subscription.currency

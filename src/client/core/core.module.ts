@@ -21,6 +21,7 @@ import { Config } from './config';
 
 // AOM Services
 import { ErrorService } from './error.service';
+import { ToastService } from './toast.service';
 
 // AOM Components
 import TopMenuComponent from './top-menu/top-menu.component';
@@ -41,7 +42,8 @@ import { CarouselDirective } from './carousel.directive';
     ApiService,
     AomHTTPService,
     Config,
-    ErrorService]
+    ErrorService,
+    ToastService]
 })
 
 export default class CoreModule {

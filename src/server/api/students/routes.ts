@@ -31,7 +31,13 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
 
       let course = await $StudentCourse
         .findOne({ slug: req.params.identifier })
-        .setOptions(options);
+        .setOptions(Object.assign({}, options, {
+          populate: {
+            path: 'course',
+            model: $Course,
+            options: { select: 'instructors' },
+            populate: { path: 'instructors', model: $User, options: { select: 'profile' } } }
+        }));
 
       if (!course) {
         course = await $Course.findOne({
@@ -70,10 +76,9 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
       const { cardDetails } = req.body;
 
       const sourceToken = cardDetails.id;
-      const stripeCustomer = await getOrCreateCustomer({ token: sourceToken, user: req.user });
+      const { stripeCustomer, updatedUser } = await getOrCreateCustomer({ token: sourceToken, user: req.user });
 
-      console.log(`======= STRIPE CUSTOMER ========= `);
-      console.log(stripeCustomer);
+      req.user = updatedUser ? updatedUser : req.user;
       if (!stripeCustomer) {
         throw new StandardError({
           error: `Could not create stripe customer`,
@@ -94,12 +99,12 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
       }
 
       const studentCourse = await $StudentCourse.createFromCourse({ course });
-      
+
       await Promise.all([
         addStudentCourseToCoursesArray({ studentCourse, user: req.user, $User }),
         $Payment.createSuccessfulPayment({ course, studentCourse, user: req.user, response: stripePayment })
       ]);
-      
+
       const data: HTTPResponse<SubscribeToCourseResponse> = { data: { studentCourse } };
       return res.json(data);
     } catch (error) {
@@ -110,20 +115,21 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
   /**
    * For the time being, users can only have one credit card on file
    */
-  async function getOrCreateCustomer({ token, user }: { token: string, user: IUser }) {
+  async function getOrCreateCustomer({ token, user }: { token: string, user: IUser }): Promise<{ updatedUser?: IUser, stripeCustomer: any }> {
     const existingCustomer = await $payment.getCustomer({ user });
     if (existingCustomer) {
-      return await $payment.updateCustomerSource({ user, newSource: token });
+      return { stripeCustomer: await $payment.updateCustomerSource({ user, newSource: token }), updatedUser: null };
     } else {
-      return await $payment.createCustomer({ user, source: token });
+      const { updatedUser, stripeCustomer } = await $payment.createCustomer({ user, source: token });
+      return { updatedUser, stripeCustomer };
     }
   }
 }
 
 async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {
-  return await $User.findByIdAndUpdate(
+  return $User.findByIdAndUpdate(
     user._id,
-    { $addToSet: { 'courses.active': { course: studentCourse._id } } },
+    { $push: { 'courses.active': studentCourse._id } },
     { new: true }
   );
 }

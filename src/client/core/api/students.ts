@@ -7,6 +7,7 @@ import { AomHTTPService } from 'client/core/aom-http.service';
 // AOM Interfaces
 import {
   GetOneCourseResponse,
+  SubscribeToCourseResponse, SubscribeToCourseRequestBody
 } from 'server/api/students/models';
 
 export function students(API_ROOT: string, http: AomHTTPService) {
@@ -18,9 +19,10 @@ export function students(API_ROOT: string, http: AomHTTPService) {
         .get(`${BASE_URL}/course/${slug}`);
     },
 
-    subscribeToCourse({ courseId, cardDetails }: { courseId: string, cardDetails: any }) {
+    subscribeToCourse({ courseId, cardDetails }: { courseId: string, cardDetails: any }): Observable<SubscribeToCourseResponse> {
+      const data: SubscribeToCourseRequestBody = { cardDetails };
       return http
-        .post(`${BASE_URL}/course/${courseId}`, { cardDetails });
+        .post(`${BASE_URL}/course/${courseId}`, data);
     }
   };
 }

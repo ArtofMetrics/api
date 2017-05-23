@@ -12,12 +12,14 @@ import * as get from 'lodash/get';
 import * as isString from 'lodash/isString';
 
 // AOM Deps
+import { userSchema } from 'server/dependencies/models/user';
 import { JWTService } from './jwt.service';
 import { ApiService } from 'client/core/api/api.service';
 import { Config } from 'client/core/config';
 
 // Interfaces
 import { RegistrationEmailRequest } from 'server/api/auth/models';
+import { IUser } from 'server/dependencies/models/user/user.model';
 
 @Injectable()
 export class UserService {
@@ -114,7 +116,7 @@ export class UserService {
    * @desc Sets the user on the $ state tracking property and also sets jwt
    */
   public setUser = (result: { user?: any, token?: string }) => {
-    this.$ = result.user || null;
+    this.$ = result.user ? new mongoose.Document(result.user, userSchema) : null;
     if (result.token) {
       this.jwtService.setToken(result.token);
     }

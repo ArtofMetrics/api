@@ -13,7 +13,13 @@ div.container(*ngIf="!!this.course")
         [course]="course"
         (changeCourseLength)="setCourseLength($event)"
         (changeCoursePrice)="setCoursePrice($event)")
-        
+  div.row
+    div.input-field
+      textarea.materialize-textarea#course-description(
+        type="text"
+        [(ngModel)]="course.data.description"
+      )
+      label(for="course-description") Description*
   div.divider
   
   //- Add Module Section

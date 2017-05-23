@@ -8,16 +8,17 @@ import { IUser } from './models/user/user.model';
 export class PaymentService {
   constructor(private $stripe, private $User: Model<any>) {}
 
-  public createCustomer = async ({ user, source }: { user: IUser, source: string }): Promise<any> => {
+  public createCustomer = async ({ user, source }: { user: IUser, source: string }): Promise<{ stripeCustomer: any, updatedUser: IUser }> => {
     const customer = await this.$stripe.customers.create({
       description: `Customer ${ user.fullName() } with email ${ user.email() }`,
       source,
       email: user.email(),
     });
 
-    await this.$User.findByIdAndUpdate(user._id, { 'internal.stripeId': customer.id });
+    const updatedUser = await this.$User
+      .findByIdAndUpdate(user._id, { 'internal.stripeId': customer.id }, { new: true });
 
-    return customer;
+    return { stripeCustomer: customer, updatedUser }; 
   };
 
   public updateCustomerSource = async ({ user, newSource }: { user: IUser, newSource: string }): Promise<any> => {

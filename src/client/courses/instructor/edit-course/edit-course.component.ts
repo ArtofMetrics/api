@@ -37,7 +37,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private route: ActivatedRoute,
     private editCourseService: EditCourseService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.language = DEFAULT_LANGUAGE;
@@ -63,8 +63,8 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   fetchCourse = ({ slug }: { slug: string }) => {
     return this.editCourseService.getCourse({ slug })
       .subscribe(
-        (data) => this.course = data.course,
-        (error) => this.handleHttpError(error)
+      (data) => this.course = data.course,
+      (error) => this.handleHttpError(error)
       )
   }
 
@@ -79,7 +79,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
 
   addModule = (position: number) => {
     const data: NewModule = {
-      name: `Module ${ this.course.data.modules[this.language].length + 1 } `,
+      name: `Module ${this.course.data.modules[this.language].length + 1} `,
       description: '',
       $isNew: true,
       isVisible: false,
@@ -88,8 +88,8 @@ export class EditCourseComponent implements OnInit, OnDestroy {
 
     this.persistModule(data)
       .subscribe(
-        (data) => this.course = data.course,
-        (error) => this.handleHttpError(error)
+      (data) => this.course = data.course,
+      (error) => this.handleHttpError(error)
       )
   };
 
@@ -100,14 +100,14 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     this.apiService.instructors
       .deleteModule({ moduleId, language, slug })
       .subscribe(
-        data => {
-          this.course = data.course;
-          this.toast(`${ payload.module.name } deleted `);
-        },
-        error => {
-          this.toast(`Oops, there was an error deleting ${ payload.module.name }`);
-          this.handleHttpError(error);
-        }
+      data => {
+        this.course = data.course;
+        this.toast(`${payload.module.name} deleted `);
+      },
+      error => {
+        this.toast(`Oops, there was an error deleting ${payload.module.name}`);
+        this.handleHttpError(error);
+      }
       );
   }
 
@@ -130,7 +130,15 @@ export class EditCourseComponent implements OnInit, OnDestroy {
 
   saveCourse = () => {
     this.apiService.instructors
-      .saveCourse({ course: { subscription: this.course.subscription }, slug: this.course.slug })
+      .saveCourse({
+        course: {
+          subscription: this.course.subscription,
+          data: {
+            description: this.course.data.description
+          }
+        },
+        slug: this.course.slug
+      })
       .subscribe(
         (data) => {
           this.course = data.course;

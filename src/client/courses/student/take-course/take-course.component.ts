@@ -25,10 +25,12 @@ export class TakeCourseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-   if (this.course.lastCompleted > -1) {
-     this.state = 'CONTINUE';
-   } else {
+   if (this.course.data.lastCompleted === '0.0.0') {
      this.state = 'BEGIN';
+   } else {
+     this.state = 'CONTINUE';
    }
+
+   console.log('THE STATE', this.state);
   }
 }

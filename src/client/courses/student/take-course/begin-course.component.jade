@@ -1,0 +1,17 @@
+div.container(*ngIf="course")
+  div.row
+    div.col.s12.m6.offset-m3
+      h2.header {{ course.data.name }}
+      div.card.horizontal
+        div.card-stacked
+          div.card-content
+            div.row
+              div.col.s4
+                p {{ course.data.description }}
+                br
+                p Difficulty: {{ course.data.difficulty }}
+              div.col.s4.push-s4
+                h6.header Taught by
+                p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}
+          div.card-action
+            div.btn.btn-waves((click)="startCourse()") Start Course

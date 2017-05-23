@@ -18,9 +18,10 @@ export class CourseViewComponent implements OnInit, OnDestroy {
     slug?: Subscription
   } = {};
   course: any;
+  isSubscribed: boolean;
 
   constructor(
-    viewReady: ViewReadyService, 
+    viewReady: ViewReadyService,
     private userService: UserService,
     private apiService: ApiService,
     private activatedRoute: ActivatedRoute) {
@@ -36,28 +37,26 @@ export class CourseViewComponent implements OnInit, OnDestroy {
             .getCourseBySlug(params)
             .map(data => this.course = data.course)
             .subscribe(
-              null,
+              data => {
+                this.isSubscribed = this.course && this.course.subscription.subscribed;
+              },
               (error) => this.handleHttpError(error)
             )
         },
         (error) => this.handleHttpError(error)
       );
    }
-   
+
    ngOnDestroy() {
      this.subscriptions.slug.unsubscribe();
    }
 
    getCourse = ({ slug }: { slug: string }) => {
     return this.apiService.students.getCourseBySlug({ slug });
-   }
+   };
 
    handleHttpError = (error: Error) => {
     console.error(error);
     throw error;
    };
-
-   isSubscribed = () => {
-     return false;
-   }
 }
