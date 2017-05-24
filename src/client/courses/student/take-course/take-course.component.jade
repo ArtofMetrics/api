@@ -1,4 +1,4 @@
 div(*ngIf="state === 'BEGIN'")
   begin-course([studentCourse]="studentCourse" [instructors]="instructors" (startCourse)="startCourse()")
 div(*ngIf="state === 'CONTINUE'")
-  continue-course([studentCourse]="studentCourse")
+  continue-course([studentCourse]="studentCourse" *ngIf="studentCourse")

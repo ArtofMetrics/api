@@ -13,6 +13,14 @@ import { commonCourseProps } from './common-course';
 // AOM Schemas
 import { CourseModule, courseModuleSchema } from '../module';
 
+export interface CourseData {
+  name: string;
+  description: string;
+  category: string;
+  photos: { url: string; caption: string; isCover: boolean }[];
+  modules: CourseModule[],
+}
+
 export interface Course extends Document {
   _id: string;
   isVisible: boolean;
@@ -34,14 +42,7 @@ export interface Course extends Document {
     length: string;
   };
 
-  data: {
-    name: string;
-    description: string;
-    category: string;
-    photos: { url: string; caption: string; isCover: boolean }[];
-    modules: CourseModule[],
-    lastCompleted?: string;
-  }
+  data: CourseData;
 
   createdAt: string;
   updatedAt: string;
