@@ -4,6 +4,8 @@ import { Schema, Model } from 'mongoose';
 // AOM Dependencies
 import { commonCourseProps } from './common-course';
 import { Course, CourseData } from './course';
+import { CourseModule } from '../module';
+import { Lesson } from '../module/lesson';
 
 export interface ParsedCompleted {
   module: number;
@@ -21,7 +23,11 @@ export interface StudentCourse extends Course {
   };
 
   data: CourseData & {
-    lastCompleted?: string;
+    lastCompleted: {
+      R: string;
+      STATA: string;
+    };
+
     activeLanguage: string;
   };
 
@@ -29,13 +35,15 @@ export interface StudentCourse extends Course {
    * Gets the currently active module (0 indexed)
    * @return {number} Module idx
    */
-  getActiveModule: () => number;
+  getActiveModule: ({ language }: { language: string }) => CourseModule;
 
   /**
    * Parses a studentCourse's `data.lastCompleted` and returns an object with the module, lesson, and drip as numbers
    * @return {Object} Object with properties module, lesson, and drip
    */
-  parseLastCompleted: () => ParsedCompleted;
+  parseLastCompleted: ({ language }: { language: string }) => ParsedCompleted;
+
+  getActiveLesson: ({ language }: { language: string }) => Lesson;
 }
 
 /**
@@ -62,7 +70,10 @@ export const studentCourseSchema = new Schema({
   data: {
     ...commonCourseProps.data,
     description: { type: String, required: true },
-    lastCompleted: { type: String, required: true },
+    lastCompleted: {
+      R: { type: String, required: true, default: `0.0.0` },
+      STATA: { type: String, required: true, default: `0.0.0`},
+    },
     activeLanguage: { type: String, required: true, enum: ['R', 'STATA'], default: 'R' }
   },
 });
@@ -78,14 +89,20 @@ export interface StudentCourseModel extends Model<StudentCourse> {
 
 // methods
 
-studentCourseSchema.methods.getActiveModule = function(): number {
-  return this.parseLastCompleted().module;
+studentCourseSchema.methods.getActiveModule = function({ language }: { language: string }): CourseModule {
+  const { module: idx } = this.parseLastCompleted({ language });
+  return this.get(`data.modules.${ language }.${ idx }`);
 };
 
-studentCourseSchema.methods.parseLastCompleted = function(): { module: number, lesson: number, drip: number } {
-  const lastCompleted = this.get('data.lastCompleted');
+studentCourseSchema.methods.parseLastCompleted = function({ language }: { language: string }): { module: number, lesson: number, drip: number } {
+  const lastCompleted = this.get(`data.lastCompleted.${ language }`);
   const [module, lesson, drip] = lastCompleted.split('.').map(num => parseInt(num, 10));
   return { module, lesson, drip };
+};
+
+studentCourseSchema.methods.getActiveLesson = function({ language }: { language: string }): Lesson {
+  const { module, lesson, drip } = this.parseLastCompleted({ language });
+  return this.get(`data.modules.${ language }.${ module }.lessons.${ lesson }`);
 };
 
 // statics
@@ -97,7 +114,11 @@ studentCourseSchema.statics.createFromCourse = function({ course }: { course: Co
     slug: course.slug,
     course: course._id,
 
-    data: Object.assign({}, courseData, { lastCompleted: '0.0.0', activeLanguage: 'R' }),
+    data: Object.assign(
+      {},
+      courseData,
+      { lastCompleted: { R: '0.0.0', STATA: '0.0.0' }, activeLanguage: 'R' }
+    ),
 
     subscription: {
       subscribed: true,

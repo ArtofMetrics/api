@@ -21,9 +21,16 @@ export class ContinueCourseComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    const activeModule = this.studentCourse.getActiveModule();
-    this.activeModule = this.studentCourse.get(`data.modules.${ this.language }.${ activeModule }`);
+    this.language = this.studentCourse.data.activeLanguage;
+    this.setActiveModule({ language: this.language });
   }
 
+  setLanguage = ({ language }: { language: string }) => {
+    this.language = language;
+    this.setActiveModule({ language: this.language });
+  };
 
+  setActiveModule = ({ language }: { language: string }) => {
+    this.activeModule = this.studentCourse.getActiveModule({ language });
+  };
 }
