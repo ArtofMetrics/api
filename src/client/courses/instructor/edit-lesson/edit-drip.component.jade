@@ -8,7 +8,16 @@ div.edit-drip-component
           type="text"
           name="drip-title"
           [(ngModel)]="drip.title")
-
+    
+    //- Drip text
+    div.section
+      h5 Explanatory Text / Images / Video
+      div.input-field
+        textarea(
+          [htmlEditor] 
+          (onDripText)="editDrip($event)" 
+          [dripText]="drip.text")#aom-text-editor
+          
     //- Quiz
     div.section
       h5 Multiple Choice Quiz
@@ -38,15 +47,20 @@ div.edit-drip-component
               )
 
           div.btn.btn-waves((click)="addQuestionQuizAnswer()") Add Answer
-    //- Drip text
+    //- Console Quiz
     div.section
-      h5 Explanatory Text / Images / Video
-      div.input-field
-        textarea(
-          [htmlEditor] 
-          (onDripText)="editDrip($event)" 
-          [dripText]="drip.text")#aom-text-editor
-    
+      h5 Console Quiz
+      
+      div.btn.btn-waves((click)="addConsoleQuiz()" *ngIf="!drip.consoleQuiz")
+        | Add Console Quiz
+      div(*ngIf="drip.consoleQuiz")
+        div.input-field
+          textarea#drip-console-quiz.materialize-textarea(
+            [(ngModel)]="drip.consoleQuiz.question"
+            name="drip-question-quiz")
+          label(class="{{ drip.consoleQuiz.question ? 'active' : '' }}" for="drip-console-quiz") Question
+          
+            
     //- Save
     button.btn.btn-waves((click)="persist()") Save
   

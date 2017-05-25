@@ -7,6 +7,9 @@ import { DripTextEditor } from './drip-text-editor.directive';
 import { EditDripService } from './edit-drip.service';
 
 // AOM Interfaces
+import { Drip } from 'server/dependencies/models/module/drip';
+
+
 declare var CKEDITOR;
 @Component({
   selector: 'edit-drip',
@@ -20,7 +23,7 @@ export class EditDripComponent {
 
   @Output()
   saveDrip: EventEmitter<any> = new EventEmitter<any>();
-  
+
   constructor(
     private editDripService: EditDripService
   ) {}
@@ -48,6 +51,10 @@ export class EditDripComponent {
     this.drip.questionQuiz.answers.push({ text: '' });
   }
 
+  addConsoleQuiz = () => {
+    this.drip.consoleQuiz = { question: '', answers: [] };
+  };
+
   isCorrectMCAnswer = (idx: number): boolean => {
     return this.editDripService
       .isCorrectMCAnswer(this.drip.questionQuiz.correctAnswers, idx);
@@ -72,5 +79,5 @@ export class EditDripComponent {
   persist = () => {
     this.saveDrip.emit({ drip: this.drip });
   }
-  
+
 }
