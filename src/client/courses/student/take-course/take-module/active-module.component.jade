@@ -9,4 +9,4 @@ div
   
   //- drips
   div.row(*ngFor="let drip of activeLesson.drips")
-    take-drip([drip]="drip")
+    take-drip([drip]="drip" (moveOn)="nextDrip()")

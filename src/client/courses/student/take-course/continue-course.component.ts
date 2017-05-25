@@ -2,6 +2,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 // AOm Dependencies
+import { ApiService } from 'client/core/api/api.service';
 
 // AOM Interfaces
 import { CourseModule } from 'server/dependencies/models/module';
@@ -18,7 +19,9 @@ export class ContinueCourseComponent implements OnInit {
   activeModule: CourseModule;
   language: string;
 
-  constructor() {}
+  constructor(
+    private apiService: ApiService
+  ) {}
 
   ngOnInit() {
     this.language = this.studentCourse.data.activeLanguage;
@@ -33,4 +36,8 @@ export class ContinueCourseComponent implements OnInit {
   setActiveModule = ({ language }: { language: string }) => {
     this.activeModule = this.studentCourse.getActiveModule({ language });
   };
+
+  continueOn = () => {
+    
+  }
 }

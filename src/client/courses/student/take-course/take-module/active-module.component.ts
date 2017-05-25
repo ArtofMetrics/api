@@ -1,5 +1,5 @@
 // External Dependencies
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 // AOM Dependencies
 
@@ -20,6 +20,9 @@ export class ActiveModuleComponent implements OnInit {
   @Input()
   studentCourse: StudentCourse;
 
+  @Output()
+  continueOn: EventEmitter<any> = new EventEmitter();
+
   activeLesson: Lesson;
   constructor() {}
 
@@ -29,5 +32,7 @@ export class ActiveModuleComponent implements OnInit {
     console.log('active lesson', this.activeLesson);
   }
 
-
+  nextDrip = () => {
+    this.continueOn.emit();
+  }
 }

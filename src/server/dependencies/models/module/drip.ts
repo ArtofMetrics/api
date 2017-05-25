@@ -3,14 +3,14 @@ import { Schema, Document } from 'mongoose';
 
 // Our Deps
 import { consoleQuizSchema} from './console-quiz';
-import { questionQuizSchema } from './question-quiz';
+import { questionQuizSchema, QuestionQuiz } from './question-quiz';
 
 export interface Drip extends Document {
   isVisible: boolean;
   title: string;
   text: string;
   consoleQuiz: any;
-  questionQuiz: any;
+  questionQuiz: QuestionQuiz;
 }
 
 const data = {

@@ -1,6 +1,21 @@
 div
-  //- Drip Text
-  div([innerHTML]="drip.text")
-  
-  div(*ngIf="drip.consoleQuiz")
-    div 
+  div.section
+    div.header Drip
+    //- Drip Text
+    div([innerHTML]="drip.text")
+    
+    div(*ngIf="drip.questionQuiz")
+      div.question-quiz-question {{ drip.questionQuiz.question }}
+      div(*ngFor="let answer of drip.questionQuiz.answers; let i = index;")
+        p
+          input(
+            type="checkbox" 
+            id="answer-{{ answer._id.toString() }}" 
+            (click)="markQuestionQuizAnswer(i)"
+            *ngIf="!isIncorrect(i)")
+          div.pointer(*ngIf="isIncorrect(i)" (click)="markQuestionQuizAnswer(i)") X
+          label(
+            for="answer-{{ answer._id.toString() }}" 
+            [class.incorrect]="isIncorrect(i)"
+            [class.missing]="isMissing(i)") {{ answer.text }}
+      div.btn.btn-waves((click)="submitQuestionQuizAnswers()") Submit
