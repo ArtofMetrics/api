@@ -40,11 +40,8 @@ export const userSchema: Schema = new Schema({
 
   // Courses
   courses: {
-    active: [{
-      course: { type: ObjectId, ref: 'courses' },
-      lastCompleted: { type: String, default: '0.0.0' }
-    }],
-    completed: [{ type: ObjectId, ref: 'courses' }]
+    active: [{ type: ObjectId, ref: 'studentcourses' }],
+    completed: [{ type: ObjectId, ref: 'studentcourses' }]
   },
 
   // Roles
@@ -56,32 +53,27 @@ export const userSchema: Schema = new Schema({
 
 
 // Virtuals
-userSchema.virtual('customerId').get(function() {
+userSchema.virtual('stripeId').get(function() {
   return this.internal.stripeId;
 });
 
 // Methods
-userSchema.methods.isActivelySubscribedToCourse = function({ id }: { id: any }) {
-  return this.courses.active
-    .map(activeCourse => activeCourse.course.toString())
-    .includes(id);
+userSchema.methods.isActivelySubscribedToCourse = function({ id }: { id: any }): boolean {
+  return this.courses.active.id(id);
 };
 
-userSchema.methods.wasEverSubscribedToCourse = function({ id }: { id: any }) {
-  return this.courses.active
-    .map(activeCourse => activeCourse.course.toString())
-    .concat(this.courses.completed.map(course => course.toString()))
-    .includes(id);
+userSchema.methods.wasEverSubscribedToCourse = function({ id }: { id: any }): boolean {
+  return this.courses.active.id(id) || this.courses.completed.id(id);
 };
 
-userSchema.methods.fullName = function() {
+userSchema.methods.fullName = function(): string {
   return `${ this.profile.name.first.trim() } ${ this.profile.name.last.trim() }`;
-}
+};
 
-userSchema.methods.email = function() {
+userSchema.methods.email = function(): string {
   return this.get('profile.email');
-}
+};
 
-userSchema.methods.firstName = function() {
+userSchema.methods.firstName = function(): string {
   return this.get('profile.name.first');
-}
+};

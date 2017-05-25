@@ -6,6 +6,7 @@ import * as status from 'http-status';
 // AOM Dependencies
 
 // AOM interfaces
+import { IUser } from '../../dependencies/models/user/user.model';
 import { Course } from '../../dependencies/models/course/course';
 
 export const findCourseBySlugOrThrow = async ({ $Course, slug }: { $Course: Model<any>, slug: string }): Promise<Course> => {
@@ -35,7 +36,7 @@ export const findCourseByIdOrThrow = async ({ $Course, courseId }: { $Course: Mo
   return course;
 };
 
-export const throwIfSubscribed = async ({ $StudentCourse, user, courseId }: { $StudentCourse: Model<any>, user: any, courseId: string }) => {
+export const throwIfSubscribed = async ({ $StudentCourse, user, courseId }: { $StudentCourse: Model<any>, user: IUser, courseId: string }) => {
   const course = await $StudentCourse.findOne({
     course: courseId
   }).select('_id course').lean();
@@ -44,9 +45,7 @@ export const throwIfSubscribed = async ({ $StudentCourse, user, courseId }: { $S
     return;
   }
 
-  if (user.courses.active
-    .map(activeCourse => activeCourse.course.toString())
-    .includes(courseId)) {
+  if (user.isActivelySubscribedToCourse(courseId)){
     throw new StandardError({
       error: `User is already subscribed to course with course id ${ courseId }`,
       readableError: `User is already subscribed to course with course id ${ courseId }`,

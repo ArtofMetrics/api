@@ -1,24 +1,35 @@
 // External Dependencies
-
+import { Model } from 'mongoose';
 // AOM Dependencies
 
 // AOM interfaces
 import { IUser } from './models/user/user.model';
 
 export class PaymentService {
-  constructor(private $stripe) {}
+  constructor(private $stripe, private $User: Model<any>) {}
 
-  public createCustomer = async ({ user, source }: { user: IUser, source: string }): Promise<any> => {
-    return await this.$stripe.customers.create({
+  public createCustomer = async ({ user, source }: { user: IUser, source: string }): Promise<{ stripeCustomer: any, updatedUser: IUser }> => {
+    const customer = await this.$stripe.customers.create({
       description: `Customer ${ user.fullName() } with email ${ user.email() }`,
       source,
       email: user.email(),
     });
+
+    const updatedUser = await this.$User
+      .findByIdAndUpdate(user._id, { 'internal.stripeId': customer.id }, { new: true });
+
+    return { stripeCustomer: customer, updatedUser }; 
   };
 
-  public getCustomer = async ({ user }: { user: IUser }) => {
+  public updateCustomerSource = async ({ user, newSource }: { user: IUser, newSource: string }): Promise<any> => {
+    return await this.$stripe.customers.update(user.stripeId, {
+      source: newSource
+    });
+  };
+
+  public getCustomer = async ({ user }: { user: IUser }): Promise<any> => {
     try {
-      const customer = await this.$stripe.customers.retrieve(user.internal.stripeId);
+      const customer = await this.$stripe.customers.retrieve(user.stripeId);
       return customer;
     } catch (error) {
       return null;
@@ -26,6 +37,6 @@ export class PaymentService {
   };
 }
 
-export function createPaymentService($stripe) {
-  return new PaymentService($stripe);
+export function createPaymentService($stripe, $User) {
+  return new PaymentService($stripe, $User);
 }

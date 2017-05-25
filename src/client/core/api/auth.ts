@@ -11,7 +11,8 @@ import {
   RegistrationEmailRequest, 
   RegistrationEmailResponse, 
   LoginEmailRequest,
-  LoginEmailResponse } from 'server/api/auth/models';
+  LoginEmailResponse,
+  GetCreditCardsResponse } from 'server/api/auth/models';
 
 export function authApi(API_ROOT: string, http: AomHTTPService, jwtService: JWTService) {
   const BASE_URL = `${ API_ROOT }/auth`;
@@ -38,6 +39,11 @@ export function authApi(API_ROOT: string, http: AomHTTPService, jwtService: JWTS
       return http
         .post(`${ BASE_URL }/login/email`, params)
         .catch(error => Observable.throw(error));
+    },
+
+    getCreditCards(): Observable<GetCreditCardsResponse> {
+      return http
+        .get(`${ BASE_URL }/cards`);
     }
   };
 }

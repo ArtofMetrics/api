@@ -1,6 +1,6 @@
 import { Schema, Document } from 'mongoose';
 
-type mongoId = string | Schema.Types.ObjectId;
+type mongoId = string & Schema.Types.ObjectId;
 type role = 'instructor' | 'admin' | 'super-admin';
 
 export interface IUser extends Document {
@@ -30,26 +30,21 @@ export interface IUser extends Document {
       country: string;
       zipcode: string;
     };
+  };
 
-    courses: {
-      active: {
-        course: mongoId;
-        lastCompleted: string;
-      }[];
-      completed: mongoId[];
-    };
-
-    roles: string[]
+  courses: {
+    active: mongoId[];
+    completed: mongoId[];
   };
 
   roles: role[];
 
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
 
   // Getters
   readonly stripeId: string;
-  
+
   // Methods
   isActivelySubscribedToCourse: ({ id }: { id: mongoId }) => boolean;
   wasEverSubscribedToCourse: ({ id }: { id: mongoId }) => boolean;

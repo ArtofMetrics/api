@@ -1,0 +1,12 @@
+div
+  div.row
+    div.col.m6.offset-m6.s12
+      h5.header {{ module.name }}
+  //- Active Lesson
+  div.row
+    h5.header {{ activeLesson.name }}
+    p(*ngIf="activeLesson.description") {{ activeLesson.description }}
+  
+  //- drips
+  div.row(*ngFor="let drip of activeLesson.drips")
+    take-drip([drip]="drip" (moveOn)="nextDrip()")
