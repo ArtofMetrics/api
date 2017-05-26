@@ -6,7 +6,14 @@ import * as status from 'http-status';
 
 // AOM Dependencies
 import { CustomErrorService } from '../../dependencies/custom-error.service';
-import { findCourseBySlugOrThrow, findCourseByIdOrThrow, throwIfSubscribed } from './course-helpers';
+import {
+  findCourseBySlugOrThrow,
+  findCourseByIdOrThrow,
+  throwIfSubscribed,
+  findStudentCourseByIdOrThrow }
+from './course-helpers';
+import { checkSubscribed } from './permission-helpers';
+
 import { SubscriptionService } from '../../dependencies/subscription';
 import { PaymentService } from '../../dependencies/payment';
 
@@ -127,10 +134,13 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
   }
 }
 
-export function submitDrip($customError: CustomErrorService) {
+export function submitDrip($customError: CustomErrorService, $StudentCourse: StudentCourseModel) {
   return async (req: SubmitDripRequest, res: Response) => {
     try {
+      const studentCourse = await findStudentCourseByIdOrThrow({ $StudentCourse, id: req.params.identifier });
+      checkSubscribed({ user: req.user, studentCourse });
 
+      const { language, completed } = req.body;
       const data: HTTPResponse<SubmitDripResponse> = { data: { } };
       res.json(data);
     } catch (error) {
