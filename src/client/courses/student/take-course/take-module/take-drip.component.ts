@@ -12,7 +12,7 @@ import { CheckedAnswer } from 'server/dependencies/models/module/question-quiz';
 @Component({
   selector: 'take-drip',
   templateUrl: './take-drip.component.jade',
-  styleUrls: ['./take-drip.component.styl']
+  styleUrls: ['./take-drip.component.styl', '../../../shared/text-editor.styl']
 })
 
 export class TakeDripComponent {
@@ -24,6 +24,7 @@ export class TakeDripComponent {
 
   potentialAnswers: Set<number> = new Set();
   grade: CheckedAnswer;
+  consoleQuizAnswer: string = '';
 
   constructor(
     private toastService: ToastService
@@ -64,4 +65,34 @@ export class TakeDripComponent {
   isMissing = (idx: number) => {
     return this.grade && this.grade.missingAnswers && this.grade.missingAnswers.has(idx);
   };
+
+  submitConsoleQuiz = (answer: string) => {
+    console.log('answer submitted', answer);
+    console.log('answer to test', this.drip.consoleQuiz.answer);
+    if (answer.trim() === this.drip.consoleQuiz.answer) {
+      this.toastService.toast(`You answered the quiz correctly!`);
+      this.moveOn.emit();
+    } else {
+      this.toastService.toast(`Oops, not quite correct!`);
+    }
+  };
+
+  setConsoleQuizAnswer = (payload: string) => {
+    this.consoleQuizAnswer = payload;
+  };
+
+  configureEditor = (editor) => {
+    const self = this;
+
+    ['shift-enter', 'ctrl-enter', 'enter'].forEach(cmd => {
+      editor.commands.addCommand({
+        name: "submitQuiz",
+        exec: function() {
+          self.submitConsoleQuiz(self.consoleQuizAnswer);
+        },
+        bindKey: {mac: cmd, win: cmd}
+      });
+    });
+
+  }
 }
