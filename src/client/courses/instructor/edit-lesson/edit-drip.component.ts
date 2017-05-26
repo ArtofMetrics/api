@@ -1,6 +1,9 @@
 // External Deps
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { AceEditorDirective } from 'ng2-ace';
+import 'brace/mode/r';
+import 'brace/theme/twilight';
 
 // AOM Deps
 import { DripTextEditor } from './drip-text-editor.directive';
@@ -14,7 +17,7 @@ declare var CKEDITOR;
 @Component({
   selector: 'edit-drip',
   templateUrl: './edit-drip.component.jade',
-  styleUrls: ['./edit-drip.component.styl']
+  styleUrls: ['./edit-drip.component.styl', '../../shared/text-editor.styl']
 })
 
 export class EditDripComponent {
@@ -29,6 +32,7 @@ export class EditDripComponent {
   ) {}
 
   ngOnInit() {
+    console.log('THIS.DRIP', this.drip);
   }
 
   editDrip = ($event: { text: string }): void => {
@@ -52,7 +56,7 @@ export class EditDripComponent {
   }
 
   addConsoleQuiz = () => {
-    this.drip.consoleQuiz = { question: '', answers: [] };
+    this.drip.consoleQuiz = { question: '', answer: '' };
   };
 
   isCorrectMCAnswer = (idx: number): boolean => {
@@ -80,4 +84,7 @@ export class EditDripComponent {
     this.saveDrip.emit({ drip: this.drip });
   }
 
+  setConsoleQuizAnswer = (payload) => {
+    this.drip.consoleQuiz.answer = payload;
+  };
 }

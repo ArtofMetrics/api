@@ -5,10 +5,10 @@ import { Schema, Document } from 'mongoose';
 
 export interface ConsoleQuiz extends Document {
   question: string;
-  answers: string[];
+  answer: string;
 }
 
 export const consoleQuizSchema = new Schema({
   question: { type: String, required: true },
-  answers: [{ type: String, required: true }]
+  answer: { type: String, required: true }
 });

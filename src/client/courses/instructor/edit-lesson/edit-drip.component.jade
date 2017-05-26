@@ -59,7 +59,14 @@ div.edit-drip-component
             [(ngModel)]="drip.consoleQuiz.question"
             name="drip-question-quiz")
           label(class="{{ drip.consoleQuiz.question ? 'active' : '' }}" for="drip-console-quiz") Question
-          
+        div.ace-text-editor(
+          ace-editor
+          [(text)]="drip.consoleQuiz.answer"
+          [mode]="'r'"
+          [theme]="'twilight'"
+          [readOnly]="false"
+          (textChanged)="setConsoleQuizAnswer($event)"
+          )
             
     //- Save
     button.btn.btn-waves((click)="persist()") Save
