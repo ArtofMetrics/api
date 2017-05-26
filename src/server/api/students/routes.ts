@@ -15,6 +15,7 @@ import { HTTPResponse } from '../models';
 import {
   GetOneCourseRequest, GetOneCourseResponse,
   SubscribeToCourseRequest, SubscribeToCourseResponse,
+  SubmitDripRequest, SubmitDripResponse
 } from './models';
 import { StudentCourseModel, StudentCourse } from '../../dependencies/models/course/student-course';
 import { IUser } from '../../dependencies/models/user/user.model';
@@ -124,6 +125,18 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
       return { updatedUser, stripeCustomer };
     }
   }
+}
+
+export function submitDrip($customError: CustomErrorService) {
+  return async (req: SubmitDripRequest, res: Response) => {
+    try {
+
+      const data: HTTPResponse<SubmitDripResponse> = { data: { } };
+      res.json(data);
+    } catch (error) {
+      $customError.httpError(res)(error);
+    }
+  };
 }
 
 async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {

@@ -23,6 +23,13 @@ export function students(API_ROOT: string, http: AomHTTPService) {
       const data: SubscribeToCourseRequestBody = { cardDetails };
       return http
         .post(`${BASE_URL}/course/${courseId}`, data);
+    },
+
+    submitDrip({ language, completed }: { language: string, completed: string }) {
+      const data = { language, completed };
+      
+      return http
+        .post(`${ BASE_URL }/course/${ courseId }/answer`, data);
     }
   };
 }

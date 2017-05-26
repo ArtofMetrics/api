@@ -26,3 +26,19 @@ export interface SubscribeToCourseRequest extends AuthenticatedRequest {
 export interface SubscribeToCourseResponse {
   studentCourse: StudentCourse;
 }
+
+// Submit drip
+
+export interface SubmitDripRequestBody {
+  language: string;
+  completed: string;
+}
+
+export interface SubmitDripRequest extends AuthenticatedRequest {
+  body: SubmitDripRequestBody;
+  params: { identifier: string };
+}
+
+export interface SubmitDripResponse {
+  
+}
