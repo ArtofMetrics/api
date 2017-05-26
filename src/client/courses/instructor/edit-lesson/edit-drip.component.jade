@@ -24,6 +24,8 @@ div.edit-drip-component
       
       div.btn.btn-waves((click)="addQuestionQuiz()" *ngIf="!drip.questionQuiz")
         | Add Quiz
+      div.btn.btn-waves((click)="removeQuestionQuiz()" *ngIf="drip.questionQuiz")
+        | Remove Quiz
       div(*ngIf="drip.questionQuiz")
         div.input-field
           textarea#drip-question-quiz.materialize-textarea(
@@ -53,6 +55,8 @@ div.edit-drip-component
       
       div.btn.btn-waves((click)="addConsoleQuiz()" *ngIf="!drip.consoleQuiz")
         | Add Console Quiz
+      div.btn.btn-waves((click)="removeConsoleQuiz()" *ngIf="drip.consoleQuiz")
+        | Remove Console Quiz
       div(*ngIf="drip.consoleQuiz")
         div.input-field
           textarea#drip-console-quiz.materialize-textarea(
@@ -66,7 +70,7 @@ div.edit-drip-component
           [theme]="'twilight'"
           [readOnly]="false"
           (textChanged)="setConsoleQuizAnswer($event)"
-          )
+        )
             
     //- Save
     button.btn.btn-waves((click)="persist()") Save

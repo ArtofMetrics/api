@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { AceEditorDirective } from 'ng2-ace';
 import 'brace/mode/r';
 import 'brace/theme/twilight';
+import * as unset from 'lodash/unset';
 
 // AOM Deps
 import { DripTextEditor } from './drip-text-editor.directive';
@@ -50,6 +51,10 @@ export class EditDripComponent {
       correctAnswers: []
     };
   }
+
+  removeQuestionQuiz = () => unset(this.drip, 'questionQuiz');
+
+  removeConsoleQuiz = () => unset(this.drip, 'consoleQuiz');
 
   addQuestionQuizAnswer = () => {
     this.drip.questionQuiz.answers.push({ text: '' });
