@@ -47,6 +47,31 @@ export interface StudentCourse extends Course {
 
   getActiveLesson: ({ language }: { language: string }) => Lesson;
 
+  /**
+   * Changes a student course's `data.${ language }.lastCompleted` property to reflect that it has moved
+   * to the next drip/lesson/module
+   */
+  changeLastCompleted: ({ language, justCompleted }: { language: string, justCompleted: ParsedCompleted }) => StudentCourse;
+
+  /**
+   * Usually a private method, increments the drip or the lesson if it is the last drip in a lesson
+   */
+  incrementDrip: ({ language, justCompleted, lastCompleted }: { language: string, justCompleted: ParsedCompleted, lastCompleted?: ParsedCompleted }) => StudentCourse;
+
+  /**
+   * Usually a private method, increments the lesson or the module if it is the last lesson in a module
+   */
+  incrementLesson: ({ language, lastCompleted }: { language: string, lastCompleted: ParsedCompleted }) => StudentCourse;
+  
+  /**
+   * Usually a private method, increments the module or finishes the course if itis the last module in a course
+   */
+  incrementModule: ({ language, lastCompleted }: { language: string, lastCompleted?: ParsedCompleted }) => StudentCourse;
+
+  /**
+   * Finishes a course and sets the `isCompleted` flag
+   */
+  finishCourse: () => StudentCourse;
 }
 
 /**
@@ -112,7 +137,7 @@ studentCourseSchema.methods.getActiveLesson = function({ language }: { language:
   return this.get(`data.modules.${ language }.${ module }.lessons.${ lesson }`);
 };
 
-studentCourseSchema.methods.changeLastCompleted = function({ language, justCompleted }: { language: string, justCompleted }): Lesson {
+studentCourseSchema.methods.changeLastCompleted = function({ language, justCompleted }: { language: string, justCompleted }): StudentCourse {
   const currentLastCompleted: ParsedCompleted = this.parseLastCompleted({ language });
   const [module, lesson, drip] = this.parseCompleted({ completed: justCompleted });
 

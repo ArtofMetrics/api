@@ -10,8 +10,9 @@ import {
   findCourseBySlugOrThrow,
   findCourseByIdOrThrow,
   throwIfSubscribed,
-  findStudentCourseByIdOrThrow }
-from './course-helpers';
+  findStudentCourseByIdOrThrow
+}
+  from './course-helpers';
 import { checkSubscribed } from './permission-helpers';
 
 import { SubscriptionService } from '../../dependencies/subscription';
@@ -44,7 +45,8 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
             path: 'course',
             model: $Course,
             options: { select: 'instructors' },
-            populate: { path: 'instructors', model: $User, options: { select: 'profile' } } }
+            populate: { path: 'instructors', model: $User, options: { select: 'profile' } }
+          }
         }));
 
       if (!course) {
@@ -139,9 +141,29 @@ export function submitDrip($customError: CustomErrorService, $StudentCourse: Stu
     try {
       const studentCourse = await findStudentCourseByIdOrThrow({ $StudentCourse, id: req.params.identifier });
       checkSubscribed({ user: req.user, studentCourse });
-      
+
       const { language, completed } = req.body;
-      const data: HTTPResponse<SubmitDripResponse> = { data: { } };
+
+      studentCourse.changeLastCompleted({ language, justCompleted: completed });
+
+      const update = await $StudentCourse.findByIdAndUpdate(
+        studentCourse._id,
+        {
+          $set: {
+            [`data.${language}.lastCompleted`]: studentCourse.get(`data.${language}.lastCompleted`),
+            isCompleted: studentCourse.isCompleted
+          }
+        },
+        { select: `isCompleted data.${language}.lastCompleted`, new: true }
+      );
+
+      const data: HTTPResponse<SubmitDripResponse> = {
+        data: {
+          isCompleted: update.get('isCompleted'),
+          lastCompleted: update.get(`data.lastCompleted`)
+        }
+      };
+      
       res.json(data);
     } catch (error) {
       $customError.httpError(res)(error);

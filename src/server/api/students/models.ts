@@ -40,5 +40,6 @@ export interface SubmitDripRequest extends AuthenticatedRequest {
 }
 
 export interface SubmitDripResponse {
-  
+  isCompleted: boolean;
+  lastCompleted: { R: string, STATA: string };
 }
