@@ -139,7 +139,7 @@ export function submitDrip($customError: CustomErrorService, $StudentCourse: Stu
     try {
       const studentCourse = await findStudentCourseByIdOrThrow({ $StudentCourse, id: req.params.identifier });
       checkSubscribed({ user: req.user, studentCourse });
-
+      
       const { language, completed } = req.body;
       const data: HTTPResponse<SubmitDripResponse> = { data: { } };
       res.json(data);
