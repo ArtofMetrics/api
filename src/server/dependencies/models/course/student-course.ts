@@ -56,7 +56,7 @@ export interface StudentCourse extends Course {
  */
 export const studentCourseSchema = new Schema({
   slug: String,
-  isCompleted: { type: Boolean, default: false };
+  isCompleted: { type: Boolean, default: false },
 
   course: { type: Schema.Types.ObjectId, ref: 'courses', required: true },
 
