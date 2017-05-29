@@ -1,4 +1,11 @@
 div.container
   div.row
     div.col.s6.offset-s3
-      div.header Congratulations. You've finished the course!
+      div.card(*ngIf="studentCourse")
+        div.card-image
+          img(src="{{ studentCourse.data.photos[0].url }}")
+          span.card-title Congratulations!
+          div.btn-floating.halfway-fab.waves-effect((click)="resetCourse()")
+            i.material-icons redo
+        div.card-content
+          p You've finished {{ studentCourse.data.name }} in {{ studentCourse.data.activeLanguage }}! Click the redo button if you'd like to redo the course.
