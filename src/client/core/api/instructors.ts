@@ -6,10 +6,13 @@ import { AomHTTPService } from 'client/core/aom-http.service';
 import { JWTService } from 'client/core/jwt.service';
 
 // AOM Interfaces
+import { Course } from 'server/dependencies/models/course/course';
 import { CourseModule } from 'server/dependencies/models/module';
 import {
   GetCoursesResponse, GetOneCourseResponse,
-  UpdateCourseRequestBody, UpdateCourseResponse } from 'server/api/instructors/models';
+  UpdateCourseRequestBody, UpdateCourseResponse,
+  ChangeVisibilityResponse
+} from 'server/api/instructors/models';
 import {
   AddModuleResponse,
   DeleteModuleRequest, DeleteModuleResponse,
@@ -50,7 +53,7 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
 
     deleteModule({ slug, moduleId, language }: { slug: string, moduleId: string, language: string }): Observable<DeleteModuleResponse> {
       return http
-        .delete(`${ BASE_URL }/course/${ slug }/language/${ language }/module/${ moduleId }`);
+        .delete(`${BASE_URL}/course/${slug}/language/${language}/module/${moduleId}`);
     },
 
     addNewLesson({ slug, moduleId, newLesson, language }: { slug: any, moduleId: string, newLesson: any, language: string }): Observable<AddNewLessonResponse> {
@@ -65,7 +68,7 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
       { slug: string, moduleId: string, lessonId: string, language: string }): Observable<any> {
       return http
         .delete(
-          `${BASE_URL}/course/${slug}/language/${ language }/module/${moduleId}/lesson/${lessonId}`);
+        `${BASE_URL}/course/${slug}/language/${language}/module/${moduleId}/lesson/${lessonId}`);
     },
     getLesson({ slug, moduleId, lessonId, language }: { slug: string, moduleId: string, lessonId: string, language: string }): Observable<GetOneLessonResponse> {
       const query: GetOneLessonQuery = { language };
@@ -98,9 +101,13 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
 
       return http
         .put(
-          `${ BASE_URL }/course/${ slug }`,
-          data
+        `${BASE_URL}/course/${slug}`,
+        data
         );
+    },
+    toggleVisibility({ course }: { course: Course }): Observable<ChangeVisibilityResponse> {
+      return http
+        .post(`${BASE_URL}/course/${course.slug}/visibility`);
     }
   };
 }

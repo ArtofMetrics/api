@@ -12,11 +12,23 @@ html(lang="en")
     meta(name="apple-mobile-web-app-status-bar-style" content="black")
     meta(property="og:locale", content="en_US")
     link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
-    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css")
     title Art Of Metrics
+    style(type='text/css').
+      body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+
+      main {
+        flex: 1 0 auto;
+        min-height: 80vh;
+      }
   body
+  
     my-app Loading...
-    script(src="https://code.jquery.com/jquery-3.1.1.js")
+    script(src="https://code.jquery.com/jquery-2.1.1.js")
     script(
       src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.js")
     script(type="text/javascript" src="http://latex.codecogs.com/js/eq_config.js")

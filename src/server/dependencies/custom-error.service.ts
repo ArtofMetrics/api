@@ -7,15 +7,10 @@ export class CustomErrorService {
   
   public httpError(res: express.Response) {
     return (error: any) => {
-      console.error(error);
-      // if (error.stack) {
-      //   console.error(`Error: ${ error }\n${ error.stack }`)
-      // } else {
-      //   console.error(error);
-      // }
+      console.log('Error: ', error);
       const formatted = error;
       formatted.ok = false;
-      res.json({ data: formatted });
+      res.status(error.code || 500).json({ data: formatted });
     }
   }
 

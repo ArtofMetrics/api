@@ -87,6 +87,25 @@ export const courseSchema: Schema = new Schema({
   }
 }, { timestamps: true });
 
+// validators
+courseSchema.path('data.photos').validate(function(photos) {
+  return this.isVisible ? photos && photos.length : true;
+});
+
+// methods
 courseSchema.methods.getModule = function (id, language: string) {
   return this.data.modules[language].id(id);
 }
+
+export interface CourseModel extends Model<Course> {
+
+  getVisibleCourses: () => Course[];
+}
+
+// statics
+courseSchema.statics.getVisibleCourses = function() {
+  return this
+    .find({
+      isVisible: true
+    });
+};

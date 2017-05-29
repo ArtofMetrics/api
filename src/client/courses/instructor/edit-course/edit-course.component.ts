@@ -8,6 +8,7 @@ import * as each from 'lodash/each';
 import { ViewReadyService } from 'client/shared/view-ready.service';
 import { ApiService } from 'client/core/api/api.service';
 import { EditCourseService } from './edit-course.service';
+import { ToastService } from 'client/core/toast.service';
 
 // AOM Models
 import { Course } from 'server/dependencies/models/course/course';
@@ -31,12 +32,14 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   course: Course;
   slug: string;
   language: string;
+  coverPhotoUrl: string;
 
   constructor(
     private viewState: ViewReadyService,
     private apiService: ApiService,
     private route: ActivatedRoute,
-    private editCourseService: EditCourseService
+    private editCourseService: EditCourseService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -63,7 +66,10 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   fetchCourse = ({ slug }: { slug: string }) => {
     return this.editCourseService.getCourse({ slug })
       .subscribe(
-      (data) => this.course = data.course,
+      (data) => {
+        this.course = data.course;
+        this.coverPhotoUrl = this.course.data.photos[0].url;
+      },
       (error) => this.handleHttpError(error)
       )
   }
@@ -102,17 +108,13 @@ export class EditCourseComponent implements OnInit, OnDestroy {
       .subscribe(
       data => {
         this.course = data.course;
-        this.toast(`${payload.module.name} deleted `);
+        this.toastService.toast(`${payload.module.name} deleted `);
       },
       error => {
-        this.toast(`Oops, there was an error deleting ${payload.module.name}`);
+        this.toastService.toast(`Oops, there was an error deleting ${payload.module.name}`);
         this.handleHttpError(error);
       }
       );
-  }
-
-  toast = (message) => {
-    (<any>window).Materialize.toast(message, 4000);
   }
 
   handleHttpError = (error: Error) => {
@@ -129,12 +131,17 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   };
 
   saveCourse = () => {
+    if (this.coverPhotoUrl) {
+      this.course.data.photos[0].url = this.coverPhotoUrl;
+    }
+
     this.apiService.instructors
       .saveCourse({
         course: {
           subscription: this.course.subscription,
           data: {
-            description: this.course.data.description
+            description: this.course.data.description,
+            photos: this.course.data.photos
           }
         },
         slug: this.course.slug
@@ -142,11 +149,22 @@ export class EditCourseComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this.course = data.course;
-          this.toast(`Course saved successfully`);
+          this.toastService.toast(`Course saved successfully`);
         },
         (error) => {
-          this.toast(`Oops, there was an error saving your course`);
+          this.toastService.toast(`Oops, there was an error saving your course`);
           this.handleHttpError(error);
+        }
+      );
+  };
+
+  toggleCourseVisibility = (visible: boolean) => {
+    this.apiService.instructors.toggleVisibility({ course: this.course })
+      .subscribe(
+        data => this.course.isVisible = data.visibility,
+        error => {
+          this.toastService.toast(`Oops, the course isnt valid enough to be visible.`);
+          this.handleHttpError(error)
         }
       );
   };

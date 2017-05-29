@@ -1,7 +1,8 @@
 div#app-component
-  top-menu([title]="applicationTitle" *ngIf="!isLoggedIn")
+  header
+    top-menu([title]="applicationTitle" *ngIf="!isLoggedIn")
   aom-sidebar-toggle(*ngIf="isLoggedIn")
   aom-sidebar
   view-wrapper
     router-outlet
-    aom-footer
+  aom-footer

@@ -6,7 +6,8 @@ import { Middleware } from '../middleware';
 import {
   getCourses,
   getOneCourse,
-  updateCourse
+  updateCourse,
+  changeVisibility
 } from './instructors.controller';
 
 import {
@@ -65,6 +66,10 @@ export function instructorsRouter(di): Router {
   // Delete routes
   api.route('/course/:slug/language/:language/module/:module')
     .delete(di.invoke(deleteModule));
+
+  // Change visibility
+  api.route('/course/:slug/visibility')
+    .post(di.invoke(changeVisibility));
 
   api.route('/course/:slug/language/:language/module/:module/lesson/:lesson')
     .delete(di.invoke(deleteLesson));

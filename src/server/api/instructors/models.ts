@@ -44,3 +44,13 @@ export interface UpdateCourseRequest extends AuthenticatedRequest {
 export interface UpdateCourseResponse {
   course: any;
 }
+
+// Change visibility
+
+export interface ChangeVisibilityRequest extends AuthenticatedRequest {
+  params: GetSpecificCourseParams;
+}
+
+export interface ChangeVisibilityResponse {
+  visibility: boolean;
+}

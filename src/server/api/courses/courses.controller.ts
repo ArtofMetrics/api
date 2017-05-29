@@ -10,6 +10,8 @@ import { Model } from 'mongoose';
 import { CustomErrorService } from '../../dependencies/custom-error.service';
 import { isInstructor, isInstructorOfCourse } from '../utils';
 import { findCourseOrThrow, createSlug } from './helpers';
+import { CourseModel, Course } from '../../dependencies/models/course/course';
+import { StudentCourse, StudentCourseModel } from '../../dependencies/models/course/student-course';
 
 // AOM models
 import { HTTPResponse } from '../models';
@@ -19,25 +21,12 @@ import {
   GetOneCourseResponse
 } from './models';
 
-export function getCourses($customError: CustomErrorService, $Course) {
+export function getCourses($customError: CustomErrorService, $Course: CourseModel) {
   return async (req, res: express.Response) => {
 
     const SAMPLE_URL = 'http://lorempixel.com/400/200';
     try {
-      const courses = [
-        new $Course({
-          slug: 'course-1',
-          data: { title: 'Course 1', description: 'Random Description 1', category: 'Econ', photos: [{ url: SAMPLE_URL, isCover: true }] },
-        }),
-        new $Course({
-          slug: 'course-2',
-          data: { title: 'Course 2', description: 'Random Description 2', category: 'R', photos: [{ url: SAMPLE_URL, isCover: true }] }
-        }),
-        new $Course({
-          slug: 'course-3',
-          data: { title: 'Course 3', description: 'Random Description 3', category: 'R', photos: [{ url: SAMPLE_URL, isCover: true }] }
-        })
-      ];
+      const courses = await $Course.getVisibleCourses();
 
       res.json({ data: { courses } });
     } catch (error) {
@@ -55,6 +44,11 @@ export function createCourse($customError: CustomErrorService, $Course) {
       }
 
       const data = req.body.course.data;
+
+      data.photos = [
+        { url: `http://lorempixel.com/400/200`, isCover: true }
+      ];
+      
       let newCourse = {
         data,
         slug: await createSlug(data.name.toLowerCase(), $Course),
@@ -72,7 +66,7 @@ export function createCourse($customError: CustomErrorService, $Course) {
   };
 }
 
-export function getOneCourse($customError: CustomErrorService, $Course: Model<any>, $StudentCourse) {
+export function getOneCourse($customError: CustomErrorService, $Course: CourseModel, $StudentCourse) {
   return async (req, res: express.Response) => {
     try {
       const options = { skipVisibility: isInstructor(req.user) }
