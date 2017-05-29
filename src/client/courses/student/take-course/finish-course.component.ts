@@ -54,6 +54,12 @@ export class FinishCourseComponent implements OnInit {
   }
 
   resetCourse = () => {
-    this.apiService.students.resetCourse({ course: this.studentCourse });
+    this.apiService.students.resetCourse({ course: this.studentCourse })  
+    .subscribe(
+      data => {
+        this.router.navigate(['course', data.studentCourse.slug]);
+      },
+      error => this.handleHttpError(error)
+    )
   };
 }

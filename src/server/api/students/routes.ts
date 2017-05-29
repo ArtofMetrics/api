@@ -216,6 +216,8 @@ export function resetCourse($User: Model<any>, $customError: CustomErrorService,
       studentCourse.isCompleted = false;
       studentCourse.data.lastCompleted = { R: '0.0.0', STATA: '0.0.0' };
       await studentCourse.save();
+
+      res.json({ data: { studentCourse } });
     } catch (error) {
       return $customError.httpError(res)(error);
     }
