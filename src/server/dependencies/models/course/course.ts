@@ -26,6 +26,7 @@ export interface Course extends Document {
   isVisible: boolean;
   isDeleted: boolean;
   status: string;
+  difficulty: string;
   slug: string;
   instructors: (Schema.Types.ObjectId | string | {})[];
 
@@ -64,6 +65,12 @@ export const courseSchema: Schema = new Schema({
   // Should only be editable by admins
   admin: {
     readableId: { type: Number, required: true },
+  },
+
+  difficulty: {
+    type: String,
+    enum: ['Beginner', 'Medium', 'Advanced'],
+    required: function() { return this.isVisible }
   },
 
   // editable by instructors or admins

@@ -1,23 +1,35 @@
 ul.side-nav#aom-sidebar
-  li
-    div.userView
-      div.background
-        img(src="http://artofmetrics.com/wp-content/uploads/2016/01/header-retina.png")
-  li
-    a#sidebar-logout((click)="logout()") Logout
+  
+  div
+    a([routerLink]="['/']")
+      i.material-icons.medium home
+
+  div.center-align.sidebar-user-info
+    a([routerLink]="['profile']")
+      i.material-icons.medium person_pin
+  li.center-align
+    p(*ngIf="userService.$") {{ userService.$.fullName() }}
+  
+  div(*ngIf="sidebar.contentView === 'course'")
+    div.divider
+
+    div.section
+      div.header {{ sidebar.course.data.name }}
+      ul.collapsible(data-collapsible="accordion")
+        li(
+          *ngFor="let module of sidebar.course.data.modules[sidebar.course.data.activeLanguage]; let moduleIdx = index;"
+          [class.disabled]="isFutureModule(moduleIdx)")
+          div.collapsible-header {{ module.name }}
+          div.collapsible-body
+            ul.collection
+              li.pointer(*ngFor="let lesson of module.lessons; let lessonIdx = index;")
+                div(
+                  [class.disabled]="isFutureLesson({ moduleIdx: moduleIdx, lessonIdx: lessonIdx })"
+                  (click)="loadLesson(lesson)") {{ lesson.name }}
   
   div.divider
 
-  div.section(*ngIf="sidebar.contentView === 'course'")
-    div.header {{ sidebar.course.data.name }}
-    ul.collapsible(data-collapsible="accordion")
-      li(
-        *ngFor="let module of sidebar.course.data.modules[sidebar.course.data.activeLanguage]; let moduleIdx = index;"
-        [class.disabled]="isFutureModule(moduleIdx)")
-        div.collapsible-header {{ module.name }}
-        div.collapsible-body
-          ul.collection
-            li.pointer(*ngFor="let lesson of module.lessons; let lessonIdx = index;")
-              div(
-                [class.disabled]="isFutureLesson({ moduleIdx: moduleIdx, lessonIdx: lessonIdx })"
-                (click)="loadLesson(lesson)") {{ lesson.name }}
+  div.section
+    li
+      a#sidebar-logout((click)="logout()") Logout
+    

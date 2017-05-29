@@ -175,7 +175,7 @@ export class AuthController {
         const customer = await $payment.getCustomer({ user: req.user });
 
         const cards = customer ?
-          await mapCards(customer.sources) :
+          await mapCards(customer.sources.data) :
           [];
 
         const data: HTTPResponse<GetCreditCardsResponse> = { data: { cards } };
@@ -191,7 +191,8 @@ export class AuthController {
           id: source.id,
           last4: source.last4,
           exp_month: source.exp_month,
-          exp_year: source.exp_year
+          exp_year: source.exp_year,
+          brand: source.brand
         };
       });
     }

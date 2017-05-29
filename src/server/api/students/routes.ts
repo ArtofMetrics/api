@@ -172,6 +172,40 @@ export function submitDrip($customError: CustomErrorService, $StudentCourse: Stu
   };
 }
 
+export function getCourses($customError: CustomErrorService, $User, $StudentCourse: StudentCourseModel) {
+  return async (req, res) => {
+    try {
+      const updatedUser = await $User
+        .findById(req.user._id)
+        .select('courses')
+        .lean();
+
+      const courses = await $StudentCourse
+        .find({ _id: { $in: updatedUser.courses.active.concat(updatedUser.courses.completed) } });
+      
+      res.json({ data: { courses } });
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  }
+}
+
+export function changeActiveLanguage($customError: CustomErrorService, $StudentCourse: StudentCourseModel, $User: Model<any>) {
+  return async (req, res) => {
+    try {
+      const studentCourse = await findStudentCourseByIdOrThrow({ $StudentCourse, id: req.params.identifier });
+      await checkSubscribed({ user: req.user, studentCourse, $User });
+
+      const update = await $StudentCourse
+        .findByIdAndUpdate(studentCourse._id, { 'data.activeLanguage': req.body.language }, { new: true });
+      
+      res.json({ data: { studentCourse: update } });
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  };
+}
+
 async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {
   return $User.findByIdAndUpdate(
     user._id,

@@ -15,7 +15,8 @@ import { StripeCard } from 'server/api/auth/models';
 
 @Component({
   selector: 'preview-course',
-  templateUrl: './preview-course.component.jade'
+  templateUrl: './preview-course.component.jade',
+  styleUrls: ['./preview-course.component.styl']
 })
 
 export class PreviewCourseComponent implements OnInit {
@@ -45,7 +46,9 @@ export class PreviewCourseComponent implements OnInit {
 
     this.apiService.auth.getCreditCards()
     .subscribe(
-      data => this.cards = data.cards,
+      data => {
+        this.cards = data.cards;
+      },
       error => this.handleHttpError(error)
     );
   };
@@ -64,7 +67,8 @@ export class PreviewCourseComponent implements OnInit {
             this.state.addingCard = false;
             this.subscribing = false;
             this.toastService.toast(`You've successfuly paid for this course!`);
-            this.router.navigate(['course', data.studentCourse.slug]);
+            setTimeout(() => window.location.reload(), 1000);
+            // this.router.navigate(['course', data.studentCourse.slug]);
           },
           error => this.handleHttpError(error)
         )

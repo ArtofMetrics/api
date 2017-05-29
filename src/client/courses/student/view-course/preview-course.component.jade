@@ -1,12 +1,14 @@
 div.container
   div.row
-    div.col.m12.s8.offset-s4
-
-      //- Name and description
+    div.col.s3
+      img(src="{{ course.data.photos[0].url }}")
+    div.col.s6.push-s3
       div.section
-        h5 {{ course.data.name }}
-        div
-      
+        h3.header {{ course.data.name }}
+        span {{ course.data.modules.R.length }} module(s) in R
+        span {{ course.data.modules.STATA.length }} module(s) in STATA
+      //- Name and description
+      div.divider
       //- Instructors
       div.section
         h6 Instructors

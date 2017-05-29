@@ -96,7 +96,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
       .subscribe(
       (data) => this.course = data.course,
       (error) => this.handleHttpError(error)
-      )
+      );
   };
 
   deleteModule = (payload): void => {
@@ -138,6 +138,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     this.apiService.instructors
       .saveCourse({
         course: {
+          difficulty: this.course.difficulty,
           subscription: this.course.subscription,
           data: {
             description: this.course.data.description,
@@ -147,27 +148,32 @@ export class EditCourseComponent implements OnInit, OnDestroy {
         slug: this.course.slug
       })
       .subscribe(
-        (data) => {
-          this.course = data.course;
-          this.toastService.toast(`Course saved successfully`);
-        },
-        (error) => {
-          this.toastService.toast(`Oops, there was an error saving your course`);
-          this.handleHttpError(error);
-        }
+      (data) => {
+        this.course = data.course;
+        this.toastService.toast(`Course saved successfully`);
+      },
+      (error) => {
+        this.toastService.toast(`Oops, there was an error saving your course`);
+        this.handleHttpError(error);
+      }
       );
   };
 
   toggleCourseVisibility = (visible: boolean) => {
     this.apiService.instructors.toggleVisibility({ course: this.course })
       .subscribe(
-        data => this.course.isVisible = data.visibility,
-        error => {
-          this.toastService.toast(`Oops, the course isnt valid enough to be visible.`);
-          this.handleHttpError(error)
-        }
+      data => this.course.isVisible = data.visibility,
+      error => {
+        this.toastService.toast(`Oops, the course isnt valid enough to be visible.`);
+        this.handleHttpError(error)
+      }
       );
   };
+
+  setDifficulty = (difficulty: string) => {
+    this.course.difficulty = difficulty;
+    console.log('set difficulty', this.course);
+  }
 
   @Input()
   setLanguage = ({ language }) => {

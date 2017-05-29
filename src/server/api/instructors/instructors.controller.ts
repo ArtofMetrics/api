@@ -57,7 +57,7 @@ export function updateCourse($customError: CustomErrorService, $Course: Model<an
 
       const { course: update } = req.body;
 
-      $docUpdate(course, update, [/^subscription/, /^data\.description/]);
+      $docUpdate(course, update, [/^subscription/, /^data\.description/, /^difficulty/]);
 
       await course.save();
       

@@ -15,6 +15,12 @@ export function students(API_ROOT: string, http: AomHTTPService) {
   const BASE_URL = `${API_ROOT}/students`;
 
   return {
+
+    getSubscribedCourses() {
+      return http
+        .get(`${ BASE_URL }/courses`);
+    },
+
     getCourseBySlug({ slug }: { slug: string }): Observable<GetOneCourseResponse> {
       return http
         .get(`${BASE_URL}/course/${slug}`);
@@ -31,6 +37,13 @@ export function students(API_ROOT: string, http: AomHTTPService) {
       
       return http
         .post(`${ BASE_URL }/course/${ courseId }/answer`, data);
+    },
+
+    changeActiveLanguage({ course, language }) {
+      const data = { language };
+
+      return http
+        .post(`${ BASE_URL }/course/${ course._id.toString() }/language`, data);
     }
   };
 }
