@@ -67,8 +67,6 @@ export class TakeDripComponent {
   };
 
   submitConsoleQuiz = (answer: string) => {
-    console.log('answer submitted', answer);
-    console.log('answer to test', this.drip.consoleQuiz.answer);
     if (answer.trim() === this.drip.consoleQuiz.answer) {
       this.toastService.toast(`You answered the quiz correctly!`);
       this.moveOn.emit();

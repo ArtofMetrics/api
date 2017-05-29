@@ -136,15 +136,14 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
   }
 }
 
-export function submitDrip($customError: CustomErrorService, $StudentCourse: StudentCourseModel) {
+export function submitDrip($customError: CustomErrorService, $StudentCourse: StudentCourseModel, $User: Model<any>) {
   return async (req: SubmitDripRequest, res: Response) => {
     try {
       const studentCourse = await findStudentCourseByIdOrThrow({ $StudentCourse, id: req.params.identifier });
-      checkSubscribed({ user: req.user, studentCourse });
+      await checkSubscribed({ user: req.user, studentCourse, $User });
 
       const { language, completed } = req.body;
 
-      console.log('completed', completed);
       studentCourse.changeLastCompleted({ language, justCompleted: completed });
 
       const update = await $StudentCourse.findByIdAndUpdate(

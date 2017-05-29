@@ -1,4 +1,5 @@
 // External Dependencies
+import { Model } from 'mongoose';
 import * as StandardError from 'standard-error';
 import * as status from 'http-status';
 
@@ -8,8 +9,11 @@ import * as status from 'http-status';
 import { StudentCourse } from '../../dependencies/models/course/student-course';
 import { IUser } from '../../dependencies/models/user/user.model';
 
-export const checkSubscribed = ({ user, studentCourse }: { user: IUser, studentCourse: StudentCourse }) => {
-  if (user.courses.active.find(courseId => courseId.toString() === studentCourse._id.toString())) {
+export const checkSubscribed = async ({ user, studentCourse, $User }: { user: IUser, studentCourse: StudentCourse, $User: Model<any> }) => {
+  const dbUser: any = await $User.findById(user._id).select('courses.active').lean();
+
+  console.log('dbuser', dbUser.courses)
+  if (dbUser.courses.active.find(courseId => courseId.toString() === studentCourse._id.toString())) {
     return;
   }
 

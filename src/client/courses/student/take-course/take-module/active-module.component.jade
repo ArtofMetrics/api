@@ -9,7 +9,7 @@ div(*ngIf="activeLesson")
   
   //- drips
   div.row(*ngFor="let drip of activeLesson.drips; let i = index;")
-    div.row.drip-row.valign-wrapper.section.scrollspy.pointer((click)="loadDrip(drip)")
+    div.row.drip-row.valign-wrapper.section.scrollspy.pointer
       div.col.s3
         span.drip-header Drip {{ i }}
       div.col.s1.offset-s8

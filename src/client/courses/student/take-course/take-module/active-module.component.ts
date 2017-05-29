@@ -26,33 +26,48 @@ export class ActiveModuleComponent implements OnChanges {
   continueOn: EventEmitter<any> = new EventEmitter();
 
   activeLesson: Lesson;
+  activeDrip: Drip;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
+    const language = this.studentCourse.get(`data.activeLanguage`);
+
     this.activeLesson = this.studentCourse
-      .getActiveLesson({ language: this.studentCourse.data.activeLanguage });
+      .getActiveLesson({ language });
+    this.activeDrip = this.studentCourse
+      .getActiveDrip({ language });
   }
-  
+
   ngOnChanges(changes: any) {
-    const { studentCourse } = changes.studentCourse.currentValue;
+    const studentCourse = changes.studentCourse.currentValue || this.studentCourse;
+    
     if (!studentCourse) {
+      console.log('there was no student ocurse', changes, this)
       return;
     }
+
+    const language = studentCourse.get('data.activeLanguage');
+    const previousActiveLesson = this.activeLesson;
+    this.activeLesson = studentCourse.getActiveLesson({ language });
+    this.activeDrip = studentCourse.getActiveDrip({ language });
     
-    this.activeLesson = studentCourse.getActiveLesson({ language: studentCourse.data.activeLanguage });
+    if (previousActiveLesson && previousActiveLesson._id.toString() !== this.activeLesson._id.toString()) {
+      this.scrollToTop();
+    }
   }
+
+  scrollToTop = () => $('html, body').animate({ 'scrollTop': 0 }, '1000');
 
   nextDrip = () => {
     this.continueOn.emit();
   }
 
   isActiveDrip = (drip: Drip) => {
-    if (!this.studentCourse) {
+    if (!this.studentCourse || !this.activeDrip) {
       return false;
     }
 
-    const activeDrip = this.studentCourse.getActiveDrip({ language: this.studentCourse.data.activeLanguage });
-    return activeDrip._id.toString() === drip._id.toString();
+    return this.activeDrip._id.toString() === drip._id.toString();
   }
 }

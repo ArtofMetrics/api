@@ -71,12 +71,7 @@ export class EditModuleComponent implements OnInit, OnDestroy {
       ['course', this.course.slug, 'module', this.module._id, 'lesson', lesson._id, 'edit'],
       { queryParams: { language: this.language } });
   };
-
-  canAddLesson = () => {
-    return !this.module.lessons.length ||
-      every(this.module.lessons, (lesson: any) => lesson.isVisible);
-  }
-
+  
   addLesson = () => {
     const name = `Lesson ${(this.module.lessons).length + 1}`;
     const { slug, module: { _id: moduleId }, language } = this;

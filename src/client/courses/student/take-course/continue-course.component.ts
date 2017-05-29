@@ -49,8 +49,6 @@ export class ContinueCourseComponent implements OnInit {
       data => {
         this.studentCourse = new mongoose.Document(data.studentCourse, studentCourseSchema);
         this.setActiveModule({ language: this.studentCourse.data.activeLanguage });
-
-        const activeDrip = this.studentCourse.getActiveDrip({ language: this.studentCourse.data.activeLanguage });
       },
       error => this.handleHttpError(error)
     )

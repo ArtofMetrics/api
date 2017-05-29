@@ -1,8 +1,8 @@
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 import { Drip, dripSchema } from './drip';
 
-export interface Lesson {
+export interface Lesson extends Document {
   name: string;
   description: string;
   drips: Drip[];
