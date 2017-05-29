@@ -18,18 +18,19 @@ export type ContentType = 'main' | 'course';
 export class SidebarStateService {
 
   private contentType = new BehaviorSubject<ContentType>('main');
-  private courseWatch = new BehaviorSubject<StudentCourse | null>(null);
+  private courseWatch: BehaviorSubject<StudentCourse | null>;
+  public lessonWatch: BehaviorSubject<Lesson | null> = new BehaviorSubject(null);
 
   private contentView: ContentType = 'main';
 
   private subscriptions: { contentType?: Subscription, courseWatch?: Subscription } = {};
 
-  private course: StudentCourse;
+  public course: StudentCourse;
 
-  private activeModule: CourseModule;
-  private activeLesson: Lesson;
-  private activeDrip: Drip;
-  
+  public activeModule: CourseModule;
+  public activeLesson: Lesson;
+  public activeDrip: Drip;
+
   constructor(
 
   ) {
@@ -45,7 +46,14 @@ export class SidebarStateService {
         console.error(error);
       }
     );
+  }
 
+  public registerCourseWatch = (course: StudentCourse) => {
+    if (this.courseWatch) {
+      this.deregisterCourseWatch();
+    }
+
+    this.courseWatch = new BehaviorSubject(course);
     this.subscriptions.courseWatch = this.courseWatch.subscribe(
       (course: StudentCourse) => {
         this.course = course;
@@ -62,14 +70,21 @@ export class SidebarStateService {
         console.error(error);
       }
     )
-  }
+  };
+
+  public deregisterCourseWatch = () => {
+    if (this.subscriptions.courseWatch) {
+      this.subscriptions.courseWatch.unsubscribe();
+
+    }
+  };
 
   public setMainView = () => {
     this.course = null;
     this.activeModule = null;
     this.activeLesson = null;
     this.activeDrip = null;
-  }
+  };
 
   public setContentType = ({ type }: { type: ContentType }) => {
     if (this.contentView !== type) {
@@ -81,5 +96,7 @@ export class SidebarStateService {
     this.courseWatch.next(course);
   };
 
-
+  public loadLesson = ({ lesson }: { lesson: Lesson }) => {
+    this.lessonWatch.next(lesson);
+  };
 }

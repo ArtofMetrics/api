@@ -1,5 +1,6 @@
 // External Dependencies
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 // AOm Dependencies
 import { ApiService } from 'client/core/api/api.service';
@@ -9,17 +10,22 @@ import { SidebarStateService } from 'client/sidebar/sidebar-state.service';
 // AOM Interfaces
 import { CourseModule } from 'server/dependencies/models/module';
 import { StudentCourse, studentCourseSchema } from 'server/dependencies/models/course/student-course';
+import { Lesson } from 'server/dependencies/models/module/lesson';
 
 @Component({
   selector: 'continue-course',
   templateUrl: './continue-course.component.jade'
 })
 
-export class ContinueCourseComponent implements OnInit {
+export class ContinueCourseComponent implements OnInit, OnDestroy {
   @Input()
   studentCourse: StudentCourse;
+
   activeModule: CourseModule;
   language: string;
+  subscriptions: {
+    lesson?: Subscription
+  } = {};
 
   constructor(
     private apiService: ApiService,
@@ -28,8 +34,22 @@ export class ContinueCourseComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.sidebar.registerCourseWatch(this.studentCourse);
+    this.subscriptions.lesson = this.sidebar.lessonWatch
+      .subscribe(
+        (lesson: Lesson) => {
+          console.log('on switch lesson', lesson);
+        },
+        error => this.errorService.logError(error)
+      )
     this.language = this.studentCourse.data.activeLanguage;
     this.setActiveModule({ language: this.language });
+
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.lesson.unsubscribe();
+    this.sidebar.deregisterCourseWatch();
   }
 
   setLanguage = ({ language }: { language: string }) => {
@@ -39,6 +59,7 @@ export class ContinueCourseComponent implements OnInit {
 
   setActiveModule = ({ language }: { language: string }) => {
     this.activeModule = this.studentCourse.getActiveModule({ language });
+    console.log('about to set course');
     this.sidebar.setCourse({ course: this.studentCourse });
   };
 
