@@ -15,6 +15,12 @@ export function students(API_ROOT: string, http: AomHTTPService) {
   const BASE_URL = `${API_ROOT}/students`;
 
   return {
+
+    getSubscribedCourses() {
+      return http
+        .get(`${ BASE_URL }/courses`);
+    },
+
     getCourseBySlug({ slug }: { slug: string }): Observable<GetOneCourseResponse> {
       return http
         .get(`${BASE_URL}/course/${slug}`);

@@ -5,9 +5,8 @@ ul.side-nav#aom-sidebar
       i.material-icons.medium home
 
   div.center-align.sidebar-user-info
-    div.userView
-      div.background
-        i.material-icons.medium person_pin
+    a([routerLink]="['profile']")
+      i.material-icons.medium person_pin
   li.center-align
     p(*ngIf="userService.$") {{ userService.$.fullName() }}
   

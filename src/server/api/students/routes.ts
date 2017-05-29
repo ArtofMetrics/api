@@ -172,6 +172,24 @@ export function submitDrip($customError: CustomErrorService, $StudentCourse: Stu
   };
 }
 
+export function getCourses($customError: CustomErrorService, $User, $StudentCourse: StudentCourseModel) {
+  return async (req, res) => {
+    try {
+      const updatedUser = await $User
+        .findById(req.user._id)
+        .select('courses')
+        .lean();
+
+      const courses = await $StudentCourse
+        .find({ _id: { $in: updatedUser.courses.active.concat(updatedUser.courses.completed) } });
+      
+      res.json({ data: { courses } });
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  }
+}
+
 async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {
   return $User.findByIdAndUpdate(
     user._id,

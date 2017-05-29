@@ -3,6 +3,11 @@ import { Component, OnInit } from '@angular/core';
 
 // AOM Deps
 import { ViewReadyService } from 'client/shared/view-ready.service';
+import { ApiService } from 'client/core/api/api.service';
+import { ErrorService } from 'client/core/error.service';
+
+// AOM Types
+import { StudentCourse } from 'server/dependencies/models/course/student-course';
 
 @Component({
   selector: 'user-profile',
@@ -11,9 +16,34 @@ import { ViewReadyService } from 'client/shared/view-ready.service';
 
 
 export default class ProfileComponent implements OnInit { 
-  constructor(private viewState: ViewReadyService) {}
+  
+  activeCourses: StudentCourse[];
+  completedCourses: StudentCourse[];
+
+  constructor(
+    private viewState: ViewReadyService,
+    private apiService: ApiService,
+    private errorService: ErrorService) {}
 
   ngOnInit() {
     this.viewState.emitFinished();
+    this.apiService.students.getSubscribedCourses()
+      .subscribe(
+        data => {
+          const courses = data.courses;
+
+          this.activeCourses = courses.filter(course => !course.isCompleted && course.subscription.subscribed);
+          this.completedCourses = courses.filter(course => course.isCompleted);
+        },
+        error => {
+          this.handleHttpError(error);
+        }
+      )
   }
+
+  handleHttpError = (error: Error) => {
+    this.errorService.handleHttpError(error);
+  }
+
+
 }
