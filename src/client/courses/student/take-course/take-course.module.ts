@@ -10,13 +10,19 @@ import { StudentCourseHeaderComponent } from './student-course-header.component'
 import { TakeCourseComponent } from './take-course.component';
 import { BeginCourseComponent } from './begin-course.component';
 import { ContinueCourseComponent } from './continue-course.component';
+import { FinishCourseComponent } from './finish-course.component';
 
 // AOM interfaces
 
 @NgModule({
   imports: [CommonModule, TakeModuleModule, SharedCourseModule, SidebarModule],
-  declarations: [BeginCourseComponent, TakeCourseComponent, ContinueCourseComponent, StudentCourseHeaderComponent],
-  exports: [BeginCourseComponent, TakeCourseComponent, ContinueCourseComponent],
+  declarations: [
+    BeginCourseComponent,
+    TakeCourseComponent,
+    ContinueCourseComponent, 
+    StudentCourseHeaderComponent,
+    FinishCourseComponent],
+  exports: [BeginCourseComponent, TakeCourseComponent, ContinueCourseComponent, FinishCourseComponent],
 })
 
-export class TakeCourseModule {}
+export class TakeCourseModule { }

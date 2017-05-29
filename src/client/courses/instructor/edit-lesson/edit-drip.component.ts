@@ -33,7 +33,6 @@ export class EditDripComponent {
   ) {}
 
   ngOnInit() {
-    console.log('THIS.DRIP', this.drip);
   }
 
   editDrip = ($event: { text: string }): void => {

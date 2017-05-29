@@ -43,7 +43,6 @@ export class ActiveModuleComponent implements OnChanges {
     const studentCourse = changes.studentCourse.currentValue || this.studentCourse;
     
     if (!studentCourse) {
-      console.log('there was no student ocurse', changes, this)
       return;
     }
 
