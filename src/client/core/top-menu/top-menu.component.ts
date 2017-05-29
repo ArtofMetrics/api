@@ -16,12 +16,7 @@ export default class TopMenuComponent {
     private topMenuService: TopMenuService, 
     private userService: UserService) {
     const self = this;
-    this.links = topMenuService.fetchLinks({ 
-      isAdmin: userService.isAdmin(),
-      isLoggedIn: userService.isLoggedIn(),
-      isInstructor: userService.isInstructor(),
-      isStudent: userService.isStudent()
-    });
+    this.links = topMenuService.fetchLinks();
   }
 
   public isLoggedIn() {

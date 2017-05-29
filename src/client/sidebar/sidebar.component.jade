@@ -3,5 +3,12 @@ ul.side-nav#aom-sidebar
     div.userView
       div.background
         img(src="http://artofmetrics.com/wp-content/uploads/2016/01/header-retina.png")
+      a([routerLink]="'/profile'") {{ user?.profile.name.first }}
+        i.material-icons account_circle
+  li
+    div.divider
+  li
+    a.subheader Modules 
   li
     a#sidebar-logout((click)="logout()") Logout
+  
