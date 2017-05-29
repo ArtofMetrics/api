@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ApiService } from 'client/core/api/api.service';
 import { ErrorService } from 'client/core/error.service';
 import { SidebarStateService } from 'client/sidebar/sidebar-state.service';
+import { ToastService } from 'client/core/toast.service';
 
 // AOM Interfaces
 import { CourseModule } from 'server/dependencies/models/module';
@@ -32,7 +33,8 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private errorService: ErrorService,
     private sidebar: SidebarStateService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -55,8 +57,18 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
   }
 
   setLanguage = ({ language }: { language: string }) => {
-    this.language = language;
-    this.setActiveModule({ language: this.language });
+    this.apiService.students.changeActiveLanguage({ course: this.studentCourse, language })
+      .subscribe(
+        data => {
+          this.studentCourse = new mongoose.Document(data.studentCourse, studentCourseSchema);
+          this.language = language;
+          this.setActiveModule({ language: this.language });
+        },
+        error => {
+          this.toastService.toast(`Oops, there was an error changing the language to ${ language }`);
+          this.handleHttpError(error)
+        }
+      )
   };
 
   setActiveModule = ({ language }: { language: string }) => {

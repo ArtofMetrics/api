@@ -37,6 +37,13 @@ export function students(API_ROOT: string, http: AomHTTPService) {
       
       return http
         .post(`${ BASE_URL }/course/${ courseId }/answer`, data);
+    },
+
+    changeActiveLanguage({ course, language }) {
+      const data = { language };
+
+      return http
+        .post(`${ BASE_URL }/course/${ course._id.toString() }/language`, data);
     }
   };
 }

@@ -190,6 +190,22 @@ export function getCourses($customError: CustomErrorService, $User, $StudentCour
   }
 }
 
+export function changeActiveLanguage($customError: CustomErrorService, $StudentCourse: StudentCourseModel, $User: Model<any>) {
+  return async (req, res) => {
+    try {
+      const studentCourse = await findStudentCourseByIdOrThrow({ $StudentCourse, id: req.params.identifier });
+      await checkSubscribed({ user: req.user, studentCourse, $User });
+
+      const update = await $StudentCourse
+        .findByIdAndUpdate(studentCourse._id, { 'data.activeLanguage': req.body.language }, { new: true });
+      
+      res.json({ data: { studentCourse: update } });
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  };
+}
+
 async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {
   return $User.findByIdAndUpdate(
     user._id,
