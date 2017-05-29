@@ -9,6 +9,12 @@ div.container(*ngIf="!!this.course")
       div.divider
       toggle-language((toggleLanguage)="setLanguage($event)")
     div.col.s3
+      h5 Visibility
+      div.divider
+      toggle-course-visibility(
+        [course]="course"
+        (toggleVisibility)="toggleCourseVisibility($event)")
+    div.col.s3
       edit-price(
         [course]="course"
         (changeCourseLength)="setCourseLength($event)"
