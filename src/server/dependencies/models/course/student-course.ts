@@ -17,6 +17,8 @@ export interface ParsedCompleted {
 export interface StudentCourse extends Course {
   isCompleted: true;
 
+  difficulty: string;
+
   subscription: {
     costCents: number;
     length: string;
@@ -88,6 +90,8 @@ export const studentCourseSchema = new Schema({
 
   course: { type: Schema.Types.ObjectId, ref: 'courses', required: true },
 
+  difficulty: String,
+  
   /**
    * Internal subscription information. A user should not be able to directly
    * modify this information through the GUI
@@ -220,7 +224,8 @@ studentCourseSchema.statics.createFromCourse = function({ course }: { course: Co
   return this.create({
     slug: course.slug,
     course: course._id,
-
+    difficulty: course.difficulty,
+    
     data: Object.assign(
       {},
       courseData,

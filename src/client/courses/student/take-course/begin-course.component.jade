@@ -9,7 +9,7 @@ div.container(*ngIf="studentCourse")
               div.col.s4
                 p {{ studentCourse.data.description }}
                 br
-                p Difficulty: {{ studentCourse.data.difficulty }}
+                p Difficulty: {{ studentCourse.difficulty }}
               div.col.s4.push-s4
                 h6.header Taught by
                 p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}
