@@ -206,6 +206,24 @@ export function changeActiveLanguage($customError: CustomErrorService, $StudentC
   };
 }
 
+export function resetCourse($User: Model<any>, $customError: CustomErrorService, $StudentCourse: StudentCourseModel) {
+  return async (req, res) => {
+    try {
+      const studentCourse = await findStudentCourseByIdOrThrow({ $StudentCourse, id: req.params.identifier });
+
+      await checkSubscribed({ user: req.user, studentCourse, $User });
+
+      studentCourse.isCompleted = false;
+      studentCourse.data.lastCompleted = { R: '0.0.0', STATA: '0.0.0' };
+      await studentCourse.save();
+
+      res.json({ data: { studentCourse } });
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  }
+}
+
 async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {
   return $User.findByIdAndUpdate(
     user._id,

@@ -15,7 +15,7 @@ export interface ParsedCompleted {
 }
 
 export interface StudentCourse extends Course {
-  isCompleted: true;
+  isCompleted: boolean;
 
   difficulty: string;
 
