@@ -1,5 +1,5 @@
 //- Course header
-div.container(*ngIf="!!this.course")
+div.container(*ngIf="this.course")
   div.row
     div.col.s3
       h2 {{ course.data.name }}
@@ -20,9 +20,20 @@ div.container(*ngIf="!!this.course")
         (changeCourseLength)="setCourseLength($event)"
         (changeCoursePrice)="setCoursePrice($event)")
   div.row
+    div.col.s3
+      div.input-field
+        input(
+          name="course-photo"
+          id="course-photo"
+          type="text"
+          [(ngModel)]="coverPhotoUrl"
+        )
+        label(for="course-photo") Cover Photo
+  div.row
     div.input-field
       textarea.materialize-textarea#course-description(
         type="text"
+        [class.active]="!!course.data.description"
         [(ngModel)]="course.data.description"
       )
       label(for="course-description") Description*

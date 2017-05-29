@@ -20,11 +20,12 @@ export class ToggleCourseVisibilityComponent {
   toggleVisibility: EventEmitter<boolean> = new EventEmitter();
 
   isVisible: boolean;
+  
   constructor(
 
   ) { }
 
-  ngOnInit() {
+  ngOninit() {
     this.isVisible = this.course.isVisible;
   }
 

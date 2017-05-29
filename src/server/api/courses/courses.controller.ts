@@ -44,6 +44,11 @@ export function createCourse($customError: CustomErrorService, $Course) {
       }
 
       const data = req.body.course.data;
+
+      data.photos = [
+        { url: `http://lorempixel.com/400/200`, isCover: true }
+      ];
+      
       let newCourse = {
         data,
         slug: await createSlug(data.name.toLowerCase(), $Course),

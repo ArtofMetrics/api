@@ -32,6 +32,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   course: Course;
   slug: string;
   language: string;
+  coverPhotoUrl: string;
 
   constructor(
     private viewState: ViewReadyService,
@@ -65,7 +66,10 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   fetchCourse = ({ slug }: { slug: string }) => {
     return this.editCourseService.getCourse({ slug })
       .subscribe(
-      (data) => this.course = data.course,
+      (data) => {
+        this.course = data.course;
+        this.coverPhotoUrl = this.course.data.photos[0].url;
+      },
       (error) => this.handleHttpError(error)
       )
   }
@@ -127,12 +131,17 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   };
 
   saveCourse = () => {
+    if (this.coverPhotoUrl) {
+      this.course.data.photos[0].url = this.coverPhotoUrl;
+    }
+
     this.apiService.instructors
       .saveCourse({
         course: {
           subscription: this.course.subscription,
           data: {
-            description: this.course.data.description
+            description: this.course.data.description,
+            photos: this.course.data.photos
           }
         },
         slug: this.course.slug
