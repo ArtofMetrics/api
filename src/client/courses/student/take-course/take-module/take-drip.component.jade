@@ -33,3 +33,7 @@ div
           (textChanged)="setConsoleQuizAnswer($event)"
           )
         div.btn.btn-waves((click)="submitConsoleQuiz(this.consoleQuizAnswer)") Execute
+      
+      //- Next button if no quizzes
+      div(*ngIf="!drip.consoleQuiz && !drip.questionQuiz")
+        div.btn.btn-waves((click)="moveOn.emit()") Next
