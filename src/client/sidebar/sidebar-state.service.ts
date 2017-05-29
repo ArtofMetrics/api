@@ -30,7 +30,6 @@ export class SidebarStateService {
   public activeModule: CourseModule;
   public activeLesson: Lesson;
   public activeDrip: Drip;
-
   constructor(
 
   ) {
