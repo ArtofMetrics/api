@@ -2,7 +2,8 @@
 @import '../global-styles/buttons.styl'
 
 // Background color for top section of home page (dark blue)
-$home-section-one-bg = #34495E;
+home-section-one-bg = #e57373
+home-section-two-bg = $brand-green
 
 // General Spacing classes
 .padded
@@ -13,13 +14,19 @@ $home-section-one-bg = #34495E;
   cursor: pointer
 
 #home-section-one
-  // background-color $brand-peach
+  background-color: home-section-one-bg
+
   .home-header
     font-family $brand-header-font
+
 #home-section-two
-  background-color $brand-green
+  background-color home-section-two-bg
+  .icon-row
+    padding-top: 40px
+    padding-bottom: 40px
 
 #home-section-three
+  background-color: $brand-peach
   font-family: $brand-header-font
 
   .course-thumb

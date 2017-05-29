@@ -90,3 +90,16 @@ export const courseSchema: Schema = new Schema({
 courseSchema.methods.getModule = function (id, language: string) {
   return this.data.modules[language].id(id);
 }
+
+export interface CourseModel extends Model<Course> {
+
+  getVisibleCourses: () => Course[];
+}
+
+// statics
+courseSchema.statics.getVisibleCourses = function() {
+  return this
+    .find({
+      isVisible: true
+    });
+};

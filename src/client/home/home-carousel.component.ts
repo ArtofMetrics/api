@@ -10,11 +10,15 @@ export class HomeCarouselComponent implements OnInit {
 
   carouselId: string = '#home-carousel';
 
-  constructor() {}
+  constructor() { }
   ngOnInit() {
     setTimeout(() => {
-      $('#home-carousel').carousel();
-
+      try {
+        $('#home-carousel').carousel();
+      } catch (error) {
+        console.error(`Error in carousel`);
+        console.error(`Error: ${ error }\n${ error.stack }`)
+      }
     }, 2000)
   }
 }
