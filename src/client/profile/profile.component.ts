@@ -17,7 +17,7 @@ import { StudentCourse } from 'server/dependencies/models/course/student-course'
 
 export default class ProfileComponent implements OnInit { 
   card: any;
-  
+
   activeCourses: StudentCourse[];
   completedCourses: StudentCourse[];
 
@@ -27,7 +27,7 @@ export default class ProfileComponent implements OnInit {
     private errorService: ErrorService) {}
 
   ngOnInit() {
-    this.viewState.emitFinished();
+    
     this.apiService.students.getSubscribedCourses()
       .subscribe(
         data => {
@@ -45,6 +45,7 @@ export default class ProfileComponent implements OnInit {
       .subscribe(
         data => {
           [this.card] = data.cards;
+          this.viewState.emitFinished();
         },
         error => this.handleHttpError(error)
       );

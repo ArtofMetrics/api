@@ -51,6 +51,7 @@ export interface StripeCard {
   exp_month: string;
   exp_year: string;
   id: string;
+  brand: string;
 }
 
 export interface GetCreditCardsRequest extends AuthenticatedRequest {
