@@ -4,6 +4,7 @@ import { Component, Input, OnInit } from '@angular/core';
 // AOm Dependencies
 import { ApiService } from 'client/core/api/api.service';
 import { ErrorService } from 'client/core/error.service';
+import { SidebarStateService } from 'client/sidebar/sidebar-state.service';
 
 // AOM Interfaces
 import { CourseModule } from 'server/dependencies/models/module';
@@ -22,7 +23,8 @@ export class ContinueCourseComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private errorService: ErrorService
+    private errorService: ErrorService,
+    private sidebar: SidebarStateService
   ) { }
 
   ngOnInit() {
@@ -37,6 +39,7 @@ export class ContinueCourseComponent implements OnInit {
 
   setActiveModule = ({ language }: { language: string }) => {
     this.activeModule = this.studentCourse.getActiveModule({ language });
+    this.sidebar.setCourse({ course: this.studentCourse });
   };
 
   continueOn = () => {
