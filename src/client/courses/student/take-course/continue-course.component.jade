@@ -1,6 +1,8 @@
 div.container
   student-course-header([studentCourse]="studentCourse")
-  toggle-language((toggleLanguage)="setLanguage($event)")
+  toggle-language(
+    *ngIf="studentCourse.data.modules.R.length && studentCourse.data.modules.STATA.length"
+    (toggleLanguage)="setLanguage($event)")
   active-module(
     [module]="activeModule" 
     [studentCourse]="studentCourse"

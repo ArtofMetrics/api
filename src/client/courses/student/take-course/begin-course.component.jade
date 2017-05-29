@@ -10,6 +10,10 @@ div.container(*ngIf="studentCourse")
                 p {{ studentCourse.data.description }}
                 br
                 p Difficulty: {{ studentCourse.difficulty }}
+                br
+                div Languages Available:
+                  p(*ngIf="studentCourse.data.modules.R.length") R
+                  p(*ngIf="studentCourse.data.modules.STATA.length") STATA
               div.col.s4.push-s4
                 h6.header Taught by
                 p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}
