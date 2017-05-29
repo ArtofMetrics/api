@@ -3,6 +3,8 @@ import 'client/vendor/css/bootstrap.min.css';
 // import foundations what input
 import 'client/vendor/js/bootstrap.min.js';
 
+import 'client/main.styl';
+
 // Import Rx.js
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/do';
