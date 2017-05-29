@@ -3,7 +3,9 @@ h2 User Account
 div.section(*ngIf="activeCourses")
   h3 My Active Courses
   div(*ngFor="let course of activeCourses")
-    div {{ course.data.name }}
+    div.row
+      div {{ course.data.name }}
+      a([routerLink]="['course', course.slug]") Go to course
   div(*ngIf="!activeCourses.length")
     div You aren't actively subscribed to any courses yet
 
@@ -21,4 +23,9 @@ div.section(*ngIf="completedCourses")
 div.divider
 
 div.section
-  
+  h3 Payment
+  div(*ngIf="!card")
+    | You have no payment method on file.
+    div((click)="addCreditCard()") Add Credit cards
+  div(*ngIf="card")
+    div {{ card.last4 }}

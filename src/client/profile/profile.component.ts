@@ -16,6 +16,7 @@ import { StudentCourse } from 'server/dependencies/models/course/student-course'
 
 
 export default class ProfileComponent implements OnInit { 
+  card: any;
   
   activeCourses: StudentCourse[];
   completedCourses: StudentCourse[];
@@ -38,7 +39,15 @@ export default class ProfileComponent implements OnInit {
         error => {
           this.handleHttpError(error);
         }
-      )
+      );
+    
+    this.apiService.auth.getCreditCards()
+      .subscribe(
+        data => {
+          [this.card] = data.cards;
+        },
+        error => this.handleHttpError(error)
+      );
   }
 
   handleHttpError = (error: Error) => {
