@@ -1,6 +1,7 @@
 // NPM Deps
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 // Our Deps
 import { SidebarComponent } from './sidebar.component';
@@ -8,7 +9,7 @@ import { SidebarToggleComponent } from './sidebar-toggle.component';
 import { SidebarStateService } from './sidebar-state.service';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   declarations: [SidebarComponent, SidebarToggleComponent],
   providers: [SidebarStateService],
   exports: [SidebarComponent, SidebarToggleComponent]

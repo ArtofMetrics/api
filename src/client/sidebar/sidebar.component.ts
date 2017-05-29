@@ -26,6 +26,7 @@ export class SidebarComponent implements OnInit {
     private sidebar: SidebarStateService) { }
 
   ngOnInit() {
+    setTimeout(() => console.log(this.userService.$), 1000);
   }
 
   public logout = () => {
