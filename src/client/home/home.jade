@@ -39,12 +39,16 @@ div#home-section-three
     div.row
       div.col.s6.offset-s3.center-align.padded
         h2.home-header Our Courses
-        br
-        ul
-          li.course-thumb.pointer(
-            *ngFor="let course of courses"
+        div(*ngFor="let course of courses")
+          h2.header {{ course.data.name }}
+          div.card.horizontal(
             [routerLink]="['/course/' + course.slug ]")
-            div.course-image
+            div.card-image
               img(src="{{ course.data.photos[0].url }}")
-            p {{ course.data.title }}
-            p {{ course.data.description }}
+            div.card-stacked
+              div.card-content
+                p {{ course.data.description }}
+              div.card-action
+                a([routerLink]="['/course/' + course.slug ]") Go to Course
+          
+          
