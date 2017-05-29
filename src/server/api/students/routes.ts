@@ -144,23 +144,25 @@ export function submitDrip($customError: CustomErrorService, $StudentCourse: Stu
 
       const { language, completed } = req.body;
 
+      console.log('completed', completed);
       studentCourse.changeLastCompleted({ language, justCompleted: completed });
 
       const update = await $StudentCourse.findByIdAndUpdate(
         studentCourse._id,
         {
           $set: {
-            [`data.${language}.lastCompleted`]: studentCourse.get(`data.${language}.lastCompleted`),
+            [`data.lastCompleted.${ language }`]: studentCourse.get(`data.lastCompleted.${language}`),
             isCompleted: studentCourse.isCompleted
           }
         },
-        { select: `isCompleted data.${language}.lastCompleted`, new: true }
+        { new: true }
       );
 
       const data: HTTPResponse<SubmitDripResponse> = {
         data: {
-          isCompleted: update.get('isCompleted'),
-          lastCompleted: update.get(`data.lastCompleted`)
+          // isCompleted: update.get('isCompleted'),
+          // lastCompleted: update.data.lastCompleted
+          studentCourse: update
         }
       };
       

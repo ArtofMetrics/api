@@ -6,6 +6,7 @@ import { commonCourseProps } from './common-course';
 import { Course, CourseData } from './course';
 import { CourseModule } from '../module';
 import { Lesson } from '../module/lesson';
+import { Drip } from '../module/drip';
 
 export interface ParsedCompleted {
   module?: number;
@@ -46,6 +47,8 @@ export interface StudentCourse extends Course {
   parseLastCompleted: ({ language }: { language: string }) => ParsedCompleted;
 
   getActiveLesson: ({ language }: { language: string }) => Lesson;
+
+  getActiveDrip: ({ language }: { language: string }) => Drip;
 
   /**
    * Changes a student course's `data.${ language }.lastCompleted` property to reflect that it has moved
@@ -123,12 +126,15 @@ studentCourseSchema.methods.getActiveModule = function({ language }: { language:
   return this.get(`data.modules.${ language }.${ idx }`);
 };
 
+studentCourseSchema.methods.getActiveDrip = function({ language }: { language: string }): Drip {
+  const { module, lesson, drip: idx } = this.parseLastCompleted({ language });
+  return this.get(`data.modules.${ language }.${ module }.lessons.${ lesson }.drips.${ idx }`);
+};
+
 studentCourseSchema.methods.parseLastCompleted = function({ language }: { language: string }): ParsedCompleted {
   const lastCompleted = this.get(`data.lastCompleted.${ language }`);
   const [module, lesson, drip] = this
-    .parseCompleted({ complete: lastCompleted })
-    .split('.')
-    .map(num => parseInt(num, 10));
+    .parseCompleted({ completed: lastCompleted });
   return { module, lesson, drip };
 };
 
@@ -137,22 +143,22 @@ studentCourseSchema.methods.getActiveLesson = function({ language }: { language:
   return this.get(`data.modules.${ language }.${ module }.lessons.${ lesson }`);
 };
 
-studentCourseSchema.methods.changeLastCompleted = function({ language, justCompleted }: { language: string, justCompleted }): StudentCourse {
+studentCourseSchema.methods.changeLastCompleted = function({ language, justCompleted }: { language: string, justCompleted: string }): StudentCourse {
   const currentLastCompleted: ParsedCompleted = this.parseLastCompleted({ language });
   const [module, lesson, drip] = this.parseCompleted({ completed: justCompleted });
 
-  let newCompleted: ParsedCompleted = {};
-  if (currentLastCompleted.module < module) {
+  if (module < currentLastCompleted.module) {
     return this;
   }
 
   if (currentLastCompleted.module === module) {
     if (currentLastCompleted.lesson === lesson) {
-      return this.incrementDrip({ language, justCompleted, lastCompleted: { module, lesson, drip } });
-    } else if (currentLastCompleted.lesson < lesson) {
+      console.log('about to increment drip');
+      return this.incrementDrip({ language, justCompleted: { module, lesson, drip }, lastCompleted: currentLastCompleted });
+    } else if (lesson < currentLastCompleted.lesson) {
       return this;
     } else {
-      return this.incrementLesson({ language, lastCompleted: { module, lesson, drip } });
+      return this.incrementLesson({ language, lastCompleted: currentLastCompleted });
     }
   }
 };
@@ -170,7 +176,7 @@ studentCourseSchema.methods.incrementDrip = function({ language, justCompleted, 
       return this.incrementLesson({ language, lastCompleted: { module, lesson, drip } });
     }
 
-    return this.set(`data.lastCompleted.${ language }`, `${ module }.${ lesson }.{ newDripIdx }`);
+    return this.set(`data.lastCompleted.${ language }`, `${ module }.${ lesson }.${ newDripIdx }`);
   }
 };
 

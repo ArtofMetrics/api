@@ -7,7 +7,7 @@ import { ErrorService } from 'client/core/error.service';
 
 // AOM Interfaces
 import { CourseModule } from 'server/dependencies/models/module';
-import { StudentCourse } from 'server/dependencies/models/course/student-course';
+import { StudentCourse, studentCourseSchema } from 'server/dependencies/models/course/student-course';
 
 @Component({
   selector: 'continue-course',
@@ -47,8 +47,10 @@ export class ContinueCourseComponent implements OnInit {
     })
     .subscribe(
       data => {
-        console.log(`data from response`, data);
-        const { isCompleted, lastCompleted } = data;
+        this.studentCourse = new mongoose.Document(data.studentCourse, studentCourseSchema);
+        this.setActiveModule({ language: this.studentCourse.data.activeLanguage });
+
+        const activeDrip = this.studentCourse.getActiveDrip({ language: this.studentCourse.data.activeLanguage });
       },
       error => this.handleHttpError(error)
     )

@@ -1,4 +1,4 @@
-div
+div(*ngIf="activeLesson")
   div.row
     div.col.m6.offset-m6.s12
       h5.header {{ module.name }}
@@ -8,5 +8,22 @@ div
     p(*ngIf="activeLesson.description") {{ activeLesson.description }}
   
   //- drips
-  div.row(*ngFor="let drip of activeLesson.drips")
-    take-drip([drip]="drip" (moveOn)="nextDrip()")
+  div.row(*ngFor="let drip of activeLesson.drips; let i = index;")
+    div.row.drip-row.valign-wrapper.section.scrollspy.pointer((click)="loadDrip(drip)")
+      div.col.s3
+        span.drip-header Drip {{ i }}
+      div.col.s1.offset-s8
+        span
+          i.material-icons(*ngIf="!isActiveDrip(drip)") play_arrow
+          svg(
+            xmlns="http://www.w3.org/2000/svg" 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24"
+            *ngIf="isActiveDrip(drip)"
+            [style.fill]="'green'")
+            path(d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z")
+    take-drip(
+      [drip]="drip"
+      (moveOn)="nextDrip()"
+      [hidden]="!isActiveDrip(drip)")

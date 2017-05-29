@@ -40,6 +40,7 @@ export interface SubmitDripRequest extends AuthenticatedRequest {
 }
 
 export interface SubmitDripResponse {
-  isCompleted: boolean;
-  lastCompleted: { R: string, STATA: string };
+  // isCompleted: boolean;
+  // lastCompleted: { R: string, STATA: string };
+  studentCourse: StudentCourse;
 }
