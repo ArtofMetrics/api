@@ -14,8 +14,6 @@ export class SubscriptionService {
     private $stripe) { }
 
   public createSubscriptionPayment = async ({ course, token, user, customer }: { course: Course, token: string, user: IUser, customer }): Promise<any> => {
-    console.log(`========= user.stripeid =========`);
-    console.log(user.stripeId);
 
     const payment = await this.$stripe.charges.create(
       {

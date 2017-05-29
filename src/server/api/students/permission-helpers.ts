@@ -12,7 +12,6 @@ import { IUser } from '../../dependencies/models/user/user.model';
 export const checkSubscribed = async ({ user, studentCourse, $User }: { user: IUser, studentCourse: StudentCourse, $User: Model<any> }) => {
   const dbUser: any = await $User.findById(user._id).select('courses.active').lean();
 
-  console.log('dbuser', dbUser.courses)
   if (dbUser.courses.active.find(courseId => courseId.toString() === studentCourse._id.toString())) {
     return;
   }

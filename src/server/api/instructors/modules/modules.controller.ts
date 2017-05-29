@@ -58,7 +58,6 @@ export function getOneModule($Course: Model<any>, $customError: CustomErrorServi
 
       checkAuthorizedInstructor({ course, user: req.user });
 
-      console.log('req.query', req.originalUrl);
       const module = findModule({ course, moduleId: req.params.module, $customError, language: req.query.language });
 
       const courseData = omit(course.toObject(), ['data.modules'])

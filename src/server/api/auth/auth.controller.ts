@@ -174,7 +174,6 @@ export class AuthController {
       try {
         const customer = await $payment.getCustomer({ user: req.user });
 
-        console.log('customer.sources', customer.sources)
         const cards = customer ?
           await mapCards(customer.sources.data) :
           [];

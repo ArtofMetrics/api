@@ -17,17 +17,13 @@ import { CourseModule } from 'server/dependencies/models/module';
 })
 
 
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
   NAV_SELECTOR: string = `#aom-sidebar`;
 
   constructor(
     private userService: UserService,
     private router: Router,
     private sidebar: SidebarStateService) { }
-
-  ngOnInit() {
-    setTimeout(() => console.log(this.userService.$), 1000);
-  }
 
   public logout = () => {
     this.userService.logout();

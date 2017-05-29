@@ -48,7 +48,6 @@ export class PreviewCourseComponent implements OnInit {
     .subscribe(
       data => {
         this.cards = data.cards;
-        console.log(this.cards);
       },
       error => this.handleHttpError(error)
     );

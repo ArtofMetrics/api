@@ -157,7 +157,6 @@ studentCourseSchema.methods.changeLastCompleted = function({ language, justCompl
 
   if (currentLastCompleted.module === module) {
     if (currentLastCompleted.lesson === lesson) {
-      console.log('about to increment drip');
       return this.incrementDrip({ language, justCompleted: { module, lesson, drip }, lastCompleted: currentLastCompleted });
     } else if (lesson < currentLastCompleted.lesson) {
       return this;
@@ -225,7 +224,7 @@ studentCourseSchema.statics.createFromCourse = function({ course }: { course: Co
     slug: course.slug,
     course: course._id,
     difficulty: course.difficulty,
-    
+
     data: Object.assign(
       {},
       courseData,
