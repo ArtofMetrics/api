@@ -59,7 +59,6 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
 
   setActiveModule = ({ language }: { language: string }) => {
     this.activeModule = this.studentCourse.getActiveModule({ language });
-    console.log('about to set course');
     this.sidebar.setCourse({ course: this.studentCourse });
   };
 
