@@ -1,0 +1,14 @@
+form(#form="ngForm")
+  div#edit-course-difficulty
+    h5 Course difficulty
+    div.divider
+    p(*ngFor="let difficulty of difficulties; let i = index;")
+      input(
+        name="course-difficulty"
+        type="radio"
+        checked="{{ difficulty === course.difficulty ? 'true' : null }}"
+        value="difficulty"
+        (click)="setDifficulty(difficulty)"
+        id="difficulty-{{i}}"
+      )
+      label(for="difficulty-{{i}}") {{ difficulties[i] }}

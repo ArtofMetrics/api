@@ -138,6 +138,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     this.apiService.instructors
       .saveCourse({
         course: {
+          difficulty: this.course.difficulty,
           subscription: this.course.subscription,
           data: {
             description: this.course.data.description,
@@ -168,6 +169,11 @@ export class EditCourseComponent implements OnInit, OnDestroy {
         }
       );
   };
+
+  setDifficulty = (difficulty: string) => {
+    this.course.difficulty = difficulty;
+    console.log('set difficulty', this.course);
+  }
 
   @Input()
   setLanguage = ({ language }) => {

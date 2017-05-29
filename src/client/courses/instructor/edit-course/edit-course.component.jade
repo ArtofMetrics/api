@@ -21,6 +21,11 @@ div.container(*ngIf="this.course")
         (changeCoursePrice)="setCoursePrice($event)")
   div.row
     div.col.s3
+      edit-difficulty(
+        [course]="course"
+        (emitDifficulty)="setDifficulty($event)"
+      )
+    div.col.s3
       div.input-field
         input(
           name="course-photo"

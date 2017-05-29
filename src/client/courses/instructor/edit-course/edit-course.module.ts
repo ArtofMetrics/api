@@ -12,12 +12,18 @@ import { ModuleRowComponent } from './module-row.component';
 import { EditCourseService } from './edit-course.service';
 import { EditPriceComponent } from './edit-price.component';
 import { ToggleCourseVisibilityComponent } from './toggle-course-visibility.component';
+import { EditDifficultyComponent } from './edit-difficulty.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, SharedCourseModule],
-  declarations: [EditCourseComponent, ModuleRowComponent, EditPriceComponent, ToggleCourseVisibilityComponent],
+  declarations: [
+    EditCourseComponent,
+    ModuleRowComponent, 
+    EditPriceComponent, 
+    ToggleCourseVisibilityComponent,
+    EditDifficultyComponent],
   providers: [EditCourseService],
   exports: [EditCourseComponent, EditPriceComponent]
 })
 
-export class EditCourseModule {}
+export class EditCourseModule { }
