@@ -3,19 +3,37 @@ div
     div.header Drip
     //- Drip Text
     div([innerHTML]="drip.text")
-    
-    div(*ngIf="drip.questionQuiz")
-      div.question-quiz-question {{ drip.questionQuiz.question }}
-      div(*ngFor="let answer of drip.questionQuiz.answers; let i = index;")
-        p
-          input(
-            type="checkbox" 
-            id="answer-{{ answer._id.toString() }}" 
-            (click)="markQuestionQuizAnswer(i)"
-            *ngIf="!isIncorrect(i)")
-          div.pointer(*ngIf="isIncorrect(i)" (click)="markQuestionQuizAnswer(i)") X
-          label(
-            for="answer-{{ answer._id.toString() }}" 
-            [class.incorrect]="isIncorrect(i)"
-            [class.missing]="isMissing(i)") {{ answer.text }}
-      div.btn.btn-waves((click)="submitQuestionQuizAnswers()") Submit
+    form(name="drip-{{ drip._id.toString() }}")
+      div(*ngIf="drip.questionQuiz")
+        div.question-quiz-question {{ drip.questionQuiz.question }}
+        div(*ngFor="let answer of drip.questionQuiz.answers; let i = index;")
+          p
+            input(
+              type="checkbox" 
+              id="answer-{{ answer._id.toString() }}" 
+              (click)="markQuestionQuizAnswer(i)"
+              *ngIf="!isIncorrect(i)")
+            div.pointer(*ngIf="isIncorrect(i)" (click)="markQuestionQuizAnswer(i)") X
+            label(
+              for="answer-{{ answer._id.toString() }}" 
+              [class.incorrect]="isIncorrect(i)"
+              [class.missing]="isMissing(i)") {{ answer.text }}
+        div.btn.btn-waves((click)="submitQuestionQuizAnswers()") Submit
+      
+      //- Console Quiz
+      div(*ngIf="drip.consoleQuiz")
+        div.console-quiz-question {{ drip.consoleQuiz.question }}
+        div.console-quiz-answer.ace-text-editor(
+          ace-editor
+          name="cqAnswer"
+          (editorRef)="configureEditor($event)"
+          [mode]="'r'"
+          [theme]="'twilight'"
+          [readOnly]="false"
+          (textChanged)="setConsoleQuizAnswer($event)"
+          )
+        div.btn.btn-waves((click)="submitConsoleQuiz(this.consoleQuizAnswer)") Execute
+      
+      //- Next button if no quizzes
+      div(*ngIf="!drip.consoleQuiz && !drip.questionQuiz")
+        div.btn.btn-waves((click)="moveOn.emit()") Next

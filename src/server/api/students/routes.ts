@@ -6,7 +6,15 @@ import * as status from 'http-status';
 
 // AOM Dependencies
 import { CustomErrorService } from '../../dependencies/custom-error.service';
-import { findCourseBySlugOrThrow, findCourseByIdOrThrow, throwIfSubscribed } from './course-helpers';
+import {
+  findCourseBySlugOrThrow,
+  findCourseByIdOrThrow,
+  throwIfSubscribed,
+  findStudentCourseByIdOrThrow
+}
+  from './course-helpers';
+import { checkSubscribed } from './permission-helpers';
+
 import { SubscriptionService } from '../../dependencies/subscription';
 import { PaymentService } from '../../dependencies/payment';
 
@@ -15,6 +23,7 @@ import { HTTPResponse } from '../models';
 import {
   GetOneCourseRequest, GetOneCourseResponse,
   SubscribeToCourseRequest, SubscribeToCourseResponse,
+  SubmitDripRequest, SubmitDripResponse
 } from './models';
 import { StudentCourseModel, StudentCourse } from '../../dependencies/models/course/student-course';
 import { IUser } from '../../dependencies/models/user/user.model';
@@ -36,7 +45,8 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
             path: 'course',
             model: $Course,
             options: { select: 'instructors' },
-            populate: { path: 'instructors', model: $User, options: { select: 'profile' } } }
+            populate: { path: 'instructors', model: $User, options: { select: 'profile' } }
+          }
         }));
 
       if (!course) {
@@ -124,6 +134,42 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
       return { updatedUser, stripeCustomer };
     }
   }
+}
+
+export function submitDrip($customError: CustomErrorService, $StudentCourse: StudentCourseModel, $User: Model<any>) {
+  return async (req: SubmitDripRequest, res: Response) => {
+    try {
+      const studentCourse = await findStudentCourseByIdOrThrow({ $StudentCourse, id: req.params.identifier });
+      await checkSubscribed({ user: req.user, studentCourse, $User });
+
+      const { language, completed } = req.body;
+
+      studentCourse.changeLastCompleted({ language, justCompleted: completed });
+
+      const update = await $StudentCourse.findByIdAndUpdate(
+        studentCourse._id,
+        {
+          $set: {
+            [`data.lastCompleted.${ language }`]: studentCourse.get(`data.lastCompleted.${language}`),
+            isCompleted: studentCourse.isCompleted
+          }
+        },
+        { new: true }
+      );
+
+      const data: HTTPResponse<SubmitDripResponse> = {
+        data: {
+          // isCompleted: update.get('isCompleted'),
+          // lastCompleted: update.data.lastCompleted
+          studentCourse: update
+        }
+      };
+      
+      res.json(data);
+    } catch (error) {
+      $customError.httpError(res)(error);
+    }
+  };
 }
 
 async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {

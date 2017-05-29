@@ -39,8 +39,6 @@ export class TakeCourseComponent implements OnInit {
    } else {
      this.state = 'CONTINUE';
    }
-
-   console.log(this.state)
   }
 
   startCourse = () => {

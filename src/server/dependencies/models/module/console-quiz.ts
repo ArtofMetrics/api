@@ -1,9 +1,9 @@
 // External Deps
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 // AOM Deps
 
-export interface ConsoleQuiz {
+export interface ConsoleQuiz extends Document {
   question: string;
   answer: string;
 }

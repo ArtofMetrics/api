@@ -12,11 +12,11 @@ export interface CheckedAnswer {
 
 export interface QuestionQuiz extends Document {
   question: string;
-  answers: string[];
-  correctAnswers: number[];
+  answers: { text: string }[];
+  correctAnswers: (number | undefined)[];
 
-  checkAnswers: (nums: number[]) => CheckedAnswer;
-  markComplete: () => QuestionQuiz;
+  checkAnswers?: (nums: number[]) => CheckedAnswer;
+  markComplete?: () => QuestionQuiz;
 }
 
 export const questionQuizSchema = new Schema({

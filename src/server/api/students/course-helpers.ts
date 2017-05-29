@@ -6,6 +6,7 @@ import * as status from 'http-status';
 // AOM Dependencies
 
 // AOM interfaces
+import { StudentCourseModel, StudentCourse } from '../../dependencies/models/course/student-course';
 import { IUser } from '../../dependencies/models/user/user.model';
 import { Course } from '../../dependencies/models/course/course';
 
@@ -34,6 +35,19 @@ export const findCourseByIdOrThrow = async ({ $Course, courseId }: { $Course: Mo
   }
 
   return course;
+};
+
+export const findStudentCourseByIdOrThrow = async ({ $StudentCourse, id }: { $StudentCourse: StudentCourseModel, id: string }): Promise<StudentCourse> => {
+  const studentCourse = await $StudentCourse.findById(id);
+  if (!studentCourse) {
+    throw new StandardError({
+      error: `Could not find student course with _id ${ id }`,
+      readableError: `Could not find student course with _id ${ id }`,
+      code: status.NOT_FOUND
+    });
+  }
+
+  return studentCourse;
 };
 
 export const throwIfSubscribed = async ({ $StudentCourse, user, courseId }: { $StudentCourse: Model<any>, user: IUser, courseId: string }) => {

@@ -3,10 +3,11 @@ import { Component, Input, OnInit } from '@angular/core';
 
 // AOm Dependencies
 import { ApiService } from 'client/core/api/api.service';
+import { ErrorService } from 'client/core/error.service';
 
 // AOM Interfaces
 import { CourseModule } from 'server/dependencies/models/module';
-import { StudentCourse } from 'server/dependencies/models/course/student-course';
+import { StudentCourse, studentCourseSchema } from 'server/dependencies/models/course/student-course';
 
 @Component({
   selector: 'continue-course',
@@ -20,8 +21,9 @@ export class ContinueCourseComponent implements OnInit {
   language: string;
 
   constructor(
-    private apiService: ApiService
-  ) {}
+    private apiService: ApiService,
+    private errorService: ErrorService
+  ) { }
 
   ngOnInit() {
     this.language = this.studentCourse.data.activeLanguage;
@@ -38,6 +40,21 @@ export class ContinueCourseComponent implements OnInit {
   };
 
   continueOn = () => {
-    
+    this.apiService.students.submitDrip({
+      courseId: this.studentCourse._id,
+      language: this.language,
+      completed: this.studentCourse.get(`data.lastCompleted.${ this.language }`)
+    })
+    .subscribe(
+      data => {
+        this.studentCourse = new mongoose.Document(data.studentCourse, studentCourseSchema);
+        this.setActiveModule({ language: this.studentCourse.data.activeLanguage });
+      },
+      error => this.handleHttpError(error)
+    )
+  }
+
+  handleHttpError = (error: Error) => {
+    this.errorService.handleHttpError(error);
   }
 }

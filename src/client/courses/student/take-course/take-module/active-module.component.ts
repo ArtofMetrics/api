@@ -1,5 +1,5 @@
 // External Dependencies
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 // AOM Dependencies
 
@@ -7,13 +7,15 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { StudentCourse } from 'server/dependencies/models/course/student-course';
 import { CourseModule } from 'server/dependencies/models/module';
 import { Lesson } from 'server/dependencies/models/module/lesson';
+import { Drip } from 'server/dependencies/models/module/drip';
 
 @Component({
   selector: 'active-module',
-  templateUrl: './active-module.component.jade'
+  templateUrl: './active-module.component.jade',
+  styleUrls: ['./active-module.component.styl']
 })
 
-export class ActiveModuleComponent implements OnInit {
+export class ActiveModuleComponent implements OnChanges {
   @Input()
   module: CourseModule;
 
@@ -24,15 +26,48 @@ export class ActiveModuleComponent implements OnInit {
   continueOn: EventEmitter<any> = new EventEmitter();
 
   activeLesson: Lesson;
-  constructor() {}
+  activeDrip: Drip;
+
+  constructor() { }
 
   ngOnInit() {
+    const language = this.studentCourse.get(`data.activeLanguage`);
+
     this.activeLesson = this.studentCourse
-      .getActiveLesson({ language: this.studentCourse.data.activeLanguage });
-    console.log('active lesson', this.activeLesson);
+      .getActiveLesson({ language });
+    this.activeDrip = this.studentCourse
+      .getActiveDrip({ language });
   }
+
+  ngOnChanges(changes: any) {
+    const studentCourse = changes.studentCourse.currentValue || this.studentCourse;
+    
+    if (!studentCourse) {
+      console.log('there was no student ocurse', changes, this)
+      return;
+    }
+
+    const language = studentCourse.get('data.activeLanguage');
+    const previousActiveLesson = this.activeLesson;
+    this.activeLesson = studentCourse.getActiveLesson({ language });
+    this.activeDrip = studentCourse.getActiveDrip({ language });
+    
+    if (previousActiveLesson && previousActiveLesson._id.toString() !== this.activeLesson._id.toString()) {
+      this.scrollToTop();
+    }
+  }
+
+  scrollToTop = () => $('html, body').animate({ 'scrollTop': 0 }, '1000');
 
   nextDrip = () => {
     this.continueOn.emit();
+  }
+
+  isActiveDrip = (drip: Drip) => {
+    if (!this.studentCourse || !this.activeDrip) {
+      return false;
+    }
+
+    return this.activeDrip._id.toString() === drip._id.toString();
   }
 }

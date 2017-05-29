@@ -6,14 +6,17 @@ import { commonCourseProps } from './common-course';
 import { Course, CourseData } from './course';
 import { CourseModule } from '../module';
 import { Lesson } from '../module/lesson';
+import { Drip } from '../module/drip';
 
 export interface ParsedCompleted {
-  module: number;
-  lesson: number;
-  drip: number;
+  module?: number;
+  lesson?: number;
+  drip?: number;
 }
 
 export interface StudentCourse extends Course {
+  isCompleted: true;
+
   subscription: {
     costCents: number;
     length: string;
@@ -44,6 +47,34 @@ export interface StudentCourse extends Course {
   parseLastCompleted: ({ language }: { language: string }) => ParsedCompleted;
 
   getActiveLesson: ({ language }: { language: string }) => Lesson;
+
+  getActiveDrip: ({ language }: { language: string }) => Drip;
+
+  /**
+   * Changes a student course's `data.${ language }.lastCompleted` property to reflect that it has moved
+   * to the next drip/lesson/module
+   */
+  changeLastCompleted: ({ language, justCompleted }: { language: string, justCompleted: ParsedCompleted }) => StudentCourse;
+
+  /**
+   * Usually a private method, increments the drip or the lesson if it is the last drip in a lesson
+   */
+  incrementDrip: ({ language, justCompleted, lastCompleted }: { language: string, justCompleted: ParsedCompleted, lastCompleted?: ParsedCompleted }) => StudentCourse;
+
+  /**
+   * Usually a private method, increments the lesson or the module if it is the last lesson in a module
+   */
+  incrementLesson: ({ language, lastCompleted }: { language: string, lastCompleted: ParsedCompleted }) => StudentCourse;
+  
+  /**
+   * Usually a private method, increments the module or finishes the course if itis the last module in a course
+   */
+  incrementModule: ({ language, lastCompleted }: { language: string, lastCompleted?: ParsedCompleted }) => StudentCourse;
+
+  /**
+   * Finishes a course and sets the `isCompleted` flag
+   */
+  finishCourse: () => StudentCourse;
 }
 
 /**
@@ -53,6 +84,7 @@ export interface StudentCourse extends Course {
  */
 export const studentCourseSchema = new Schema({
   slug: String,
+  isCompleted: { type: Boolean, default: false },
 
   course: { type: Schema.Types.ObjectId, ref: 'courses', required: true },
 
@@ -94,15 +126,90 @@ studentCourseSchema.methods.getActiveModule = function({ language }: { language:
   return this.get(`data.modules.${ language }.${ idx }`);
 };
 
-studentCourseSchema.methods.parseLastCompleted = function({ language }: { language: string }): { module: number, lesson: number, drip: number } {
+studentCourseSchema.methods.getActiveDrip = function({ language }: { language: string }): Drip {
+  const { module, lesson, drip: idx } = this.parseLastCompleted({ language });
+  return this.get(`data.modules.${ language }.${ module }.lessons.${ lesson }.drips.${ idx }`);
+};
+
+studentCourseSchema.methods.parseLastCompleted = function({ language }: { language: string }): ParsedCompleted {
   const lastCompleted = this.get(`data.lastCompleted.${ language }`);
-  const [module, lesson, drip] = lastCompleted.split('.').map(num => parseInt(num, 10));
+  const [module, lesson, drip] = this
+    .parseCompleted({ completed: lastCompleted });
   return { module, lesson, drip };
 };
 
 studentCourseSchema.methods.getActiveLesson = function({ language }: { language: string }): Lesson {
   const { module, lesson, drip } = this.parseLastCompleted({ language });
   return this.get(`data.modules.${ language }.${ module }.lessons.${ lesson }`);
+};
+
+studentCourseSchema.methods.changeLastCompleted = function({ language, justCompleted }: { language: string, justCompleted: string }): StudentCourse {
+  const currentLastCompleted: ParsedCompleted = this.parseLastCompleted({ language });
+  const [module, lesson, drip] = this.parseCompleted({ completed: justCompleted });
+
+  if (module < currentLastCompleted.module) {
+    return this;
+  }
+
+  if (currentLastCompleted.module === module) {
+    if (currentLastCompleted.lesson === lesson) {
+      console.log('about to increment drip');
+      return this.incrementDrip({ language, justCompleted: { module, lesson, drip }, lastCompleted: currentLastCompleted });
+    } else if (lesson < currentLastCompleted.lesson) {
+      return this;
+    } else {
+      return this.incrementLesson({ language, lastCompleted: currentLastCompleted });
+    }
+  }
+};
+
+studentCourseSchema.methods.incrementDrip = function({ language, justCompleted, lastCompleted }: { language: string, justCompleted: ParsedCompleted, lastCompleted?: ParsedCompleted }): StudentCourse {
+  const { module, lesson, drip } = lastCompleted || this.parseLastCompleted({ language });
+  if (justCompleted.drip < drip) {
+    return this;
+  }
+
+  if (justCompleted.drip === drip) {
+    const newDripIdx = justCompleted.drip + 1;
+    const newDrip = this.get(`data.modules.${ language }.${ module }.lessons.${ lesson }.drips.${ newDripIdx }`);
+    if (!newDrip) {
+      return this.incrementLesson({ language, lastCompleted: { module, lesson, drip } });
+    }
+
+    return this.set(`data.lastCompleted.${ language }`, `${ module }.${ lesson }.${ newDripIdx }`);
+  }
+};
+
+studentCourseSchema.methods.incrementLesson = function({ language, lastCompleted }: { language: string, lastCompleted?: ParsedCompleted }): StudentCourse {
+  const { module, lesson, drip } = lastCompleted || this.parseLastCompleted({ language });
+  const newLessonIdx = lesson + 1;
+  const newLesson = this.get(`data.modules.${ language }.${ module }.lessons.${ newLessonIdx }`);
+  if (!newLesson) {
+    return this.incrementModule({ language, lastCompleted: { module, lesson, drip } });
+  }
+
+  this.set(`data.lastCompleted.${ language }`, `${ module }.${ newLessonIdx }.0`);
+  return this;
+};
+
+studentCourseSchema.methods.incrementModule = function({ language, lastCompleted }: { language: string, lastCompleted?: ParsedCompleted }): StudentCourse {
+  const { module, lesson, drip } = lastCompleted || this.parseLastCompleted({ language });
+  const newModuleIdx = module + 1;
+  const newModule = this.get(`data.modules.${ language }.${ newModuleIdx }`);
+  if (!newModule) {
+    return this.finishCourse();
+  }
+
+  this.set(`data.lastCompleted.${ language }`, `${ module }.0.0`);
+};
+
+studentCourseSchema.methods.finishCourse = function(): StudentCourse {
+  this.set(`isCompleted`, true);
+  return this;
+};
+
+studentCourseSchema.methods.parseCompleted = function({ completed }: { completed: string }): number[] {
+  return completed.split('.').map(num => parseInt(num, 10));
 };
 
 // statics
@@ -128,4 +235,8 @@ studentCourseSchema.statics.createFromCourse = function({ course }: { course: Co
       currency: course.subscription.currency
     }
   });
+};
+
+studentCourseSchema.statics.deltaLastCompleted = function ({ course }: { course: Course }) {
+
 };
