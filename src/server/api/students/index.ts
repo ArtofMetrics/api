@@ -17,7 +17,7 @@ export function studentsRouter(di): Router {
   api.route('/course/:identifier')
     .get(di.invoke(getOneCourse))
     .post(di.invoke(subscribeToCourse))
-
+  
   api.route('/course/:identifier/answer')
     .post(di.invoke(submitDrip));
 
