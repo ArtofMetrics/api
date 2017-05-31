@@ -6,6 +6,7 @@ import { AuthRouter } from './auth';
 import { coursesRouter } from './courses';
 import { instructorsRouter } from './instructors';
 import { studentsRouter } from './students';
+import { AdminRouter } from './admin';
 
 export function Api(di) {
   const api = express.Router();
@@ -16,6 +17,6 @@ export function Api(di) {
   api.use('/courses', coursesRouter(di));
   api.use('/instructors', instructorsRouter(di));
   api.use('/students', studentsRouter(di));
-  
+  api.use('/admin', AdminRouter(di));
   return api;
 }

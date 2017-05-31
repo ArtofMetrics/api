@@ -1,7 +1,7 @@
 import { Schema, Document } from 'mongoose';
 
 type mongoId = string & Schema.Types.ObjectId;
-type role = 'instructor' | 'admin' | 'super-admin';
+export type Role = 'instructor' | 'admin' | 'super-admin';
 
 export interface IUser extends Document {
   status: string;
@@ -37,7 +37,7 @@ export interface IUser extends Document {
     completed: mongoId[];
   };
 
-  roles: role[];
+  roles: Role[];
 
   created_at: Date;
   updated_at: Date;

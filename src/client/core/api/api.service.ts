@@ -13,7 +13,7 @@ import { students } from './students';
 
 @Injectable()
 export class ApiService {
-  private API_ROOT: string = '/api/v1';
+  public API_ROOT: string = '/api/v1';
 
   constructor(private aomHttp: AomHTTPService, private jwtService: JWTService) {}
 

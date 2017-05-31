@@ -14,6 +14,9 @@ ul.side-nav#aom-sidebar
       *ngIf="userService.isInstructor()"
       [routerLink]="['dashboard']") Instructor Dashboard
     a([routerLink]="['student']") My Courses
+    a(
+      *ngIf="userService.isAdmin()"
+      [routerLink]="['admin', 'users']") Users
   
   div(*ngIf="sidebar.contentView === 'course'")
     div.divider

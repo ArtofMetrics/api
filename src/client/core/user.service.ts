@@ -95,7 +95,7 @@ export class UserService {
    * @desc Determines if a user is an admin
    */
   public isAdmin = (): boolean => {
-    return this.hasRole(this.$, 'admin');
+    return this.hasRole(this.$, 'admin') || this.hasRole(this.$, 'super-admin');
   }
 
   /**

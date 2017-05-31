@@ -1,1 +1,35 @@
-div hi
+div.container
+  div.row
+    div.col.s3.center-align
+      h6.header Name
+    div.col.s3.center-align
+      h6.header Email
+    div.col.s3.center-align 
+      h6.header Admin
+    div.col.s3.center-align 
+      h6.header Instructor
+  
+  div.divider
+
+  div.row(*ngFor="let user of users")
+    div.col.s3.center-align
+      h6.header {{ user.fullName() }}
+    div.col.s3.center-align
+      h6.header {{ user.email() }}
+    div.col.s3.center-align
+      div.btn.btn-waves(
+        *ngIf="user.roles.indexOf('admin') === -1"
+        (click)="makeRole(user, 'admin')") Make admin
+      div.btn.btn-waves(
+        *ngIf="user.roles.indexOf('admin') > -1"
+        (click)="removeRole(user, 'admin')"
+      ) Remove admin
+    div.col.s3.center-align
+      div.btn.btn-waves(
+        *ngIf="user.roles.indexOf('instructor') === -1"
+        (click)="makeRole(user, 'instructor')") Make instructor
+      div.btn.btn-waves(
+        *ngIf="user.roles.indexOf('instructor') > -1"
+        (click)="removeRole(user, 'instructor')"
+      ) Remove instructor
+    

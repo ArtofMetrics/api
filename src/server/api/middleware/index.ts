@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as status from 'http-status';
 import { Document, Model } from 'mongoose';
 import { pick } from 'lodash';
+import * as StandardError from 'standard-error';
 
 // AOM Deps
 import { IUser } from '../../dependencies/models/user/user.model';
@@ -81,6 +82,23 @@ export class Middleware {
       this.$customError.httpError(res)(error);
     }
   };
+
+  public requireAdmin = (req: AuthenticatedRequest, res: Response, next) => {
+    try {
+      if (req.user.roles.indexOf('super-admin') > -1 || req.user.roles.indexOf('admin') > -1) {
+        return next();
+      }
+
+      throw new StandardError({
+        error: `Admin only`,
+        readableError: `Admin only`,
+        code: status.NOT_FOUND
+      });
+
+    } catch (error) {
+      this.$customError.httpError(res)(error);
+    }
+  }
 
   private getDecoded = (token: string, secret: string): any => {
     try {
