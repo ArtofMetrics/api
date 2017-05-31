@@ -11,12 +11,4 @@ div.row
       p {{ student.profile.email }}
   div.col.s8
     //- Current Courses
-    p Current Courses: {{ student.courses?.active.length || 0 }}
-
-    //- Explore courses button
-    div
-      +course-button(`Explore / Add Courses`)([routerLink]="['courses']")
-
-    //- See Past Courses button
-    div
-      +course-button(`See Past Courses`)
+    p Current Courses: {{ subscribedCourses.length }}

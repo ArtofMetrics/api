@@ -45,3 +45,12 @@ export interface SubmitDripResponse {
   // lastCompleted: { R: string, STATA: string };
   studentCourse: StudentCourse;
 }
+
+// Get Courses
+export interface GetCoursesRequest extends AuthenticatedRequest {
+
+}
+
+export interface GetCoursesResponse {
+  courses: StudentCourse[];
+}

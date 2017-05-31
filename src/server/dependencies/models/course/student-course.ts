@@ -1,5 +1,6 @@
 // External Dependencies
 import { Schema, Model } from 'mongoose';
+import * as moment from 'moment';
 
 // AOM Dependencies
 import { commonCourseProps } from './common-course';
@@ -77,6 +78,10 @@ export interface StudentCourse extends Course {
    * Finishes a course and sets the `isCompleted` flag
    */
   finishCourse: () => StudentCourse;
+
+  expirationDate: () => moment.Moment;
+
+  isExpired: () => boolean;
 }
 
 /**
@@ -213,6 +218,28 @@ studentCourseSchema.methods.finishCourse = function(): StudentCourse {
 
 studentCourseSchema.methods.parseCompleted = function({ completed }: { completed: string }): number[] {
   return completed.split('.').map(num => parseInt(num, 10));
+};
+
+studentCourseSchema.methods.expirationDate = function(): moment.Moment {
+  const argsMap = {
+    annual: [1, 'year'],
+    semester: [180, 'days']
+  };
+
+  const subscribedOn = moment(this.subscription.subscribedOn);
+
+  switch(this.get('subscription.length')) {
+    case 'annual':
+      return subscribedOn
+        .add(1, 'year');
+    case 'semester':
+      return subscribedOn
+        .add(180, 'days');
+  }
+};
+
+studentCourseSchema.methods.isExpired = function(): boolean {
+  return this.expirationDate() > moment();
 };
 
 // statics

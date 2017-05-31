@@ -23,7 +23,8 @@ import { HTTPResponse } from '../models';
 import {
   GetOneCourseRequest, GetOneCourseResponse,
   SubscribeToCourseRequest, SubscribeToCourseResponse,
-  SubmitDripRequest, SubmitDripResponse
+  SubmitDripRequest, SubmitDripResponse,
+  GetCoursesRequest, GetCoursesResponse
 } from './models';
 import { StudentCourseModel, StudentCourse } from '../../dependencies/models/course/student-course';
 import { IUser } from '../../dependencies/models/user/user.model';
@@ -179,7 +180,7 @@ export function submitDrip($customError: CustomErrorService, $StudentCourse: Stu
 }
 
 export function getCourses($customError: CustomErrorService, $User, $StudentCourse: StudentCourseModel) {
-  return async (req, res) => {
+  return async (req: GetCoursesRequest, res: Response) => {
     try {
       const updatedUser = await $User
         .findById(req.user._id)
@@ -189,7 +190,8 @@ export function getCourses($customError: CustomErrorService, $User, $StudentCour
       const courses = await $StudentCourse
         .find({ _id: { $in: updatedUser.courses.active.concat(updatedUser.courses.completed) } });
       
-      res.json({ data: { courses } });
+      const data: HTTPResponse<GetCoursesResponse> = { data: { courses } };
+      res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);
     }
