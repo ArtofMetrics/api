@@ -3,7 +3,7 @@ import * as express from 'express';
 
 // AOM Deps
 import { Middleware } from '../middleware';
-import { getUsers } from './routes';
+import { editRole, getUsers } from './routes';
 
 export function AdminRouter(di) {
   const api: express.Router = express.Router();
@@ -18,6 +18,9 @@ export function AdminRouter(di) {
 
   api.route('/users')
     .get(di.invoke(getUsers));
+  
+  api.route('/users/:id/role')
+    .put(di.invoke(editRole));
 
   return api;
 }
