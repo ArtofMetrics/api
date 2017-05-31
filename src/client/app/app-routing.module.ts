@@ -31,6 +31,12 @@ export const routing: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'student',
+    canActivate: [LoginGuard],
+    component: UserDashboardComponent,
+    pathMatch: 'full'
+  },
+  {
     path: 'register',
     component: RegisterComponent,
     pathMatch: 'full'

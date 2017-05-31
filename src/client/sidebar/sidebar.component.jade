@@ -9,6 +9,11 @@ ul.side-nav#aom-sidebar
       i.material-icons.medium person_pin
   li.center-align
     p(*ngIf="userService.$") {{ userService.$.fullName() }}
+  li.center-align
+    a(
+      *ngIf="userService.isInstructor()"
+      [routerLink]="['dashboard']") Instructor Dashboard
+    a([routerLink]="['student']") My Courses
   
   div(*ngIf="sidebar.contentView === 'course'")
     div.divider
