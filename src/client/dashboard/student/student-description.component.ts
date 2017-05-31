@@ -14,8 +14,4 @@ import { StudentCourse } from 'server/dependencies/models/course/student-course'
 export class StudentDescriptionComponent {
   @Input()
   student: any;
-
-  @Input()
-  subscribedCourses: StudentCourse[] = [];
-
 }
