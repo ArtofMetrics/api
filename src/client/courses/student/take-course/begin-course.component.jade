@@ -17,5 +17,10 @@ div.container(*ngIf="studentCourse")
               div.col.s4.push-s4
                 h6.header Taught by
                 p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}
+          
+          //- Active Language
+          toggle-language(
+            [default]="studentCourse.data.activeLanguage"
+            (toggleLanguage)="setActiveLanguage($event)")
           div.card-action
             div.btn.btn-waves((click)="sendStartCourse()") Start Course

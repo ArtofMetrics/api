@@ -120,7 +120,7 @@ export interface StudentCourseModel extends Model<StudentCourse> {
    * @param  {Course}} {course}      Course
    * @return {Promise<StudentCourse>}
    */
-  createFromCourse: ({ course }: { course: Course }) => Promise<StudentCourse>;
+  createFromCourse: ({ course, language }: { course: Course, language: string }) => Promise<StudentCourse>;
 }
 
 // methods
@@ -217,7 +217,7 @@ studentCourseSchema.methods.parseCompleted = function({ completed }: { completed
 
 // statics
 
-studentCourseSchema.statics.createFromCourse = function({ course }: { course: Course }): Promise<StudentCourse> {
+studentCourseSchema.statics.createFromCourse = function({ course, language }: { course: Course, language: string }): Promise<StudentCourse> {
   const courseData: any = (course.toObject() as any).data;
 
   return this.create({
@@ -228,7 +228,7 @@ studentCourseSchema.statics.createFromCourse = function({ course }: { course: Co
     data: Object.assign(
       {},
       courseData,
-      { lastCompleted: { R: '0.0.0', STATA: '0.0.0' }, activeLanguage: 'R' }
+      { lastCompleted: { R: '0.0.0', STATA: '0.0.0' }, activeLanguage: language }
     ),
 
     subscription: {

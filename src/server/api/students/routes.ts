@@ -82,7 +82,7 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
       await throwIfSubscribed({ $StudentCourse, user: req.user, courseId: course._id.toString() });
 
       if (course.isFree()) {
-        const studentCourse = await $StudentCourse.createFromCourse({ course });
+        const studentCourse = await $StudentCourse.createFromCourse({ course, language: req.body.language });
         await addStudentCourseToCoursesArray({ studentCourse, user: req.user, $User })
 
         return res.json({ data: { studentCourse } });
@@ -114,7 +114,7 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
         throw new StandardError({ error, code: status.BAD_REQUEST });
       }
 
-      const studentCourse = await $StudentCourse.createFromCourse({ course });
+      const studentCourse = await $StudentCourse.createFromCourse({ course, language: req.body.language });
 
       await Promise.all([
         addStudentCourseToCoursesArray({ studentCourse, user: req.user, $User }),

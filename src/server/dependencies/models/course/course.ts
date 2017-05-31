@@ -18,7 +18,7 @@ export interface CourseData {
   description: string;
   category: string;
   photos: { url: string; caption: string; isCover: boolean }[];
-  modules: CourseModule[],
+  modules: { R: CourseModule[], STATA: CourseModule[] };
 }
 
 export interface Course extends Document {
@@ -124,3 +124,4 @@ courseSchema.statics.getVisibleCourses = function() {
       isVisible: true
     });
 };
+
