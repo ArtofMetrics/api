@@ -15,6 +15,7 @@ import { AuthModule } from 'client/auth/auth.module';
 import { CoursesModule } from 'client/courses';
 import { SidebarModule } from 'client/sidebar/sidebar.module';
 import { DashboardModule } from 'client/dashboard/dashboard.module';
+import { AdminModule } from 'client/admin/admin.module';
 
 // test
 @NgModule({
@@ -31,6 +32,7 @@ import { DashboardModule } from 'client/dashboard/dashboard.module';
     HomeModule,
     ProfileModule,
     AuthModule,
+    AdminModule,
     AppRoutingModule
   ],
   declarations: [AppComponent],
