@@ -27,6 +27,7 @@ export class PreviewCourseComponent implements OnInit {
   state: { addingCard: boolean } = { addingCard: false };
   cards: StripeCard[];
   subscribing: boolean = false;
+  activeLanguage: string;
 
   constructor(
     private apiService: ApiService,
@@ -38,19 +39,28 @@ export class PreviewCourseComponent implements OnInit {
 
   ngOnInit() {
     this.instructors = this.course.instructors.map(user => new mongoose.Document(user, userSchema));
-    this.doc = new mongoose.Document(this.course, courseSchema);
+    const doc: Course = new mongoose.Document(this.course, courseSchema);
+    this.doc = doc;
+
+    this.activeLanguage = this.doc.data.modules.R.length ?
+      'R' :
+      'STATA';
   }
 
   startPayment = () => {
+    if (this.doc.isFree()) {
+      return this.subscribeToFreeCourse();
+    }
+
     this.subscribing = true;
 
     this.apiService.auth.getCreditCards()
-    .subscribe(
+      .subscribe(
       data => {
         this.cards = data.cards;
       },
       error => this.handleHttpError(error)
-    );
+      );
   };
 
   addCreditCard = () => this.state.addingCard = true;
@@ -61,21 +71,36 @@ export class PreviewCourseComponent implements OnInit {
     } else {
       const { data: { token } } = payload;
       this.apiService.students
-        .subscribeToCourse({ courseId: this.course._id, cardDetails: token.token })
+        .subscribeToCourse({ courseId: this.doc._id, cardDetails: token.token, language: this.activeLanguage })
         .subscribe(
-          data => {
-            this.state.addingCard = false;
-            this.subscribing = false;
-            this.toastService.toast(`You've successfuly paid for this course!`);
-            setTimeout(() => window.location.reload(), 1000);
-            // this.router.navigate(['course', data.studentCourse.slug]);
-          },
-          error => this.handleHttpError(error)
-        )
+        data => {
+          this.state.addingCard = false;
+          this.subscribing = false;
+          this.onSuccessfulPayment();
+        },
+        error => this.handleHttpError(error)
+        );
     }
   };
 
+  subscribeToFreeCourse = () => {
+    this.apiService.students.subscribeToCourse({ courseId: this.doc._id, language: this.activeLanguage })
+      .subscribe(
+      data => this.onSuccessfulPayment(),
+      error => this.handleHttpError(error)
+      )
+  };
+
+  onSuccessfulPayment = () => {
+    this.toastService.toast(`You've successfuly paid for this course!`);
+    setTimeout(() => window.location.reload(), 1000);
+  }
+
   handleHttpError = (error: Error) => {
     this.errorService.handleHttpError(error);
+  };
+
+  setActiveLanguage = ({ language }: { language : string }) => {
+    this.activeLanguage = language;
   };
 }

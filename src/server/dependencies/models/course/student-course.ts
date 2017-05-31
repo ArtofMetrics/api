@@ -1,5 +1,6 @@
 // External Dependencies
 import { Schema, Model } from 'mongoose';
+import * as moment from 'moment';
 
 // AOM Dependencies
 import { commonCourseProps } from './common-course';
@@ -77,6 +78,10 @@ export interface StudentCourse extends Course {
    * Finishes a course and sets the `isCompleted` flag
    */
   finishCourse: () => StudentCourse;
+
+  expirationDate: () => moment.Moment;
+
+  isExpired: () => boolean;
 }
 
 /**
@@ -120,7 +125,7 @@ export interface StudentCourseModel extends Model<StudentCourse> {
    * @param  {Course}} {course}      Course
    * @return {Promise<StudentCourse>}
    */
-  createFromCourse: ({ course }: { course: Course }) => Promise<StudentCourse>;
+  createFromCourse: ({ course, language }: { course: Course, language: string }) => Promise<StudentCourse>;
 }
 
 // methods
@@ -215,9 +220,31 @@ studentCourseSchema.methods.parseCompleted = function({ completed }: { completed
   return completed.split('.').map(num => parseInt(num, 10));
 };
 
+studentCourseSchema.methods.expirationDate = function(): moment.Moment {
+  const argsMap = {
+    annual: [1, 'year'],
+    semester: [180, 'days']
+  };
+
+  const subscribedOn = moment(this.subscription.subscribedOn);
+
+  switch(this.get('subscription.length')) {
+    case 'annual':
+      return subscribedOn
+        .add(1, 'year');
+    case 'semester':
+      return subscribedOn
+        .add(180, 'days');
+  }
+};
+
+studentCourseSchema.methods.isExpired = function(): boolean {
+  return this.expirationDate() > moment();
+};
+
 // statics
 
-studentCourseSchema.statics.createFromCourse = function({ course }: { course: Course }): Promise<StudentCourse> {
+studentCourseSchema.statics.createFromCourse = function({ course, language }: { course: Course, language: string }): Promise<StudentCourse> {
   const courseData: any = (course.toObject() as any).data;
 
   return this.create({
@@ -228,7 +255,7 @@ studentCourseSchema.statics.createFromCourse = function({ course }: { course: Co
     data: Object.assign(
       {},
       courseData,
-      { lastCompleted: { R: '0.0.0', STATA: '0.0.0' }, activeLanguage: 'R' }
+      { lastCompleted: { R: '0.0.0', STATA: '0.0.0' }, activeLanguage: language }
     ),
 
     subscription: {

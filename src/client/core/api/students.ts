@@ -10,7 +10,8 @@ import { StudentCourse } from 'server/dependencies/models/course/student-course'
 import {
   GetOneCourseResponse,
   SubscribeToCourseResponse, SubscribeToCourseRequestBody,
-  SubmitDripRequestBody, SubmitDripResponse
+  SubmitDripRequestBody, SubmitDripResponse,
+  GetCoursesResponse
 } from 'server/api/students/models';
 
 export function students(API_ROOT: string, http: AomHTTPService) {
@@ -18,7 +19,7 @@ export function students(API_ROOT: string, http: AomHTTPService) {
 
   return {
 
-    getSubscribedCourses() {
+    getSubscribedCourses(): Observable<GetCoursesResponse> {
       return http
         .get(`${BASE_URL}/courses`);
     },
@@ -28,8 +29,8 @@ export function students(API_ROOT: string, http: AomHTTPService) {
         .get(`${BASE_URL}/course/${slug}`);
     },
 
-    subscribeToCourse({ courseId, cardDetails }: { courseId: string, cardDetails: any }): Observable<SubscribeToCourseResponse> {
-      const data: SubscribeToCourseRequestBody = { cardDetails };
+    subscribeToCourse({ courseId, cardDetails, language }: { courseId: string, cardDetails?: any, language: string }): Observable<SubscribeToCourseResponse> {
+      const data: SubscribeToCourseRequestBody = { cardDetails, language };
       return http
         .post(`${BASE_URL}/course/${courseId}`, data);
     },

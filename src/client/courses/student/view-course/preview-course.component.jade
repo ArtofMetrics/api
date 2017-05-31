@@ -5,8 +5,8 @@ div.container
     div.col.s6.push-s3
       div.section
         h3.header {{ course.data.name }}
-        span {{ course.data.modules.R.length }} module(s) in R
-        span {{ course.data.modules.STATA.length }} module(s) in STATA
+        p {{ course.data.modules.R.length }} module(s) in R
+        p {{ course.data.modules.STATA.length }} module(s) in STATA
       //- Name and description
       div.divider
       //- Instructors
@@ -14,13 +14,22 @@ div.container
         h6 Instructors
         div(*ngFor="let instructor of instructors")
           p {{ instructor.fullName() }}
-          //- p {{ instructor.fullName() }}
-          
+      
+      //- Difficulty
+      div.section
+        h6 Difficulty
+        p {{ course.difficulty }}
+      
       //- Course description
       div.section
         h6 Course description
         div {{ course.data.description }}
-
+      
+      //- Set Language
+      div.section
+        toggle-language(
+          [default]="activeLanguage"
+          (toggleLanguage)="setActiveLanguage($event)")
       //- Subscribe
       div.section
         div.btn.btn-waves((click)="startPayment()") Subscribe

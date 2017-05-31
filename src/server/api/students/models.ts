@@ -15,7 +15,8 @@ export interface GetOneCourseResponse {
 
 // Subscribe to course
 export interface SubscribeToCourseRequestBody {
-  cardDetails: any;
+  cardDetails?: any;
+  language: string;
 }
 
 export interface SubscribeToCourseRequest extends AuthenticatedRequest {
@@ -43,4 +44,13 @@ export interface SubmitDripResponse {
   // isCompleted: boolean;
   // lastCompleted: { R: string, STATA: string };
   studentCourse: StudentCourse;
+}
+
+// Get Courses
+export interface GetCoursesRequest extends AuthenticatedRequest {
+
+}
+
+export interface GetCoursesResponse {
+  courses: StudentCourse[];
 }

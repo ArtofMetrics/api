@@ -23,7 +23,8 @@ import { HTTPResponse } from '../models';
 import {
   GetOneCourseRequest, GetOneCourseResponse,
   SubscribeToCourseRequest, SubscribeToCourseResponse,
-  SubmitDripRequest, SubmitDripResponse
+  SubmitDripRequest, SubmitDripResponse,
+  GetCoursesRequest, GetCoursesResponse
 } from './models';
 import { StudentCourseModel, StudentCourse } from '../../dependencies/models/course/student-course';
 import { IUser } from '../../dependencies/models/user/user.model';
@@ -78,11 +79,17 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
   $stripe, $subscription: SubscriptionService, $Payment: PaymentModel, $payment: PaymentService, $User: Model<any>) {
   return async (req: SubscribeToCourseRequest, res: Response) => {
     try {
-      validateParams(req.body);
-
       const course = await findCourseByIdOrThrow({ $Course, courseId: req.params.identifier });
       await throwIfSubscribed({ $StudentCourse, user: req.user, courseId: course._id.toString() });
 
+      if (course.isFree()) {
+        const studentCourse = await $StudentCourse.createFromCourse({ course, language: req.body.language });
+        await addStudentCourseToCoursesArray({ studentCourse, user: req.user, $User })
+
+        return res.json({ data: { studentCourse } });
+      }
+
+      validateParams(req.body);
       const { cardDetails } = req.body;
 
       const sourceToken = cardDetails.id;
@@ -108,7 +115,7 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
         throw new StandardError({ error, code: status.BAD_REQUEST });
       }
 
-      const studentCourse = await $StudentCourse.createFromCourse({ course });
+      const studentCourse = await $StudentCourse.createFromCourse({ course, language: req.body.language });
 
       await Promise.all([
         addStudentCourseToCoursesArray({ studentCourse, user: req.user, $User }),
@@ -173,7 +180,7 @@ export function submitDrip($customError: CustomErrorService, $StudentCourse: Stu
 }
 
 export function getCourses($customError: CustomErrorService, $User, $StudentCourse: StudentCourseModel) {
-  return async (req, res) => {
+  return async (req: GetCoursesRequest, res: Response) => {
     try {
       const updatedUser = await $User
         .findById(req.user._id)
@@ -183,7 +190,8 @@ export function getCourses($customError: CustomErrorService, $User, $StudentCour
       const courses = await $StudentCourse
         .find({ _id: { $in: updatedUser.courses.active.concat(updatedUser.courses.completed) } });
       
-      res.json({ data: { courses } });
+      const data: HTTPResponse<GetCoursesResponse> = { data: { courses } };
+      res.json(data);
     } catch (error) {
       return $customError.httpError(res)(error);
     }
@@ -232,7 +240,7 @@ async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { 
   );
 }
 
-function validateParams({ cardDetails }: { cardDetails: string }) {
+function validateParams({ cardDetails }: { cardDetails?: string }) {
   if (!cardDetails) {
     throw new StandardError({
       error: `Token is required to subscribe to course`,

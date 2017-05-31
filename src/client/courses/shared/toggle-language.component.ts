@@ -9,7 +9,8 @@ type Language = 'R' | 'STATA';
 
 @Component({
   selector: 'toggle-language',
-  templateUrl: './toggle-language.component.jade'
+  templateUrl: './toggle-language.component.jade',
+  styleUrls: ['./toggle-language.component.styl']
 })
 
 export class ToggleLanguageComponent implements OnInit{

@@ -9,6 +9,11 @@ ul.side-nav#aom-sidebar
       i.material-icons.medium person_pin
   li.center-align
     p(*ngIf="userService.$") {{ userService.$.fullName() }}
+  li.center-align
+    a(
+      *ngIf="userService.isInstructor()"
+      [routerLink]="['dashboard']") Instructor Dashboard
+    a([routerLink]="['student']") My Courses
   
   div(*ngIf="sidebar.contentView === 'course'")
     div.divider
@@ -25,7 +30,7 @@ ul.side-nav#aom-sidebar
               li.pointer(*ngFor="let lesson of module.lessons; let lessonIdx = index;")
                 div(
                   [class.disabled]="isFutureLesson({ moduleIdx: moduleIdx, lessonIdx: lessonIdx })"
-                  (click)="loadLesson(lesson)") {{ lesson.name }}
+                  (click)="loadLesson(lesson)") {{ lesson.name || 'Lesson ' + lessonIdx }}
   
   div.divider
 

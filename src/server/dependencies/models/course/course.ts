@@ -18,7 +18,7 @@ export interface CourseData {
   description: string;
   category: string;
   photos: { url: string; caption: string; isCover: boolean }[];
-  modules: CourseModule[],
+  modules: { R: CourseModule[], STATA: CourseModule[] };
 }
 
 export interface Course extends Document {
@@ -35,6 +35,7 @@ export interface Course extends Document {
 
   admin: {
     readableId: number;
+    isFree: boolean;
   };
 
   subscription: {
@@ -50,6 +51,8 @@ export interface Course extends Document {
 
   // methods
   getModule: (id: string | Schema.Types.ObjectId, language: string) => CourseModule;
+
+  isFree: () => boolean;
 }
 
 export const courseSchema: Schema = new Schema({
@@ -65,6 +68,7 @@ export const courseSchema: Schema = new Schema({
   // Should only be editable by admins
   admin: {
     readableId: { type: Number, required: true },
+    isFree: { type: Boolean, default: false }
   },
 
   difficulty: {
@@ -104,6 +108,10 @@ courseSchema.methods.getModule = function (id, language: string) {
   return this.data.modules[language].id(id);
 }
 
+courseSchema.methods.isFree = function(): boolean {
+  return this.admin.isFree;
+};
+
 export interface CourseModel extends Model<Course> {
 
   getVisibleCourses: () => Course[];
@@ -116,3 +124,4 @@ courseSchema.statics.getVisibleCourses = function() {
       isVisible: true
     });
 };
+

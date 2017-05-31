@@ -41,6 +41,7 @@
     "jwt-simple": "^0.5.1",
     "linkedin-oauth-agent": "^1.0.3",
     "lodash": "^4.17.2",
+    "moment": "^2.18.1",
     "mongoose": "^4.9.5",
     "morgan": "^1.7.0",
     "ng2-ace": "^0.0.15",

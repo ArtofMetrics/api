@@ -1,6 +1,8 @@
 div.switch
   label
     | {{ languages[0] }}
-    input(type="checkbox" [disabled]="true" (click)="toggle()" [checked]="language === 'R'")
-    span.lever
+    input(type="checkbox" (click)="toggle()" [checked]="language === 'R'")
+    span.lever(
+      [class.toggledLeft]="language === 'STATA'"
+      [class.toggledRight]="language === 'R'")
     | {{ languages[1] }}

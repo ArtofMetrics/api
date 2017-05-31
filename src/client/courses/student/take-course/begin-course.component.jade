@@ -11,11 +11,13 @@ div.container(*ngIf="studentCourse")
                 br
                 p Difficulty: {{ studentCourse.difficulty }}
                 br
-                div Languages Available:
-                  p(*ngIf="studentCourse.data.modules.R.length") R
-                  p(*ngIf="studentCourse.data.modules.STATA.length") STATA
               div.col.s4.push-s4
                 h6.header Taught by
                 p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}
+          
+          //- Active Language
+          toggle-language(
+            [default]="studentCourse.data.activeLanguage"
+            (toggleLanguage)="setActiveLanguage($event)")
           div.card-action
             div.btn.btn-waves((click)="sendStartCourse()") Start Course
