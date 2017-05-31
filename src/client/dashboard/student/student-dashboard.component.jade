@@ -17,7 +17,7 @@ div.card-panel
   div.divider
 
   div.container
-    h2.header Subscribed Courses
+    h2.header Subscribed Courses ({{ subscribedCourses.length }})
     //- table header
     div.row
       +table-header({ completed: false })
@@ -27,18 +27,18 @@ div.card-panel
     //- table row
     div.row(*ngFor="let course of subscribedCourses")
       div.col.s3.center-align
-        a([routerLink]="['course', course.slug]")
+        a([routerLink]="['/course', course.slug]")
           h6.header {{ course.data.name }}
       div.col.s3.center-align
-        div lol
+        div {{ course.expirationDate().format('MMM Do, YYYY') }}
       div.col.s3.center-align
-        a([routerLink]="['course', course.slug]")
-          h6.header {{ course.getActiveModule({ language: course.data.activeLanguage }).name }}
+        a([routerLink]="['/course', course.slug]")
+          h6.header {{ course.getActiveModule({ language: course.data.activeLanguage })?.name }}
       div.col.s3.center-align
         h6.header {{ course.data.activeLanguage }}
   
   div.container(*ngIf="completedCourses.length")
-    h2.header Completed Courses
+    h2.header Completed Courses ({{ completedCourses.length }})
 
     div.row
       +table-header({ completed: true })
@@ -50,10 +50,10 @@ div.card-panel
         a([routerLink]="['course', course.slug]")
           h6.header {{ course.data.name }}
       div.col.s3.center-align
-        div lol
+        div {{ course.expirationDate().format('MMM Do, YYYY') }}
       div.col.s3.center-align
         a([routerLink]="['course', course.slug]")
-          h6.header {{ course.expirationDate().format('MMM Do, YYYY') }}
+          h6.header {{ course.isExpired() ? 'Expired' : 'Subscribed' }}
       div.col.s3.center-align
         h6.header {{ course.data.activeLanguage }}
 
