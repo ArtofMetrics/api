@@ -79,8 +79,6 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
   $stripe, $subscription: SubscriptionService, $Payment: PaymentModel, $payment: PaymentService, $User: Model<any>) {
   return async (req: SubscribeToCourseRequest, res: Response) => {
     try {
-      console.log(req.body.cardDetails);
-      
       const course = await findCourseByIdOrThrow({ $Course, courseId: req.params.identifier });
       await throwIfSubscribed({ $StudentCourse, user: req.user, courseId: course._id.toString() });
 

@@ -78,10 +78,8 @@ export class PreviewCourseComponent implements OnInit {
   };
 
   submitSubscription = ({ token }: { token?: any }) => {
-    console.log('selectedCard in submitSubscription', this.selectedCard);
     const cardDetails = this.selectedCard || token.token;
 
-    console.log('cardDetails', cardDetails);
     this.apiService.students
       .subscribeToCourse({ courseId: this.doc._id, cardDetails, language: this.activeLanguage })
       .subscribe(
@@ -127,7 +125,6 @@ export class PreviewCourseComponent implements OnInit {
       this.selectedCard = card;
     }
 
-    console.log('selectedCard', this.selectedCard);
   };
 
   isSelectedCard = (card: StripeCard) => {
