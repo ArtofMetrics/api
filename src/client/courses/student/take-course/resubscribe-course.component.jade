@@ -15,18 +15,3 @@ div.container
                 h5.header Taught By
                 p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}
             div.btn.btn-waves((click)="resubscribeToCourse()") Resubscribe
-            
-            
-  //- div.row
-  //-   div.col.s1.offset-s4.material-icons.expired-alert info_outline
-  //-   div.col.s3.left-align Your subscription has expired
-  //- div.row
-  //-   div.col.s6.offset-s2
-  //-     blockquote {{ studentCourse.data.description }}
-  //-   div.col.s2
-  //-     div.section
-  //-       h4.header Instructors
-  //-     div.divider
-  //-     div.section
-  //-       div(*ngFor="let instructor of instructors")
-  //-         div {{ instructor.fullName() }}
