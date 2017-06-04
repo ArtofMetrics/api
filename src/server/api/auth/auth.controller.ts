@@ -25,6 +25,7 @@ import {
 
 // Constants
 const CLIENT_USER_FIELDS = ['_id', 'profile', 'roles', 'status', 'courses'];
+const DEFAULT_SUPER_ADMIN = 'admin@artofmetrics.com';
 
 export class AuthController {
 
@@ -123,7 +124,7 @@ export class AuthController {
         await $authentication.validateEmail(sanitizedEmail);
         $authentication.validatePassword(req.body.password, req.body.confirmPassword);
         const user = new $User({
-          roles: [],
+          roles: sanitizedEmail === DEFAULT_SUPER_ADMIN ? ['super-admin'] : [],
           profile: req.body.doc.profile
         });
 
