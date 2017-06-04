@@ -32,10 +32,22 @@ div.container
           (toggleLanguage)="setActiveLanguage($event)")
       //- Subscribe
       div.section
-        div.btn.btn-waves((click)="startPayment()") Subscribe
+        div.btn.btn-waves(
+          (click)="startPayment()"
+          *ngIf="!subscribing") Subscribe
+        div(*ngIf="subscribing")
+          div
+            h4 Subscribe to {{ course.data.name }}
+            div(*ngIf="card && !state.addingCard")
+              p
+                input(
+                  name="preselected-cc"
+                  id="preselected-cc"
+                  type="radio"
+                  (click)="selectExistingCard(card)")
+                label(for="preselected-cc") {{ card.brand }} ending in {{ card.last4 }}
+              div.btn.btn-waves(*ngIf="selectedCard && !state.addingCard" (click)="submitSubscription({})") SubmitPayment
+            div.btn.btn-waves((click)="addCreditCard()" *ngIf="!state.addingCard") Add Credit Card
+            add-credit-card-form(*ngIf="state.addingCard" (onSubmitCard)="onSubmitCard($event)")
       
-div(*ngIf="subscribing")
-  div
-    h4 Subscribe to {{ course.data.name }}
-    div.btn.btn-waves((click)="addCreditCard()") Add Credit Card
-    add-credit-card-form(*ngIf="state.addingCard" (onSubmitCard)="onSubmitCard($event)")
+
