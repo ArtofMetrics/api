@@ -1,7 +1,9 @@
 div.container(*ngIf="studentCourse")
   div.row
     div.col.s12.m6.offset-m3
-      h2.header {{ studentCourse.data.name }}
+      div.row
+        h2.header {{ studentCourse.data.name }}
+      course-expiration([studentCourse]="studentCourse")
       div.card.horizontal
         div.card-stacked
           div.card-content

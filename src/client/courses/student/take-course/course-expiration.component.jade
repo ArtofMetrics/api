@@ -1,0 +1,8 @@
+div.row(*ngIf="!studentCourse.isExpired()")
+  div.col.s1
+    i.material-icons.will-expire-alert info_outline
+  div.col.s11 Your subscription will expire on {{ studentCourse.expirationDate().format('MMM Do, YYYY') }}
+div.row(*ngIf="studentCourse.isExpired()")
+  div.col.s1
+    i.material-icons.expired-alert info_outline
+  div.col.s11 Your subscription has expired
