@@ -239,7 +239,7 @@ studentCourseSchema.methods.expirationDate = function(): moment.Moment {
 };
 
 studentCourseSchema.methods.isExpired = function(): boolean {
-  return this.expirationDate() < moment() || true;
+  return this.expirationDate() < moment();
 };
 
 // statics
