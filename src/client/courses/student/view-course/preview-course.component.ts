@@ -25,9 +25,10 @@ export class PreviewCourseComponent implements OnInit {
   doc: Course;
   instructors: any[];
   state: { addingCard: boolean } = { addingCard: false };
-  cards: StripeCard[];
+  card: StripeCard;
   subscribing: boolean = false;
   activeLanguage: string;
+  selectedCard: StripeCard;
 
   constructor(
     private apiService: ApiService,
@@ -57,31 +58,46 @@ export class PreviewCourseComponent implements OnInit {
     this.apiService.auth.getCreditCards()
       .subscribe(
       data => {
-        this.cards = data.cards;
+        [this.card] = data.cards;
       },
       error => this.handleHttpError(error)
       );
   };
 
-  addCreditCard = () => this.state.addingCard = true;
+  addCreditCard = () => {
+    this.state.addingCard = true;
+  };
 
   onSubmitCard = (payload) => {
     if (payload.data.error) {
       (<any>window).Materialize.toast(payload.data.error.message, 4000);
     } else {
       const { data: { token } } = payload;
-      this.apiService.students
-        .subscribeToCourse({ courseId: this.doc._id, cardDetails: token.token, language: this.activeLanguage })
-        .subscribe(
-        data => {
-          this.state.addingCard = false;
-          this.subscribing = false;
-          this.onSuccessfulPayment();
-        },
-        error => this.handleHttpError(error)
-        );
+      this.submitSubscription({ token });
     }
   };
+
+  submitSubscription = ({ token }: { token?: any }) => {
+    console.log('selectedCard in submitSubscription', this.selectedCard);
+    const cardDetails = this.selectedCard || token.token;
+
+    console.log('cardDetails', cardDetails);
+    this.apiService.students
+      .subscribeToCourse({ courseId: this.doc._id, cardDetails, language: this.activeLanguage })
+      .subscribe(
+      data => {
+        this.stateCleanup();
+        this.onSuccessfulPayment();
+      },
+      error => this.handleHttpError(error)
+      );
+  };
+
+  stateCleanup = () => {
+    this.selectedCard = null;
+    this.state.addingCard = false;
+    this.subscribing = false;
+  }
 
   subscribeToFreeCourse = () => {
     this.apiService.students.subscribeToCourse({ courseId: this.doc._id, language: this.activeLanguage })
@@ -100,7 +116,21 @@ export class PreviewCourseComponent implements OnInit {
     this.errorService.handleHttpError(error);
   };
 
-  setActiveLanguage = ({ language }: { language : string }) => {
+  setActiveLanguage = ({ language }: { language: string }) => {
     this.activeLanguage = language;
   };
+
+  selectExistingCard = (card: StripeCard) => {
+    if (this.selectedCard) {
+      this.selectedCard = null;
+    } else {
+      this.selectedCard = card;
+    }
+
+    console.log('selectedCard', this.selectedCard);
+  };
+
+  isSelectedCard = (card: StripeCard) => {
+    return this.selectedCard && this.selectedCard.id === card.id;
+  }
 }
