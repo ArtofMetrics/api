@@ -21,4 +21,8 @@ export class ResubscribeCourseComponent {
   instructors: IUser[];
   
   constructor() {}
+
+  resubscribeToCourse = () => {
+
+  };
 }
