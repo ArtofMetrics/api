@@ -18,8 +18,8 @@ export function app(di) {
     app.use(morgan('combined'));
   }
 
-  app.use(express.static('vendor'));
-  
+  app.use('/vendor', express.static('vendor'));
+
   app.use(express.static('dist'));
 
   app.use(express.static('assets'))
