@@ -18,10 +18,12 @@ export function app(di) {
     app.use(morgan('combined'));
   }
 
+  app.use(express.static('vendor'));
+  
   app.use(express.static('dist'));
 
   app.use(express.static('assets'))
-  app.use(express.static('vendor'));
+  
   app.use('/api/v1', Api(di));
 
   app.get('/', (req: express.Request, res: express.Response) => {
