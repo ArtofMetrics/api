@@ -11,8 +11,6 @@ import { TakeCourseComponent } from './take-course.component';
 import { BeginCourseComponent } from './begin-course.component';
 import { ContinueCourseComponent } from './continue-course.component';
 import { FinishCourseComponent } from './finish-course.component';
-import { CourseExpirationComponent } from './course-expiration.component';
-import { ResubscribeCourseComponent } from './resubscribe-course.component';
 
 // AOM interfaces
 
@@ -23,9 +21,7 @@ import { ResubscribeCourseComponent } from './resubscribe-course.component';
     TakeCourseComponent,
     ContinueCourseComponent, 
     StudentCourseHeaderComponent,
-    FinishCourseComponent,
-    CourseExpirationComponent,
-    ResubscribeCourseComponent],
+    FinishCourseComponent],
   exports: [BeginCourseComponent, TakeCourseComponent, ContinueCourseComponent, FinishCourseComponent],
 })
 

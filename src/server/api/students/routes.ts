@@ -90,7 +90,7 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
       }
 
       validateParams(req.body);
-      const { cardDetails, length } = req.body;
+      const { cardDetails } = req.body;
 
       const sourceToken = cardDetails.id;
       const { stripeCustomer, updatedUser } = await getOrCreateCustomer({ token: sourceToken, user: req.user });
@@ -107,7 +107,7 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
       let stripePayment;
       try {
         stripePayment = await $subscription
-          .createSubscriptionPayment({ course, token: cardDetails.id, user: req.user, customer: stripeCustomer, length });
+          .createSubscriptionPayment({ course, token: cardDetails.id, user: req.user, customer: stripeCustomer });
       } catch (error) {
         const failedPayment = await $Payment
           .createFailedPayment({ course, user: req.user, response: error });
@@ -115,7 +115,7 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
         throw new StandardError({ error, code: status.BAD_REQUEST });
       }
 
-      const studentCourse = await $StudentCourse.createFromCourse({ course, language: req.body.language, length });
+      const studentCourse = await $StudentCourse.createFromCourse({ course, language: req.body.language });
 
       await Promise.all([
         addStudentCourseToCoursesArray({ studentCourse, user: req.user, $User }),
@@ -235,7 +235,7 @@ export function resetCourse($User: Model<any>, $customError: CustomErrorService,
 async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {
   return $User.findByIdAndUpdate(
     user._id,
-    { $addToSet: { 'courses.active': studentCourse._id } },
+    { $push: { 'courses.active': studentCourse._id } },
     { new: true }
   );
 }

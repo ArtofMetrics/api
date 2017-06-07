@@ -1,9 +1,7 @@
 div.container(*ngIf="studentCourse")
   div.row
     div.col.s12.m6.offset-m3
-      div.row
-        h2.header {{ studentCourse.data.name }}
-      course-expiration([studentCourse]="studentCourse")
+      h2.header {{ studentCourse.data.name }}
       div.card.horizontal
         div.card-stacked
           div.card-content
@@ -13,7 +11,6 @@ div.container(*ngIf="studentCourse")
                 br
                 p Difficulty: {{ studentCourse.difficulty }}
                 br
-                p Time To Complete: {{ studentCourse.timeToComplete }} hours
               div.col.s4.push-s4
                 h6.header Taught by
                 p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}

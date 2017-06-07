@@ -1,5 +1,5 @@
 // External Dependencies
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 // AOM Dependencies
 import { Course } from 'server/dependencies/models/course/course';
@@ -11,7 +11,7 @@ import { Course } from 'server/dependencies/models/course/course';
   templateUrl: './toggle-course-visibility.component.jade'
 })
 
-export class ToggleCourseVisibilityComponent implements OnInit {
+export class ToggleCourseVisibilityComponent {
 
   @Input()
   course: Course;
@@ -25,8 +25,7 @@ export class ToggleCourseVisibilityComponent implements OnInit {
 
   ) { }
 
-  ngOnInit() {
-    console.log(this.course);
+  ngOninit() {
     this.isVisible = this.course.isVisible;
   }
 

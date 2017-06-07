@@ -122,22 +122,14 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     throw error;
   }
 
-  setCoursePrice = ({ cents, type }: { cents: number, type: 'semester' | 'annual' }) => {
-    if (type === 'annual') {
-      this.course.subscription.annualCostCents = cents;
-    } else if (type === 'semester') {
-      this.course.subscription.semesterCostCents = cents;
-    }
+  setCourseLength = (length: string) => {
+    this.course.subscription.length = length;
+  }
+
+  setCoursePrice = (costCents: number) => {
+    this.course.subscription.costCents = costCents;
   };
 
-  setTimeToComplete = ({ time }: { time: number }) => {
-    console.log('TIME', time);
-    if (isNaN(time) || !time) {
-      this.course.timeToComplete = undefined;
-    } else {
-      this.course.timeToComplete = time;
-    }
-  }
   saveCourse = () => {
     if (this.coverPhotoUrl) {
       this.course.data.photos[0].url = this.coverPhotoUrl;
@@ -146,7 +138,6 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     this.apiService.instructors
       .saveCourse({
         course: {
-          timeToComplete: this.course.timeToComplete,
           difficulty: this.course.difficulty,
           subscription: this.course.subscription,
           data: {

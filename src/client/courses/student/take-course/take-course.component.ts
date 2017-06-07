@@ -23,7 +23,7 @@ export class TakeCourseComponent implements OnInit {
   studentCourse: StudentCourse;
   instructors: IUser[];
 
-  state: 'CONTINUE' | 'BEGIN' | 'RESUBSCRIBE';
+  state: 'CONTINUE' | 'BEGIN';
   constructor(
     private apiService: ApiService,
     private errorService: ErrorService
@@ -34,16 +34,11 @@ export class TakeCourseComponent implements OnInit {
       .instructors
       .map(instructor => new mongoose.Document(instructor, userSchema));
     this.studentCourse = new mongoose.Document(this.course, studentCourseSchema);
-
-    const expired = this.studentCourse.isExpired();
-
-    if (this.studentCourse.data.lastCompleted[this.studentCourse.data.activeLanguage] === '0.0.0' && !expired) {
-      this.state = 'BEGIN';
-    } else if (expired) {
-      this.state = 'RESUBSCRIBE';
-    } else {
-      this.state = 'CONTINUE';
-    }
+   if (this.studentCourse.data.lastCompleted[this.studentCourse.data.activeLanguage] === '0.0.0') {
+     this.state = 'BEGIN';
+   } else {
+     this.state = 'CONTINUE';
+   }
   }
 
   startCourse = (payload: { activeLanguage: string }) => {

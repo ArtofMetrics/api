@@ -19,25 +19,37 @@ export class EditPriceComponent implements OnInit {
   course: Course;
 
   @Output()
-  changeCoursePrice: EventEmitter<{ cents: number, type: string }> = new EventEmitter();
+  changeCourseLength: EventEmitter<string> = new EventEmitter();
 
-  annualPriceCents: number;
-  semesterPriceCents: number;
+  @Output()
+  changeCoursePrice: EventEmitter<number> = new EventEmitter();
+
+  lengths: string[] = ['semester', 'annual'];
+
+  lengthTypes = {
+    semester: 'Semester',
+    annual: 'Annual'
+  };
+
+  priceCents: number;
 
   ngOnInit() {
-    this.annualPriceCents = this.course.subscription.annualCostCents > -1 ?
-      (this.course.subscription.annualCostCents / 100) :
+    this.priceCents = this.course.subscription.costCents > -1 ?
+      (this.course.subscription.costCents / 100) :
       null;
-    this.semesterPriceCents = this.course.subscription.semesterCostCents > -1 ?
-      (this.course.subscription.semesterCostCents / 100) :
-      null;
+    $('#course-length').material_select();
   }
 
   ngOnDestroy() {
+    this.changeCourseLength.unsubscribe();
     this.changeCoursePrice.unsubscribe();
   }
 
-  setPrice = (event, type: 'semester' | 'annual'): void => {
+  setLength = (length: string): void => {
+    this.changeCourseLength.emit(length);
+  }
+
+  setPrice = (event): void => {
     const dollars = isNil(event.target.value) || event.target.value === '' ? '0' : event.target.value;
 
     const dollarNum = parseFloat(dollars);
@@ -47,7 +59,7 @@ export class EditPriceComponent implements OnInit {
     } else {
       const cents = round(dollarNum * 100, 0);
       event.target.value = (cents / 100).toFixed(2);
-      this.changeCoursePrice.emit({ cents, type });
+      this.changeCoursePrice.emit(cents);
     }
   }
 }
