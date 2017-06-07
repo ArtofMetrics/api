@@ -130,6 +130,14 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     }
   };
 
+  setTimeToComplete = ({ time }: { time: number }) => {
+    console.log('TIME', time);
+    if (isNaN(time) || !time) {
+      this.course.timeToComplete = undefined;
+    } else {
+      this.course.timeToComplete = time;
+    }
+  }
   saveCourse = () => {
     if (this.coverPhotoUrl) {
       this.course.data.photos[0].url = this.coverPhotoUrl;
@@ -138,6 +146,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     this.apiService.instructors
       .saveCourse({
         course: {
+          timeToComplete: this.course.timeToComplete,
           difficulty: this.course.difficulty,
           subscription: this.course.subscription,
           data: {

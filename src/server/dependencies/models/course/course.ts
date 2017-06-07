@@ -27,6 +27,7 @@ export interface Course extends Document {
   isDeleted: boolean;
   status: string;
   difficulty: string;
+  timeToComplete: number;
   slug: string;
   instructors: (Schema.Types.ObjectId | string | {})[];
 
@@ -74,6 +75,11 @@ export const courseSchema: Schema = new Schema({
   difficulty: {
     type: String,
     enum: ['Beginner', 'Medium', 'Advanced'],
+    required: function() { return this.isVisible }
+  },
+
+  timeToComplete: {
+    type: Number,
     required: function() { return this.isVisible }
   },
 

@@ -1,0 +1,11 @@
+div#edit-time-to-complete
+  div.input-field
+    input(
+      type="number"
+      (change)="setTime($event)"
+      name="time-to-complete"
+      [(ngModel)]="time"
+      id="time-to-complete"
+      step="0.5"
+    )
+    label(for="time-to-complete") Time to Complete

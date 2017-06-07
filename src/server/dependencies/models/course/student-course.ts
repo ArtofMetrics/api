@@ -20,6 +20,8 @@ export interface StudentCourse extends Course {
 
   difficulty: string;
 
+  timeToComplete: number;
+
   subscription: {
     costCents: number;
     length: string;
@@ -97,6 +99,8 @@ export const studentCourseSchema = new Schema({
 
   difficulty: String,
   
+  timeToComplete: Number,
+
   /**
    * Internal subscription information. A user should not be able to directly
    * modify this information through the GUI
@@ -262,7 +266,8 @@ studentCourseSchema.statics.createFromCourse = function({ course, language, leng
       courseData,
       { lastCompleted: { R: '0.0.0', STATA: '0.0.0' }, activeLanguage: language }
     ),
-
+    timeToComplete: course.timeToComplete,
+    
     subscription: {
       subscribed: true,
       subscribedOn: Date.now(),
