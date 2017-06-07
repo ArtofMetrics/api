@@ -58,9 +58,12 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    each(this.subscriptions, (subscription: Subscription, key: string) => {
-      subscription.unsubscribe();
-    });
+    this.saveCourse()
+      .add(() => {
+        each(this.subscriptions, (subscription: Subscription, key: string) => {
+          subscription.unsubscribe();
+        });
+      });
   }
 
   fetchCourse = ({ slug }: { slug: string }) => {
@@ -84,19 +87,22 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   }
 
   addModule = (position: number) => {
-    const data: NewModule = {
-      name: `Module ${this.course.data.modules[this.language].length + 1} `,
-      description: '',
-      $isNew: true,
-      isVisible: false,
-      lessons: []
-    };
+    this.saveCourse()
+      .add(() => {
+        const data: NewModule = {
+          name: `Module ${this.course.data.modules[this.language].length + 1} `,
+          description: '',
+          $isNew: true,
+          isVisible: false,
+          lessons: []
+        };
 
-    this.persistModule(data)
-      .subscribe(
-      (data) => this.course = data.course,
-      (error) => this.handleHttpError(error)
-      );
+        this.persistModule(data)
+          .subscribe(
+          (data) => this.course = data.course,
+          (error) => this.handleHttpError(error)
+          );
+      });
   };
 
   deleteModule = (payload): void => {
@@ -143,7 +149,7 @@ export class EditCourseComponent implements OnInit, OnDestroy {
       this.course.data.photos[0].url = this.coverPhotoUrl;
     }
 
-    this.apiService.instructors
+    return this.apiService.instructors
       .saveCourse({
         course: {
           timeToComplete: this.course.timeToComplete,
