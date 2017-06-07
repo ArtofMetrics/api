@@ -13,6 +13,7 @@ div.container(*ngIf="studentCourse")
                 br
                 p Difficulty: {{ studentCourse.difficulty }}
                 br
+                p Time To Complete: {{ studentCourse.timeToComplete }} hours
               div.col.s4.push-s4
                 h6.header Taught by
                 p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}
