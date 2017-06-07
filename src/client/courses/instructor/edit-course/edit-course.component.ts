@@ -124,9 +124,9 @@ export class EditCourseComponent implements OnInit, OnDestroy {
 
   setCoursePrice = ({ cents, type }: { cents: number, type: 'semester' | 'annual' }) => {
     if (type === 'annual') {
-      this.course.set('course.subscription.annualCostCents', cents);
+      this.course.subscription.annualCostCents = cents;
     } else if (type === 'semester') {
-      this.course.set('course.subscription.semesterCostCents', cents);
+      this.course.subscription.semesterCostCents = cents;
     }
   };
 

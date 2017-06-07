@@ -125,7 +125,7 @@ export interface StudentCourseModel extends Model<StudentCourse> {
    * @param  {Course}} {course}      Course
    * @return {Promise<StudentCourse>}
    */
-  createFromCourse: ({ course, language }: { course: Course, language: string }) => Promise<StudentCourse>;
+  createFromCourse: ({ course, language, length }: { course: Course, language: string, length: string }) => Promise<StudentCourse>;
 }
 
 // methods

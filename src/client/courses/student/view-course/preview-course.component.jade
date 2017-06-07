@@ -38,6 +38,23 @@ div.container
         div(*ngIf="subscribing")
           div
             h4 Subscribe to {{ course.data.name }}
+            div
+              p
+                input(
+                  name="selected-annual-course-length"
+                  id="selected-annual-course-length"
+                  type="radio"
+                  (click)="setCourseLength('annual')"
+                )
+                label(for="selected-annual-course-length") Annual
+              p
+                input(
+                  name="selected-semester-course-length"
+                  id="selected-semester-course-length"
+                  type="radio"
+                  (click)="setCourseLength('semester')"
+                )
+                label(for="selected-semester-course-length") Semester
             div(*ngIf="card && !state.addingCard")
               p
                 input(
