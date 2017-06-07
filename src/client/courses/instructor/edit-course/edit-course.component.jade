@@ -17,13 +17,17 @@ div.container(*ngIf="this.course")
     div.col.s3
       edit-price(
         [course]="course"
-        (changeCourseLength)="setCourseLength($event)"
         (changeCoursePrice)="setCoursePrice($event)")
   div.row
     div.col.s3
       edit-difficulty(
         [course]="course"
         (emitDifficulty)="setDifficulty($event)"
+      )
+    div.col.s3
+      edit-time-to-complete(
+        [course]="course"
+        (onTimeChange)="setTimeToComplete($event)"
       )
     div.col.s3
       div.input-field

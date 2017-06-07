@@ -20,6 +20,9 @@ div.container
         h6 Difficulty
         p {{ course.difficulty }}
       
+      div.section
+        h6 Time To Complete
+        p {{ course.timeToComplete }} hours
       //- Course description
       div.section
         h6 Course description
@@ -38,7 +41,27 @@ div.container
         div(*ngIf="subscribing")
           div
             h4 Subscribe to {{ course.data.name }}
+            div
+              h6 Select Course Length
+              p
+                input(
+                  name="selected-annual-course-length"
+                  id="selected-annual-course-length"
+                  type="radio"
+                  (click)="setCourseLength('annual')"
+                )
+                label(for="selected-annual-course-length") Annual
+              p
+                input(
+                  name="selected-semester-course-length"
+                  id="selected-semester-course-length"
+                  type="radio"
+                  (click)="setCourseLength('semester')"
+                )
+                label(for="selected-semester-course-length") Semester
+            div.divider
             div(*ngIf="card && !state.addingCard")
+              h6 Select Card
               p
                 input(
                   name="preselected-cc"

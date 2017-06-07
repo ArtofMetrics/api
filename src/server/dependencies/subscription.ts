@@ -13,12 +13,17 @@ export class SubscriptionService {
   constructor(
     private $stripe) { }
 
-  public createSubscriptionPayment = async ({ course, token, user, customer }: { course: Course, token: string, user: IUser, customer }): Promise<any> => {
+  public createSubscriptionPayment = async ({ course, token, user, customer, length }: { course: Course, token: string, user: IUser, customer, length: string }): Promise<any> => {
+
+    const lengthType = {
+      semester: `semesterCostCents`,
+      annual: `annualCostCents`
+    }[length];
 
     const payment = await this.$stripe.charges.create(
       {
         currency: course.subscription.currency || this.DEFAULT_CURRENCY,
-        amount: course.subscription.costCents,
+        amount: course.subscription[lengthType],
         description: `Subscription payment for ${user.email()} charged`,
         customer: user.stripeId
       });

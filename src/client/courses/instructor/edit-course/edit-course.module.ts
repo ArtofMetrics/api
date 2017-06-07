@@ -13,6 +13,7 @@ import { EditCourseService } from './edit-course.service';
 import { EditPriceComponent } from './edit-price.component';
 import { ToggleCourseVisibilityComponent } from './toggle-course-visibility.component';
 import { EditDifficultyComponent } from './edit-difficulty.component';
+import { EditTimeToCompleteComponent } from './edit-time-to-complete.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, SharedCourseModule],
@@ -21,7 +22,8 @@ import { EditDifficultyComponent } from './edit-difficulty.component';
     ModuleRowComponent, 
     EditPriceComponent, 
     ToggleCourseVisibilityComponent,
-    EditDifficultyComponent],
+    EditDifficultyComponent,
+    EditTimeToCompleteComponent],
   providers: [EditCourseService],
   exports: [EditCourseComponent, EditPriceComponent]
 })

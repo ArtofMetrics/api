@@ -20,6 +20,8 @@ export interface StudentCourse extends Course {
 
   difficulty: string;
 
+  timeToComplete: number;
+
   subscription: {
     costCents: number;
     length: string;
@@ -97,6 +99,8 @@ export const studentCourseSchema = new Schema({
 
   difficulty: String,
   
+  timeToComplete: Number,
+
   /**
    * Internal subscription information. A user should not be able to directly
    * modify this information through the GUI
@@ -125,7 +129,7 @@ export interface StudentCourseModel extends Model<StudentCourse> {
    * @param  {Course}} {course}      Course
    * @return {Promise<StudentCourse>}
    */
-  createFromCourse: ({ course, language }: { course: Course, language: string }) => Promise<StudentCourse>;
+  createFromCourse: ({ course, language, length }: { course: Course, language: string, length: string }) => Promise<StudentCourse>;
 }
 
 // methods
@@ -239,13 +243,18 @@ studentCourseSchema.methods.expirationDate = function(): moment.Moment {
 };
 
 studentCourseSchema.methods.isExpired = function(): boolean {
-  return this.expirationDate() > moment();
+  return this.expirationDate() < moment();
 };
 
 // statics
 
-studentCourseSchema.statics.createFromCourse = function({ course, language }: { course: Course, language: string }): Promise<StudentCourse> {
+studentCourseSchema.statics.createFromCourse = function({ course, language, length }: { course: Course, language: string, length: string }): Promise<StudentCourse> {
   const courseData: any = (course.toObject() as any).data;
+
+  const lengthType = {
+    semester: `semesterCostCents`,
+    annual: `annualCostCents`
+  }[length];
 
   return this.create({
     slug: course.slug,
@@ -257,12 +266,13 @@ studentCourseSchema.statics.createFromCourse = function({ course, language }: { 
       courseData,
       { lastCompleted: { R: '0.0.0', STATA: '0.0.0' }, activeLanguage: language }
     ),
-
+    timeToComplete: course.timeToComplete,
+    
     subscription: {
       subscribed: true,
       subscribedOn: Date.now(),
-      costCents: course.subscription.costCents,
-      length: course.subscription.length,
+      costCents: course.subscription[lengthType],
+      length,
       currency: course.subscription.currency
     }
   });

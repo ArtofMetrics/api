@@ -1,0 +1,17 @@
+div.container
+  div.row
+    div.col.s12
+      h2.header {{ studentCourse.data.name }}
+      div.card.horizontal
+        div.card-image
+          img(src="{{ studentCourse.data.photos[0].url }}")
+        div.card-stacked
+          div.card-content
+            course-expiration([studentCourse]="studentCourse")
+            div.row
+              div.col.s6
+                blockquote {{ studentCourse.data.description }}
+              div.col.s6
+                h5.header Taught By
+                p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}
+            div.btn.btn-waves((click)="resubscribeToCourse()") Resubscribe

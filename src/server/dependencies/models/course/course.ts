@@ -27,6 +27,7 @@ export interface Course extends Document {
   isDeleted: boolean;
   status: string;
   difficulty: string;
+  timeToComplete: number;
   slug: string;
   instructors: (Schema.Types.ObjectId | string | {})[];
 
@@ -40,8 +41,8 @@ export interface Course extends Document {
 
   subscription: {
     currency?: string;
-    costCents: number;
-    length: string;
+    annualCostCents?: number;
+    semesterCostCents?: number;
   };
 
   data: CourseData;
@@ -77,6 +78,11 @@ export const courseSchema: Schema = new Schema({
     required: function() { return this.isVisible }
   },
 
+  timeToComplete: {
+    type: Number,
+    required: function() { return this.isVisible }
+  },
+
   // editable by instructors or admins
   data: {
     ...commonCourseProps.data,
@@ -86,14 +92,13 @@ export const courseSchema: Schema = new Schema({
   // subscription information
   subscription: {
     currency: { type: String, default: 'usd' },
-    costCents: {
+    semesterCostCents: {
       type: Number,
-      required: [isPublished, `Please select a price for your course`]
+      required: [isPublished, `Please select a semesterly price for your course`]
     },
-    length: {
-      type: String,
-      enum: ['semester', 'annual'],
-      required: [isPublished, `Please select a course length`]
+    annualCostCents: {
+      type: Number,
+      required: [isPublished, `Please select an annual price for your course`]
     }
   }
 }, { timestamps: true });
