@@ -128,6 +128,8 @@ export class PreviewCourseComponent implements OnInit {
 
   };
 
+  setCourseLength = (length: string) => this.selectedLength = length;
+  
   isSelectedCard = (card: StripeCard) => {
     return this.selectedCard && this.selectedCard.id === card.id;
   }

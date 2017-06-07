@@ -39,6 +39,7 @@ div.container
           div
             h4 Subscribe to {{ course.data.name }}
             div
+              h6 Select Course Length
               p
                 input(
                   name="selected-annual-course-length"
@@ -55,7 +56,9 @@ div.container
                   (click)="setCourseLength('semester')"
                 )
                 label(for="selected-semester-course-length") Semester
+            div.divider
             div(*ngIf="card && !state.addingCard")
+              h6 Select Card
               p
                 input(
                   name="preselected-cc"
