@@ -1,53 +1,72 @@
 div.container
   div.row
-    div.col.s3
-      img(src="{{ course.data.photos[0].url }}")
-    div.col.s6.push-s3
-      div.section
-        h3.header {{ course.data.name }}
-        p {{ course.data.modules.R.length }} module(s) in R
-        p {{ course.data.modules.STATA.length }} module(s) in STATA
-      //- Name and description
-      div.divider
-      //- Instructors
-      div.section
-        h6 Instructors
-        div(*ngFor="let instructor of instructors")
-          p {{ instructor.fullName() }}
+    div.col.s12
+      h2.header {{ course.data.name }}
+      div.card.horizontal
+        div.card-image
+          img(src="{{ course.data.photos[0].url }}")
+        div.card-stacked
+          div.card-content
+            //- course-expiration([studentCourse]="course")
+            div.row
+              div.col.s6
+                blockquote {{ course.data.description }}
+              div.col.s6
+                h5.header Taught By
+                p(*ngFor="let instructor of instructors") {{ instructor.fullName() }}
+            div.btn.btn-waves((click)="resubscribeToCourse()") Resubscribe
+
+
+//- div.container
+//-   div.row
+//-     div.col.s3
+//-       img(src="{{ course.data.photos[0].url }}")
+//-     div.col.s6.push-s3
+//-       div.section
+//-         h3.header {{ course.data.name }}
+//-         p {{ course.data.modules.R.length }} module(s) in R
+//-         p {{ course.data.modules.STATA.length }} module(s) in STATA
+//-       //- Name and description
+//-       div.divider
+//-       //- Instructors
+//-       div.section
+//-         h6 Instructors
+//-         div(*ngFor="let instructor of instructors")
+//-           p {{ instructor.fullName() }}
       
-      //- Difficulty
-      div.section
-        h6 Difficulty
-        p {{ course.difficulty }}
+//-       //- Difficulty
+//-       div.section
+//-         h6 Difficulty
+//-         p {{ course.difficulty }}
       
-      //- Course description
-      div.section
-        h6 Course description
-        div {{ course.data.description }}
+//-       //- Course description
+//-       div.section
+//-         h6 Course description
+//-         div {{ course.data.description }}
       
-      //- Set Language
-      div.section
-        toggle-language(
-          [default]="activeLanguage"
-          (toggleLanguage)="setActiveLanguage($event)")
-      //- Subscribe
-      div.section
-        div.btn.btn-waves(
-          (click)="startPayment()"
-          *ngIf="!subscribing") Subscribe
-        div(*ngIf="subscribing")
-          div
-            h4 Subscribe to {{ course.data.name }}
-            div(*ngIf="card && !state.addingCard")
-              p
-                input(
-                  name="preselected-cc"
-                  id="preselected-cc"
-                  type="radio"
-                  (click)="selectExistingCard(card)")
-                label(for="preselected-cc") {{ card.brand }} ending in {{ card.last4 }}
-              div.btn.btn-waves(*ngIf="selectedCard && !state.addingCard" (click)="submitSubscription({})") SubmitPayment
-            div.btn.btn-waves((click)="addCreditCard()" *ngIf="!state.addingCard") Add Credit Card
-            add-credit-card-form(*ngIf="state.addingCard" (onSubmitCard)="onSubmitCard($event)")
+//-       //- Set Language
+//-       div.section
+//-         toggle-language(
+//-           [default]="activeLanguage"
+//-           (toggleLanguage)="setActiveLanguage($event)")
+//-       //- Subscribe
+//-       div.section
+//-         div.btn.btn-waves(
+//-           (click)="startPayment()"
+//-           *ngIf="!subscribing") Subscribe
+//-         div(*ngIf="subscribing")
+//-           div
+//-             h4 Subscribe to {{ course.data.name }}
+//-             div(*ngIf="card && !state.addingCard")
+//-               p
+//-                 input(
+//-                   name="preselected-cc"
+//-                   id="preselected-cc"
+//-                   type="radio"
+//-                   (click)="selectExistingCard(card)")
+//-                 label(for="preselected-cc") {{ card.brand }} ending in {{ card.last4 }}
+//-               div.btn.btn-waves(*ngIf="selectedCard && !state.addingCard" (click)="submitSubscription({})") SubmitPayment
+//-             div.btn.btn-waves((click)="addCreditCard()" *ngIf="!state.addingCard") Add Credit Card
+//-             add-credit-card-form(*ngIf="state.addingCard" (onSubmitCard)="onSubmitCard($event)")
       
 
