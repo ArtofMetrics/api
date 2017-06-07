@@ -29,6 +29,7 @@ export class PreviewCourseComponent implements OnInit {
   subscribing: boolean = false;
   activeLanguage: string;
   selectedCard: StripeCard;
+  selectedLength: string;
 
   constructor(
     private apiService: ApiService,
@@ -81,7 +82,7 @@ export class PreviewCourseComponent implements OnInit {
     const cardDetails = this.selectedCard || token.token;
 
     this.apiService.students
-      .subscribeToCourse({ courseId: this.doc._id, cardDetails, language: this.activeLanguage })
+      .subscribeToCourse({ courseId: this.doc._id, cardDetails, language: this.activeLanguage, length: this.selectedLength })
       .subscribe(
       data => {
         this.stateCleanup();
@@ -98,7 +99,7 @@ export class PreviewCourseComponent implements OnInit {
   }
 
   subscribeToFreeCourse = () => {
-    this.apiService.students.subscribeToCourse({ courseId: this.doc._id, language: this.activeLanguage })
+    this.apiService.students.subscribeToCourse({ courseId: this.doc._id, language: this.activeLanguage, length: this.selectedLength })
       .subscribe(
       data => this.onSuccessfulPayment(),
       error => this.handleHttpError(error)

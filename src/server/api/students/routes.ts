@@ -235,7 +235,7 @@ export function resetCourse($User: Model<any>, $customError: CustomErrorService,
 async function addStudentCourseToCoursesArray({ studentCourse, user, $User }: { studentCourse: StudentCourse, user: IUser, $User: Model<any> }): Promise<IUser> {
   return $User.findByIdAndUpdate(
     user._id,
-    { $push: { 'courses.active': studentCourse._id } },
+    { $addToSet: { 'courses.active': studentCourse._id } },
     { new: true }
   );
 }

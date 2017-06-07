@@ -1,24 +1,23 @@
 form(#form="ngForm")
-  //- Course Length
-  div#edit-course-length
-    h5 Course Length
+  //- Annual Course Price
+  div#edit-annual-course-price
+    h5 Annual Course Price
     div.divider
-    p(*ngFor="let length of lengths; let i = index;" )
-      input(
-        name="course-length"
-        type="radio"
-        checked="{{ length === course.subscription.length ? 'true' : null }}"
-        value="length"
-        (click)="setLength(length)"
-        id="length-{{i}}")
-      label(for="length-{{i}}") {{ lengthTypes[length] }}
-  
-  //- Course Price
-  div#edit-course-price
     div.input-field
       input(
         type="number"
-        name="course-price"
-        [(ngModel)]="priceCents"
-        (change)="setPrice($event)")
-      label Price
+        name="annual-course-price"
+        [(ngModel)]="annualPriceCents"
+        (change)="setPrice($event, 'annual')"
+      )
+  //- Semester Course Price
+  div#edit-semester-course-price
+    h5 Semester Course Price
+    div.divider
+    div.input-field
+      input(
+        type="number"
+        name="semester-course-price"
+        [(ngModel)]="semesterPriceCents"
+        (change)="setPrice($event, 'semester')"
+      )

@@ -244,8 +244,13 @@ studentCourseSchema.methods.isExpired = function(): boolean {
 
 // statics
 
-studentCourseSchema.statics.createFromCourse = function({ course, language }: { course: Course, language: string }): Promise<StudentCourse> {
+studentCourseSchema.statics.createFromCourse = function({ course, language, length }: { course: Course, language: string, length: string }): Promise<StudentCourse> {
   const courseData: any = (course.toObject() as any).data;
+
+  const lengthType = {
+    semester: `semesterCostCents`,
+    annual: `annualCostCents`
+  }[length];
 
   return this.create({
     slug: course.slug,
@@ -261,8 +266,8 @@ studentCourseSchema.statics.createFromCourse = function({ course, language }: { 
     subscription: {
       subscribed: true,
       subscribedOn: Date.now(),
-      costCents: course.subscription.costCents,
-      length: course.subscription.length,
+      costCents: course.subscription[lengthType],
+      length,
       currency: course.subscription.currency
     }
   });

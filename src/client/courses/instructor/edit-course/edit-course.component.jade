@@ -17,7 +17,6 @@ div.container(*ngIf="this.course")
     div.col.s3
       edit-price(
         [course]="course"
-        (changeCourseLength)="setCourseLength($event)"
         (changeCoursePrice)="setCoursePrice($event)")
   div.row
     div.col.s3

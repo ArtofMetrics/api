@@ -122,12 +122,12 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     throw error;
   }
 
-  setCourseLength = (length: string) => {
-    this.course.subscription.length = length;
-  }
-
-  setCoursePrice = (costCents: number) => {
-    this.course.subscription.costCents = costCents;
+  setCoursePrice = ({ cents, type }: { cents: number, type: 'semester' | 'annual' }) => {
+    if (type === 'annual') {
+      this.course.set('course.subscription.annualCostCents', cents);
+    } else if (type === 'semester') {
+      this.course.set('course.subscription.semesterCostCents', cents);
+    }
   };
 
   saveCourse = () => {
