@@ -22,7 +22,8 @@ import {
   getOneLesson,
   addDrip,
   deleteDrip,
-  updateDrip
+  updateDrip,
+  updateLesson
 } from './lessons/lessons.controller';
 
 export function instructorsRouter(di): Router {
@@ -53,7 +54,8 @@ export function instructorsRouter(di): Router {
 
   // Edit Lesson
   api.route('/course/:slug/module/:module/lesson/:lesson')
-    .get(di.invoke(getOneLesson));
+    .get(di.invoke(getOneLesson))
+    .put(di.invoke(updateLesson));
 
   // Create Drip
   api.route('/course/:slug/module/:module/lesson/:lesson/drip')

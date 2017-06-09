@@ -22,7 +22,8 @@ import {
 import {
   GetOneLessonQuery, GetOneLessonResponse,
   AddDripRequestBody, AddDripResponse,
-  UpdateDripRequestBody, UpdateDripResponse
+  UpdateDripRequestBody, UpdateDripResponse,
+  UpdateLessonRequestBody, UpdateLessonResponse
 } from 'server/api/instructors/lessons/models';
 
 export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: JWTService) {
@@ -76,6 +77,11 @@ export function instructors(API_ROOT: string, http: AomHTTPService, jwtService: 
         .get(
         `${BASE_URL}/course/${slug}/module/${moduleId}/lesson/${lessonId}`,
         query);
+    },
+    saveLesson({ slug, moduleId, lesson, language }: { slug: string, moduleId: string, lesson: any, language: string }): Observable<UpdateLessonResponse> {
+      const data: UpdateLessonRequestBody = { language, lesson };
+      return http
+        .put(`${ BASE_URL }/course/${ slug }/module/${ moduleId }/lesson/${ lesson._id }`, data);
     },
     addDrip({ slug, moduleId, lessonId, language }: { slug: string, moduleId: string, lessonId: string, language: string }): Observable<AddDripResponse> {
       const data: AddDripRequestBody = { language };

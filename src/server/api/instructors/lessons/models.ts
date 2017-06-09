@@ -54,3 +54,19 @@ export interface UpdateDripResponse {
   drip: any;
   language: string;
 }
+
+// Update Lesson
+
+export interface UpdateLessonRequestBody {
+  lesson: any;
+  language: string;
+}
+
+export interface UpdateLessonRequest extends AuthenticatedRequest {
+  body: UpdateLessonRequestBody;
+  params: Params;
+}
+
+export interface UpdateLessonResponse {
+  lesson: any;
+}

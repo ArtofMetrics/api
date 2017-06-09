@@ -16,7 +16,8 @@ import { HTTPResponse } from '../../models';
 import {
   GetOneLessonRequest, GetOneLessonResponse,
   AddDripRequest, AddDripResponse,
-  UpdateDripRequest, UpdateDripResponse
+  UpdateDripRequest, UpdateDripResponse,
+  UpdateLessonRequest, UpdateLessonResponse
 } from './models';
 
 export function getOneLesson($Course: Model<any>, $customError: CustomErrorService) {
@@ -153,6 +154,36 @@ export function updateDrip($Course: Model<any>, $customError: CustomErrorService
       return $customError.httpError(res)(error);
     }
   }
+}
+
+export function updateLesson($customError: CustomErrorService, $Course: Model<any>) {
+  return async (req: UpdateLessonRequest, res: Response) => {
+    try {
+
+      const course = await findCourseOrThrow({ $Course, slug: req.params.slug, $customError });
+      checkAuthorizedInstructor({ course, user: req.user });
+
+      const { language, lesson } = req.body;
+      const modules = course.data.modules[language];
+      const moduleIdx = findWithinMongooseArrayOrThrow(modules, req.params.module, 'module');
+      const lessonIdx = findWithinMongooseArrayOrThrow(modules[moduleIdx].lessons, req.params.lesson, 'lesson'); 
+
+      
+      const updateOp = {
+        [`data.modules.${ language }.${ moduleIdx }.lessons.${ lessonIdx }.difficulty`]: lesson.difficulty,
+        [`data.modules.${ language }.${ moduleIdx }.lessons.${ lessonIdx }.timeToComplete`]: lesson.timeToComplete
+      };
+      
+      const update = await $Course
+        .findByIdAndUpdate(course._id, updateOp, { new: true })
+        .setOptions({ skipVisibility: true });
+
+      const data: HTTPResponse<UpdateLessonResponse> = { data: { lesson: update } };
+      res.json(data);
+    } catch (error) {
+      return $customError.httpError(res)(error);
+    }
+  };
 }
 
 function findWithinMongooseArrayOrThrow(arr: any[], id: string, elemName: string): number {

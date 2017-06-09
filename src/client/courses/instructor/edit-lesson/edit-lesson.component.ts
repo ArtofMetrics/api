@@ -4,9 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import * as cloneDeep from 'lodash/cloneDeep';
 import * as findIndex from 'lodash/findIndex';
+
 // AOM Deps
 import { ApiService } from 'client/core/api/api.service';
 import { ViewReadyService } from 'client/shared/view-ready.service';
+import { ToastService } from 'client/core/toast.service';
 
 // AOM Interfaces
 
@@ -32,7 +34,8 @@ export class EditLessonComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private route: ActivatedRoute,
     private router: Router,
-    private viewState: ViewReadyService
+    private viewState: ViewReadyService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -109,6 +112,19 @@ export class EditLessonComponent implements OnInit, OnDestroy {
       )
   }
 
+  saveLesson = () => {
+    this.apiService.instructors
+      .saveLesson({ slug: this.slug, moduleId: this.moduleId, language: this.language, lesson: this.lesson })
+      .subscribe(
+        data => {
+          this.toastService.toast(`${ this.lesson.name } was successfully updated`);
+        },
+        error => {
+          this.toastService.toast(`Oops, there was an error updating ${ this.lesson.name }`);
+          this.handleHttpError(error);
+        }
+      );
+  }
   getLesson = ({ lessonId }: { lessonId: string }) => {
     const { slug, moduleId, language } = this;
 

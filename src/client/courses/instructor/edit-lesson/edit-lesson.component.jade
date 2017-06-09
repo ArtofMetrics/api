@@ -6,6 +6,31 @@ div.container
         div#edit-lesson-name
           h4 {{ lesson.name }}
           div.btn.btn-waves.floating-effect((click)="goBack()") Back
+          div.btn.btn-waves.floating-effect((click)="saveLesson()") Save Lesson
+        //- Difficulty
+        div#edit-lesson-difficulty
+          h6.header Difficulty*
+          p(*ngFor="let difficulty of ['Beginner', 'Intermediate', 'Advanced']; let i = index")
+            input(
+              type="radio"
+              name="lesson-difficulty"
+              id="lesson-difficulty-{{ i }}"
+              value="{{ difficulty }}"
+              checked="{{lesson.difficulty === difficulty ? 'true' : null}}"
+              (click)="lesson.difficulty = difficulty"
+            )
+            label(for="lesson-difficulty-{{ i }}") {{ difficulty }}
+        //- Time to Complete
+        div#edit-lesson-time-to-complete
+          h6.header Time To Complete*
+          div.input-field
+            input(
+              type="number"
+              name="time-to-complete"
+              [(ngModel)]="lesson.timeToComplete"
+              id="time-to-complete"
+              step="0.5"
+            )
         //- Drips
         div#view-lesson-drips
           div(*ngFor="let drip of lesson.drips")
