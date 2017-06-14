@@ -4,6 +4,7 @@ import { passwordSchema } from './password';
 import { courseSchema } from './course/course';
 import { studentCourseSchema } from './course/student-course';
 import { paymentSchema } from './payment';
+import { couponSchema } from './coupon';
 
 export const models = {
   Course: courseSchema,
@@ -11,4 +12,5 @@ export const models = {
   Password: passwordSchema,
   StudentCourse: studentCourseSchema,
   Payment: paymentSchema,
+  Coupon: couponSchema
 };
