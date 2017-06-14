@@ -10,6 +10,7 @@ export interface Coupon extends Document {
   startDate: Date;
   endDate?: Date;
   forever: boolean;
+  discount: number;
 }
 
 

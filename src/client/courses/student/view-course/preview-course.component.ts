@@ -30,6 +30,7 @@ export class PreviewCourseComponent implements OnInit {
   activeLanguage: string;
   selectedCard: StripeCard;
   selectedLength: string;
+  promo: string;
 
   constructor(
     private apiService: ApiService,
@@ -82,7 +83,7 @@ export class PreviewCourseComponent implements OnInit {
     const cardDetails = this.selectedCard || token.token;
 
     this.apiService.students
-      .subscribeToCourse({ courseId: this.doc._id, cardDetails, language: this.activeLanguage, length: this.selectedLength })
+      .subscribeToCourse({ courseId: this.doc._id, cardDetails, language: this.activeLanguage, length: this.selectedLength, promo: this.promo })
       .subscribe(
       data => {
         this.stateCleanup();

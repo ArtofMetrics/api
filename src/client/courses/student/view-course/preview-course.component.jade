@@ -71,6 +71,15 @@ div.container
                 label(for="preselected-cc") {{ card.brand }} ending in {{ card.last4 }}
               div.btn.btn-waves(*ngIf="selectedCard && !state.addingCard" (click)="submitSubscription({})") SubmitPayment
             div.btn.btn-waves((click)="addCreditCard()" *ngIf="!state.addingCard") Add Credit Card
+            div.enter-promo.input-field
+              h6.header Promo Code
+              input(
+                type="text"
+                [(ngModel)]="promo"
+                name="promo"
+                id="promo"
+              )
+              
             add-credit-card-form(*ngIf="state.addingCard" (onSubmitCard)="onSubmitCard($event)")
       
 

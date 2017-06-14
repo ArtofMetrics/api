@@ -4,6 +4,7 @@ import { Document, Schema, Model } from 'mongoose';
 // AOM Dependencies
 
 // AOM Interfaces
+import { Coupon } from './coupon';
 import { Course } from './course/course';
 import { StudentCourse } from './course/student-course';
 import { IUser } from './user/user.model';
@@ -20,6 +21,7 @@ export interface Payment extends Document {
   updatedAt: string;
   status: string;
   response: any;
+  coupon?: MongoId & Coupon;
 }
 
 /**
@@ -38,18 +40,18 @@ export const paymentSchema = new Schema({
  * Model Statics
  */
 export interface PaymentModel extends Model<Payment> {
-  createSuccessfulPayment: ({ course, studentCourse, user, response }: { course: Course, studentCourse: StudentCourse, user: IUser, response: any }) => Promise<Payment>;
+  createSuccessfulPayment: ({ course, studentCourse, user, response, coupon }: { course: Course, studentCourse: StudentCourse, user: IUser, response: any, coupon?: Coupon }) => Promise<Payment>;
   createFailedPayment: ({ course, user, response }) => Promise<Payment>;
 }
 
-paymentSchema.statics.createSuccessfulPayment = function ({ course, studentCourse, user, response }: { course: Course, studentCourse: StudentCourse, user: IUser, response: any }) {
-  return this.create({
+paymentSchema.statics.createSuccessfulPayment = function ({ course, studentCourse, user, response, coupon }: { course: Course, studentCourse: StudentCourse, user: IUser, response: any, coupon?: Coupon }) {
+  return this.create(Object.assign({
     response,
     status: 'COMPLETED',
     course: course._id,
     student: user._id,
     studentCourse: studentCourse._id
-  });
+  }, coupon ? { coupon: coupon._id } : {}));
 };
 
 paymentSchema.statics.createFailedPayment = function ({ course, user, response }: { course: Course, user: IUser, response: any }): Promise<Payment> {
