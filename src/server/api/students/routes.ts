@@ -150,7 +150,7 @@ export function submitDrip($customError: CustomErrorService, $StudentCourse: Stu
       await checkSubscribed({ user: req.user, studentCourse, $User });
 
       const { language, completed } = req.body;
-
+      
       studentCourse.changeLastCompleted({ language, justCompleted: completed });
 
       const update = await $StudentCourse.findByIdAndUpdate(

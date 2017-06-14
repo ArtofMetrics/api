@@ -206,13 +206,14 @@ studentCourseSchema.methods.incrementLesson = function({ language, lastCompleted
 
 studentCourseSchema.methods.incrementModule = function({ language, lastCompleted }: { language: string, lastCompleted?: ParsedCompleted }): StudentCourse {
   const { module, lesson, drip } = lastCompleted || this.parseLastCompleted({ language });
+
   const newModuleIdx = module + 1;
   const newModule = this.get(`data.modules.${ language }.${ newModuleIdx }`);
   if (!newModule) {
     return this.finishCourse();
   }
-
-  this.set(`data.lastCompleted.${ language }`, `${ module }.0.0`);
+  
+  this.set(`data.lastCompleted.${ language }`, `${ newModuleIdx }.0.0`);
 };
 
 studentCourseSchema.methods.finishCourse = function(): StudentCourse {
