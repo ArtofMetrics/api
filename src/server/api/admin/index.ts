@@ -3,7 +3,7 @@ import * as express from 'express';
 
 // AOM Deps
 import { Middleware } from '../middleware';
-import { editRole, getUsers } from './routes';
+import { editRole, getUsers, getCoupons, createCoupon } from './routes';
 
 export function AdminRouter(di) {
   const api: express.Router = express.Router();
@@ -21,6 +21,10 @@ export function AdminRouter(di) {
   
   api.route('/users/:id/role')
     .put(di.invoke(editRole));
+  
+  api.route(`/coupons`)
+    .get(di.invoke(getCoupons))
+    .post(di.invoke(createCoupon));
 
   return api;
 }

@@ -7,6 +7,7 @@ import { ApiService } from 'client/core/api/api.service';
 import { JWTService } from 'client/core/jwt.service';
 import { AomHTTPService } from 'client/core/aom-http.service';
 import { usersApi } from './users';
+import { couponsApi } from './coupons';
 
 @Injectable()
 export class AdminApiService {
@@ -18,4 +19,6 @@ export class AdminApiService {
   private API_ROOT: string = `${ this.apiService.API_ROOT }/admin`;
 
   public users = usersApi(this.API_ROOT, this.aomHttp);
+
+  public coupons = couponsApi(this.API_ROOT, this.aomHttp);
 }
