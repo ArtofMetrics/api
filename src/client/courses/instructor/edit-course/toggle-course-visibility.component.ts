@@ -26,7 +26,6 @@ export class ToggleCourseVisibilityComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.course);
     this.isVisible = this.course.isVisible;
   }
 

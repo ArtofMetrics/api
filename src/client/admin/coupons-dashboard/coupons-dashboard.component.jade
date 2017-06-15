@@ -1,0 +1,71 @@
+div.container
+  div.row
+    h3.header Coupons
+    div.row
+      div.col.s3.center-align
+        h6.header Code
+      div.col.s3.center-align
+        h6.header Start Date
+      div.col.s3.center-align 
+        h6.header End Date
+      div.col.s3.center-align 
+        h6.header Discount (%)
+
+    div.divider
+
+    div.row(*ngFor="let coupon of coupons")
+      div.col.s3.center-align
+        h6.header {{ coupon.code }}
+      div.col.s3.center-align
+        h6.header {{ showDate(coupon, coupon.startDate) }}
+      div.col.s3.center-align
+        h6.header {{ showDate(coupon, coupon.endDate) }}
+      div.col.s3.center-align
+        h6.header {{ coupon.discount }}%
+    
+    div.divider
+    div.btn.btn-waves((click)="startCreateCoupon()" *ngIf="!state.creatingCoupon") Create Coupon
+    div.btn.btn-waves((click)="createCoupon()" *ngIf="state.creatingCoupon") Submit Coupon
+    div(*ngIf="state.creatingCoupon")
+      form(name="createCouponForm")
+        div.input-field
+          input(
+            type="text"
+            [(ngModel)]="coupon.code"
+            name="couponCode"
+            id="couponCode"
+          )
+          label(for="couponCode") Code* (Case Sensitive)
+        div.coupon-dates(*ngIf="!coupon.forever")
+          div.input-field
+            h6.header Start Date*
+            input#startDatePicker.datepicker(
+              (change)="setStartDate(_startDate)"
+              [(ngModel)]="_startDate"
+              name="couponStartDate"
+              type="date")
+          div.input-field
+            h6.header End Date*
+            input#endDatePicker.datepicker(
+              (change)="setEndDate(_endDate)"
+              [(ngModel)]="_endDate"
+              name="couponEndDate"
+              active="true"
+              type="date")
+        div.input-field
+          p
+            input(
+              name="couponForever"
+              id="couponForever"
+              type="checkbox"
+              (click)="setForever()"
+            ) 
+            label(for="couponForever") Forever
+        div.input-field
+          h6.header Discount (%)
+          input(
+            name="couponDiscount"
+            id="couponDiscount"
+            type="number"
+            [(ngModel)]="coupon.discount"
+          )

@@ -18,6 +18,7 @@ export interface SubscribeToCourseRequestBody {
   cardDetails?: any;
   language: string;
   length: string;
+  promo?: string;
 }
 
 export interface SubscribeToCourseRequest extends AuthenticatedRequest {

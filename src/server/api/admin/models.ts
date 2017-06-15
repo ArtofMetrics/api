@@ -5,6 +5,7 @@
 // AOM Types
 import { AuthenticatedRequest } from '../models';
 import { IUser, Role } from '../../dependencies/models/user/user.model';
+import { Coupon } from '../../dependencies/models/coupon';
 
 // Get Users
 
@@ -28,4 +29,27 @@ export interface EditRoleRequest extends AuthenticatedRequest {
 
 export interface EditRoleResponse {
   
+}
+
+// Get Coupons
+
+export interface GetCouponsRequest extends AuthenticatedRequest {
+
+}
+
+export interface GetCouponsResponse {
+  coupons: Coupon[];
+}
+
+// CreateCoupon
+
+export interface CreateCouponRequestBody {
+  coupon: Coupon;
+}
+export interface CreateCouponRequest extends AuthenticatedRequest {
+  body: CreateCouponRequestBody;
+}
+
+export interface CreateCouponResponse {
+  coupon: Coupon;
 }

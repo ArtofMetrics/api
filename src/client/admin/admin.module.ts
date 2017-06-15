@@ -7,11 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { UsersDashboardService, UsersDashboardComponent } from './users-dashboard';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminApiService } from './admin-api/admin-api.service';
+import { CouponsDashboardModule } from './coupons-dashboard/coupons-dashboard.module';
 
 // AOM Interfaces
 
 @NgModule({
-  imports: [AdminRoutingModule, CommonModule, FormsModule],
+  imports: [AdminRoutingModule, CommonModule, FormsModule, CouponsDashboardModule],
   providers: [UsersDashboardService, AdminApiService],
   declarations: [UsersDashboardComponent],
   exports: [AdminRoutingModule]

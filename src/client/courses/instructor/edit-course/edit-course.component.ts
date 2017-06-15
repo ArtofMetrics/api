@@ -81,8 +81,6 @@ export class EditCourseComponent implements OnInit, OnDestroy {
     if (courseModule.$isNew) {
       return this.apiService.instructors
         .addModule({ slug: this.slug, module: courseModule, language: this.language });
-    } else {
-      console.log('need to add for editing module')
     }
   }
 
@@ -137,7 +135,6 @@ export class EditCourseComponent implements OnInit, OnDestroy {
   };
 
   setTimeToComplete = ({ time }: { time: number }) => {
-    console.log('TIME', time);
     if (isNaN(time) || !time) {
       this.course.timeToComplete = undefined;
     } else {
@@ -187,7 +184,6 @@ export class EditCourseComponent implements OnInit, OnDestroy {
 
   setDifficulty = (difficulty: string) => {
     this.course.difficulty = difficulty;
-    console.log('set difficulty', this.course);
   }
 
   @Input()

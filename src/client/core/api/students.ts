@@ -29,8 +29,8 @@ export function students(API_ROOT: string, http: AomHTTPService) {
         .get(`${BASE_URL}/course/${slug}`);
     },
 
-    subscribeToCourse({ courseId, cardDetails, language, length }: { courseId: string, cardDetails?: any, language: string, length: string }): Observable<SubscribeToCourseResponse> {
-      const data: SubscribeToCourseRequestBody = { cardDetails, language, length };
+    subscribeToCourse({ courseId, cardDetails, language, length, promo }: { courseId: string, cardDetails?: any, language: string, length: string, promo?: string }): Observable<SubscribeToCourseResponse> {
+      const data: SubscribeToCourseRequestBody = { cardDetails, language, length, promo };
       return http
         .post(`${BASE_URL}/course/${courseId}`, data);
     },

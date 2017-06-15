@@ -29,6 +29,7 @@ import {
 import { StudentCourseModel, StudentCourse } from '../../dependencies/models/course/student-course';
 import { IUser } from '../../dependencies/models/user/user.model';
 import { Payment, PaymentModel } from '../../dependencies/models/payment';
+import { CouponModel } from 'dependencies/models/coupon';
 
 export function getOneCourse($customError: CustomErrorService, $StudentCourse: Model<any>, $Course: Model<any>, $User: Model<any>) {
   return async (req: GetOneCourseRequest, res: Response) => {
@@ -76,21 +77,23 @@ export function getOneCourse($customError: CustomErrorService, $StudentCourse: M
  * with reference to the `studentCourse` and `course` objects
  */
 export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCourseModel, $customError: CustomErrorService,
-  $stripe, $subscription: SubscriptionService, $Payment: PaymentModel, $payment: PaymentService, $User: Model<any>) {
+  $stripe, $subscription: SubscriptionService, $Payment: PaymentModel, $payment: PaymentService, $User: Model<any>, $Coupon: CouponModel) {
   return async (req: SubscribeToCourseRequest, res: Response) => {
     try {
       const course = await findCourseByIdOrThrow({ $Course, courseId: req.params.identifier });
       await throwIfSubscribed({ $StudentCourse, user: req.user, courseId: course._id.toString() });
 
+      const { cardDetails, length, promo } = req.body;
+
       if (course.isFree()) {
-        const studentCourse = await $StudentCourse.createFromCourse({ course, language: req.body.language });
+        const studentCourse = await $StudentCourse.createFromCourse({ course, language: req.body.language, length });
         await addStudentCourseToCoursesArray({ studentCourse, user: req.user, $User })
 
         return res.json({ data: { studentCourse } });
       }
 
       validateParams(req.body);
-      const { cardDetails, length } = req.body;
+      
 
       const sourceToken = cardDetails.id;
       const { stripeCustomer, updatedUser } = await getOrCreateCustomer({ token: sourceToken, user: req.user });
@@ -105,9 +108,10 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
       }
 
       let stripePayment;
+      const coupon = promo ? await $Coupon.findOne({ code: promo }) : null;
       try {
         stripePayment = await $subscription
-          .createSubscriptionPayment({ course, token: cardDetails.id, user: req.user, customer: stripeCustomer, length });
+          .createSubscriptionPayment({ course, token: cardDetails.id, user: req.user, customer: stripeCustomer, length, coupon });
       } catch (error) {
         const failedPayment = await $Payment
           .createFailedPayment({ course, user: req.user, response: error });
@@ -119,7 +123,7 @@ export function subscribeToCourse($Course: Model<any>, $StudentCourse: StudentCo
 
       await Promise.all([
         addStudentCourseToCoursesArray({ studentCourse, user: req.user, $User }),
-        $Payment.createSuccessfulPayment({ course, studentCourse, user: req.user, response: stripePayment })
+        $Payment.createSuccessfulPayment({ course, studentCourse, user: req.user, response: stripePayment, coupon })
       ]);
 
       const data: HTTPResponse<SubscribeToCourseResponse> = { data: { studentCourse } };
