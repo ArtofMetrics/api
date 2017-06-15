@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class SidebarToggleComponent implements OnInit {
-  SELECTOR = '#sidebar-toggle';
+  SELECTOR = '#sidebar-toggle-button';
 
   constructor() {}
 

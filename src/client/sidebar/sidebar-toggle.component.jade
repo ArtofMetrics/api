@@ -1,5 +1,6 @@
-a#sidebar-toggle.button-collapse(
-  on-mouseover="showBar()"
-  href="#"
-  data-activates="aom-sidebar")
-  i.material-icons menu
+div#sidebar-toggle(on-mouseover="showBar()")
+  div#sidebar-bg.btn.btn-waves
+    a#sidebar-toggle-button.button-collapse(
+      href="#"
+      data-activates="aom-sidebar")
+      i.material-icons menu
