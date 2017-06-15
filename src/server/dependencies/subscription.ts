@@ -24,7 +24,8 @@ export class SubscriptionService {
 
     const courseCost = course.subscription[lengthType];
 
-    const amountToCharge = coupon ? courseCost - (courseCost * coupon.discount) : courseCost;
+    const amountToCharge = coupon ? coupon.discountFromCourse({ courseCost }) : courseCost;
+    
     const payment = await this.$stripe.charges.create(
       {
         currency: course.subscription.currency || this.DEFAULT_CURRENCY,

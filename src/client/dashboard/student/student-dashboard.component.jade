@@ -46,12 +46,12 @@ div.card-panel
     
     div.row(*ngFor="let course of completedCourses")
       div.col.s3.center-align
-        a([routerLink]="['course', course.slug]")
+        a([routerLink]="['/course', course.slug]")
           h6.header {{ course.data.name }}
       div.col.s3.center-align
         div {{ course.expirationDate().format('MMM Do, YYYY') }}
       div.col.s3.center-align
-        a([routerLink]="['course', course.slug]")
+        a([routerLink]="['/course', course.slug]")
           h6.header {{ course.isExpired() ? 'Expired' : 'Subscribed' }}
       div.col.s3.center-align
         h6.header {{ course.data.activeLanguage }}

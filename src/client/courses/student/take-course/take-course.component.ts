@@ -47,7 +47,6 @@ export class TakeCourseComponent implements OnInit {
   }
 
   startCourse = (payload: { activeLanguage: string }) => {
-    console.log(payload);
     this.studentCourse.set('data.activeLanguage', payload.activeLanguage);
     this.state = 'CONTINUE';
   }
