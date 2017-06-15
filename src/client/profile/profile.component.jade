@@ -7,28 +7,28 @@ div.container#profile
 
       div.section(*ngIf="activeCourses")
         h3 My Active Courses
+        div.divider
         div(*ngFor="let course of activeCourses")
           div.row
-            div {{ course.data.name }}
-            a([routerLink]="['course', course.slug]") Go to course
+            a([routerLink]="['/course', course.slug]") {{ course.data.name }}
         div(*ngIf="!activeCourses.length")
           div You aren't actively subscribed to any courses yet
-
-      div.divider
+      
+      br
 
       div.section(*ngIf="completedCourses")
         h3 My Completed Courses
+        div.divider
         div(*ngIf="!completedCourses.length")
           | You haven't completed any courses yet
         div(*ngIf="completedCourses.length")
           div(*ngFor="let course of completedCourses")
-            div {{ course.data.name }}
+            a([routerLink]="['/course', course.slug]") {{ course.data.name }}
 
       //- Payment
-      div.divider
-
       div.section
         h3 Payment
+        div.divider
         div(*ngIf="!card")
           | You have no payment method on file.
           div((click)="addCreditCard()") Add Credit cards
