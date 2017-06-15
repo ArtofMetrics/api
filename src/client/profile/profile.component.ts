@@ -5,13 +5,15 @@ import { Component, OnInit } from '@angular/core';
 import { ViewReadyService } from 'client/shared/view-ready.service';
 import { ApiService } from 'client/core/api/api.service';
 import { ErrorService } from 'client/core/error.service';
+import { UserService } from 'client/core/user.service';
 
 // AOM Types
 import { StudentCourse } from 'server/dependencies/models/course/student-course';
 
 @Component({
   selector: 'user-profile',
-  templateUrl: './profile.component.jade'
+  templateUrl: './profile.component.jade',
+  styleUrls: ['./profile.component.styl']
 })
 
 
@@ -24,7 +26,8 @@ export default class ProfileComponent implements OnInit {
   constructor(
     private viewState: ViewReadyService,
     private apiService: ApiService,
-    private errorService: ErrorService) {}
+    private errorService: ErrorService,
+    private userService: UserService) {}
 
   ngOnInit() {
     

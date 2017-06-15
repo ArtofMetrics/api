@@ -1,31 +1,36 @@
-h2 User Account
+div.container#profile
+  div.row
+    div.col.s4.offset-s4(*ngIf="userService.isLoggedIn()")
+      h2.header {{userService.$.fullName() }}
 
-div.section(*ngIf="activeCourses")
-  h3 My Active Courses
-  div(*ngFor="let course of activeCourses")
-    div.row
-      div {{ course.data.name }}
-      a([routerLink]="['course', course.slug]") Go to course
-  div(*ngIf="!activeCourses.length")
-    div You aren't actively subscribed to any courses yet
+      div.divider
 
-div.divider
+      div.section(*ngIf="activeCourses")
+        h3 My Active Courses
+        div(*ngFor="let course of activeCourses")
+          div.row
+            div {{ course.data.name }}
+            a([routerLink]="['course', course.slug]") Go to course
+        div(*ngIf="!activeCourses.length")
+          div You aren't actively subscribed to any courses yet
 
-div.section(*ngIf="completedCourses")
-  h3 My Completed Courses
-  div(*ngIf="!completedCourses.length")
-    | You haven't completed any courses yet
-  div(*ngIf="completedCourses.length")
-    div(*ngFor="let course of completedCourses")
-      div {{ course.data.name }}
+      div.divider
 
-//- Payment
-div.divider
+      div.section(*ngIf="completedCourses")
+        h3 My Completed Courses
+        div(*ngIf="!completedCourses.length")
+          | You haven't completed any courses yet
+        div(*ngIf="completedCourses.length")
+          div(*ngFor="let course of completedCourses")
+            div {{ course.data.name }}
 
-div.section
-  h3 Payment
-  div(*ngIf="!card")
-    | You have no payment method on file.
-    div((click)="addCreditCard()") Add Credit cards
-  div(*ngIf="card")
-    div {{ card.last4 }}
+      //- Payment
+      div.divider
+
+      div.section
+        h3 Payment
+        div(*ngIf="!card")
+          | You have no payment method on file.
+          div((click)="addCreditCard()") Add Credit cards
+        div(*ngIf="card")
+          div {{ card.last4 }}
