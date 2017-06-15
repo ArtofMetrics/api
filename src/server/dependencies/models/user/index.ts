@@ -77,3 +77,7 @@ userSchema.methods.email = function(): string {
 userSchema.methods.firstName = function(): string {
   return this.get('profile.name.first');
 };
+
+userSchema.methods.lastName = function(): string {
+  return this.get(`profile.name.last`);
+}
