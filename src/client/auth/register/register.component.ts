@@ -22,7 +22,14 @@ export class RegisterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.viewState.emitFinished();
+    this.userService.isLoggedInAsync()
+      .then(isLoggedIn => {
+        if (isLoggedIn) {
+          return this.router.navigate(['/student']);
+        }
+
+        this.viewState.emitFinished();
+      });
   }
 
   onRegister = (data: SignupResponse) => {
