@@ -1,11 +1,17 @@
 div
   div.section
-    div.header Drip
     //- Drip Text
-    div([innerHTML]="drip.text")
+    div.section
+      div([innerHTML]="drip.text")
     form(name="drip-{{ drip._id.toString() }}")
-      div(*ngIf="drip.questionQuiz")
-        div.question-quiz-question {{ drip.questionQuiz.question }}
+      div.section(*ngIf="drip.questionQuiz")
+        h4.header Multiple Choice Quiz (select all that apply)
+        div.divider
+        br
+        div.question-quiz-question
+          span.bold Q: 
+          span {{ drip.questionQuiz.question }}
+        br
         div(*ngFor="let answer of drip.questionQuiz.answers; let i = index;")
           p
             input(
@@ -18,11 +24,20 @@ div
               for="answer-{{ answer._id.toString() }}" 
               [class.incorrect]="isIncorrect(i)"
               [class.missing]="isMissing(i)") {{ answer.text }}
-        div.btn.btn-waves((click)="submitQuestionQuizAnswers()") Submit
+        div.btn.btn-waves(
+          *ngIf="!grade || !grade.passed"
+          (click)="submitQuestionQuizAnswers()") Submit
       
       //- Console Quiz
-      div(*ngIf="drip.consoleQuiz")
-        div.console-quiz-question {{ drip.consoleQuiz.question }}
+      div.section(*ngIf="drip.consoleQuiz")
+        h4.header Console Quiz
+        div.divider
+        br
+
+        div.console-quiz-question
+          span.bold Q: 
+          span {{ drip.consoleQuiz.question }}
+        br
         div.console-quiz-answer.ace-text-editor(
           ace-editor
           name="cqAnswer"
@@ -32,8 +47,9 @@ div
           [readOnly]="false"
           (textChanged)="setConsoleQuizAnswer($event)"
           )
-        div.btn.btn-waves((click)="submitConsoleQuiz(this.consoleQuizAnswer)") Execute
+        div.btn.btn-waves(
+          (click)="submitConsoleQuiz(this.consoleQuizAnswer)") Execute
       
       //- Next button if no quizzes
-      div(*ngIf="!drip.consoleQuiz && !drip.questionQuiz")
+      div.section(*ngIf="!drip.consoleQuiz && !drip.questionQuiz")
         div.btn.btn-waves((click)="moveOn.emit()") Next

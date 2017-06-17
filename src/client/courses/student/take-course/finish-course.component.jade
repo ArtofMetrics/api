@@ -9,3 +9,6 @@ div.container
             i.material-icons redo
         div.card-content
           p You've finished {{ studentCourse.data.name }} in {{ studentCourse.data.activeLanguage }}! Click the redo button if you'd like to redo the course.
+          p Or, click&nbsp;
+            a([routerLink]="['/']") here&nbsp;
+            | if you'd like to see more courses.

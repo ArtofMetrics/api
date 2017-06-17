@@ -1,10 +1,9 @@
-div(*ngIf="activeLesson")
-  div.row
-    div.col.m6.offset-m6.s12
-      h5.header {{ module.name }}
+div#active-module(*ngIf="activeLesson")
+  div.row.center-align
+    h3.header {{ module.name }}: {{ activeLesson.name }}
+  div.divider
   //- Active Lesson
   div.row
-    h5.header {{ activeLesson.name }}
     p(*ngIf="activeLesson.description") {{ activeLesson.description }}
   
   //- drips

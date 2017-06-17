@@ -1,6 +1,7 @@
 // External Dependencies
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 // AOM Dependencies
 import { SidebarModule } from 'client/sidebar/sidebar.module';
@@ -17,7 +18,7 @@ import { ResubscribeCourseComponent } from './resubscribe-course.component';
 // AOM interfaces
 
 @NgModule({
-  imports: [CommonModule, TakeModuleModule, SharedCourseModule, SidebarModule],
+  imports: [CommonModule, TakeModuleModule, SharedCourseModule, SidebarModule, RouterModule],
   declarations: [
     BeginCourseComponent,
     TakeCourseComponent,
