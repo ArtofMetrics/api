@@ -22,7 +22,15 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.viewState.emitFinished();
+    this.userService.isLoggedInAsync()
+      .then(isLoggedIn => {
+        if (isLoggedIn) {
+          return this.router.navigate(['/student']);
+        }
+
+        this.viewState.emitFinished();
+      });
+    
   }
 
   onLoginSuccess = (data: LoginEmailResponse) => {
