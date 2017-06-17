@@ -52,4 +52,5 @@ export interface IUser extends Document {
   fullName(): string;
   email(): string
   firstName(): string;
+  lastName(): string;
 }

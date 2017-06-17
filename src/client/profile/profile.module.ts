@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // AOM Dependencies
+import CoreModule from 'client/core/core.module';
 import ProfileComponent from './profile.component';
 
 @NgModule({
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CoreModule],
   declarations: [ProfileComponent],
   exports: [ProfileComponent]
 })

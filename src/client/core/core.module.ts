@@ -27,14 +27,15 @@ import { ToastService } from './toast.service';
 import TopMenuComponent from './top-menu/top-menu.component';
 import { ViewWrapperComponent } from './view-wrapper/view-wrapper.component';
 import { FooterComponent } from './footer';
+import { UserInitialsComponent } from './user-initials';
 
 // AOM Directives
 import { CarouselDirective } from './carousel.directive';
 
 @NgModule({
   imports: [CommonModule, SharedModule, TopMenuModule, ViewWrapperModule],
-  exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective, SharedModule, FooterComponent, PaymentModule],
-  declarations: [CarouselDirective, FooterComponent],
+  exports: [TopMenuComponent, ViewWrapperComponent, CarouselDirective, SharedModule, FooterComponent, PaymentModule, UserInitialsComponent],
+  declarations: [CarouselDirective, FooterComponent, UserInitialsComponent],
   providers: [
     AUTH_PROVIDERS,
     JWTService,

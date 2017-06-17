@@ -1,12 +1,11 @@
 ul.side-nav#aom-sidebar
   
   div
-    a([routerLink]="['/']")
+    a.btn.btn-waves([routerLink]="['/']")
       i.material-icons.medium home
-
   div.center-align.sidebar-user-info
-    a([routerLink]="['profile']")
-      i.material-icons.medium person_pin
+    a.sidebar-button.btn.btn-waves([routerLink]="['profile']")
+      user-initials([user]="userService.$" *ngIf="userService.isLoggedIn()")
   li.center-align
     p(*ngIf="userService.$") {{ userService.$.fullName() }}
   li.center-align
