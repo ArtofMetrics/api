@@ -1,7 +1,7 @@
 // External Dependencies
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 // AOm Dependencies
 import { ApiService } from 'client/core/api/api.service';
@@ -22,11 +22,14 @@ import { Lesson } from 'server/dependencies/models/module/lesson';
 export class ContinueCourseComponent implements OnInit, OnDestroy {
   @Input()
   studentCourse: StudentCourse;
+  retakeModule?: number;
+  retakeLesson?: number;
 
   activeModule: CourseModule;
   language: string;
   subscriptions: {
-    lesson?: Subscription
+    lesson?: Subscription,
+    url?: Subscription
   } = {};
 
   constructor(
@@ -34,6 +37,7 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
     private errorService: ErrorService,
     private sidebar: SidebarStateService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private toastService: ToastService
   ) { }
 
@@ -45,10 +49,18 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
           console.log('on switch lesson', lesson);
         },
         error => this.errorService.logError(error)
-      )
+      );
+    
+    this.subscriptions.url = this.activatedRoute
+      .queryParams
+      .subscribe((params: { retakeModule: number, retakeLesson: number }) => {
+        console.log('subscribed');
+        this.retakeModule = params.retakeModule;
+        this.retakeLesson = params.retakeLesson;
+      });
+    
     this.language = this.studentCourse.data.activeLanguage;
     this.setActiveModule({ language: this.language });
-
   }
 
   ngOnDestroy() {
@@ -66,14 +78,21 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
         },
         error => {
           this.toastService.toast(`Oops, there was an error changing the language to ${ language }`);
-          this.handleHttpError(error)
+          this.handleHttpError(error);
         }
       )
   };
 
   setActiveModule = ({ language }: { language: string }) => {
-    this.activeModule = this.studentCourse.getActiveModule({ language });
-    this.sidebar.setCourse({ course: this.studentCourse });
+    if (this.retakeModule > -1 && this.retakeLesson > -1) {
+      console.log('the retake module', this.retakeModule);
+      console.log('the retake lesson', this.retakeLesson);
+      this.activeModule = this.studentCourse
+        .get(`data.modules.${ this.studentCourse.data.activeLanguage }.${ this.retakeModule }`);
+    } else {
+      this.activeModule = this.studentCourse.getActiveModule({ language });
+      this.sidebar.setCourse({ course: this.studentCourse });
+    }
   };
 
   continueOn = () => {
@@ -92,7 +111,7 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
         this.setActiveModule({ language: this.studentCourse.data.activeLanguage });
       },
       error => this.handleHttpError(error)
-    )
+    );
   }
 
   handleHttpError = (error: Error) => {

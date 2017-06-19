@@ -25,14 +25,15 @@ ul.side-nav#aom-sidebar
       ul.collapsible(data-collapsible="accordion")
         li(
           *ngFor="let module of sidebar.course.data.modules[sidebar.course.data.activeLanguage]; let moduleIdx = index;"
-          [class.disabled]="isFutureModule(moduleIdx)")
+          [class.disabled]="isFutureModule(moduleIdx)"
+          (click)="openAcc()")
           div.collapsible-header {{ module.name }}
           div.collapsible-body
-            ul.collection
-              li.pointer(*ngFor="let lesson of module.lessons; let lessonIdx = index;")
-                div(
-                  [class.disabled]="isFutureLesson({ moduleIdx: moduleIdx, lessonIdx: lessonIdx })"
-                  (click)="loadLesson(lesson)") {{ lesson.name || 'Lesson ' + lessonIdx }}
+            //- ul.collection
+            li.pointer(*ngFor="let lesson of module.lessons; let lessonIdx = index;")
+              div(
+                [class.disabled]="isFutureLesson({ moduleIdx: moduleIdx, lessonIdx: lessonIdx })"
+                (click)="loadLesson(lesson)") {{ lesson.name || 'Lesson ' + lessonIdx }}
   
   div.divider
 

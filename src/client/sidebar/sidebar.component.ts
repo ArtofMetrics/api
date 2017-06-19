@@ -45,6 +45,10 @@ export class SidebarComponent {
     return moduleIdx > idxOfActiveModule;
   };
 
+  openAcc = () => {
+    $('.collapsible').collapsible('open');
+  };
+
   isFutureLesson = ({ moduleIdx, lessonIdx }: { moduleIdx: number, lessonIdx: number }) => {
     if (this.isFutureModule(moduleIdx)) {
       return true;

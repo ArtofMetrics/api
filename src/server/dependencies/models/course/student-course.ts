@@ -1,6 +1,7 @@
 // External Dependencies
 import { Schema, Model } from 'mongoose';
 import * as moment from 'moment';
+import * as flatten from 'lodash/flatten';
 
 // AOM Dependencies
 import { commonCourseProps } from './common-course';
@@ -245,6 +246,15 @@ studentCourseSchema.methods.expirationDate = function(): moment.Moment {
 
 studentCourseSchema.methods.isExpired = function(): boolean {
   return this.expirationDate() < moment();
+};
+
+studentCourseSchema.methods.isCompletedLesson = function({ lessonIdx, moduleIdx }): boolean {
+  const currentActive = this.parseLastCompleted({ language: this.data.activeLanguage });
+  if (moduleIdx < currentActive.module) {
+    return true;
+  } else {
+    return lessonIdx < currentActive.lesson;
+  }
 };
 
 // statics
