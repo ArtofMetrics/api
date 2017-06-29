@@ -85,6 +85,8 @@ export interface StudentCourse extends Course {
   expirationDate: () => moment.Moment;
 
   isExpired: () => boolean;
+
+  findModuleFromLesson: ({ language, lesson }: { language: string, lesson: Lesson }) => CourseModule;
 }
 
 /**
@@ -134,6 +136,12 @@ export interface StudentCourseModel extends Model<StudentCourse> {
 }
 
 // methods
+
+studentCourseSchema.methods.findModuleFromLesson = function({ language, lesson }: { language: string, lesson: Lesson }): CourseModule {
+  const modules = this.get(`data.modules.${ language }`);
+  const module = modules.find(module => module.lessons.find(l => l._id.toString() === lesson._id.toString()));
+  return module;
+};
 
 studentCourseSchema.methods.getActiveModule = function({ language }: { language: string }): CourseModule {
   const { module: idx } = this.parseLastCompleted({ language });

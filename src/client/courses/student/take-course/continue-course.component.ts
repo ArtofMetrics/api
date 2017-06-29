@@ -45,12 +45,25 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
     this.sidebar.registerCourseWatch(this.studentCourse);
     this.subscriptions.lesson = this.sidebar.lessonWatch
       .subscribe(
-        (lesson: Lesson) => {
-          console.log('on switch lesson', lesson);
-        },
-        error => this.errorService.logError(error)
+      (lesson: Lesson) => {
+        console.log('LESSON', lesson);
+        if (lesson) {
+          const newModule = this.studentCourse.findModuleFromLesson({ language: this.studentCourse.data.activeLanguage, lesson });
+
+          const moduleIdx = this.studentCourse
+            .get(`data.modules.${this.studentCourse.data.activeLanguage}`)
+            .map(module => module._id.toString())
+            .indexOf(newModule._id.toString());
+
+          const lessonIdx = newModule.lessons.map((l: Lesson) => l._id.toString()).indexOf(lesson._id.toString());
+          this.router.navigate([], {
+            queryParams: { retakeModule: moduleIdx, retakeLesson: lessonIdx }
+          });
+        }
+      },
+      error => this.errorService.logError(error)
       );
-    
+
     this.subscriptions.url = this.activatedRoute
       .queryParams
       .subscribe((params: { retakeModule: number, retakeLesson: number }) => {
@@ -58,7 +71,7 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
         this.retakeModule = params.retakeModule;
         this.retakeLesson = params.retakeLesson;
       });
-    
+
     this.language = this.studentCourse.data.activeLanguage;
     this.setActiveModule({ language: this.language });
   }
@@ -71,15 +84,15 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
   setLanguage = ({ language }: { language: string }) => {
     this.apiService.students.changeActiveLanguage({ course: this.studentCourse, language })
       .subscribe(
-        data => {
-          this.studentCourse = new mongoose.Document(data.studentCourse, studentCourseSchema);
-          this.language = language;
-          this.setActiveModule({ language: this.language });
-        },
-        error => {
-          this.toastService.toast(`Oops, there was an error changing the language to ${ language }`);
-          this.handleHttpError(error);
-        }
+      data => {
+        this.studentCourse = new mongoose.Document(data.studentCourse, studentCourseSchema);
+        this.language = language;
+        this.setActiveModule({ language: this.language });
+      },
+      error => {
+        this.toastService.toast(`Oops, there was an error changing the language to ${language}`);
+        this.handleHttpError(error);
+      }
       )
   };
 
@@ -88,7 +101,7 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
       console.log('the retake module', this.retakeModule);
       console.log('the retake lesson', this.retakeLesson);
       this.activeModule = this.studentCourse
-        .get(`data.modules.${ this.studentCourse.data.activeLanguage }.${ this.retakeModule }`);
+        .get(`data.modules.${this.studentCourse.data.activeLanguage}.${this.retakeModule}`);
     } else {
       this.activeModule = this.studentCourse.getActiveModule({ language });
       this.sidebar.setCourse({ course: this.studentCourse });
@@ -99,9 +112,9 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
     this.apiService.students.submitDrip({
       courseId: this.studentCourse._id,
       language: this.language,
-      completed: this.studentCourse.get(`data.lastCompleted.${ this.language }`)
+      completed: this.studentCourse.get(`data.lastCompleted.${this.language}`)
     })
-    .subscribe(
+      .subscribe(
       data => {
         this.studentCourse = new mongoose.Document(data.studentCourse, studentCourseSchema);
         if (this.studentCourse.isCompleted) {
@@ -111,7 +124,7 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
         this.setActiveModule({ language: this.studentCourse.data.activeLanguage });
       },
       error => this.handleHttpError(error)
-    );
+      );
   }
 
   handleHttpError = (error: Error) => {
