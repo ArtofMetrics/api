@@ -46,7 +46,6 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
     this.subscriptions.lesson = this.sidebar.lessonWatch
       .subscribe(
       (lesson: Lesson) => {
-        console.log('LESSON', lesson);
         if (lesson) {
           const newModule = this.studentCourse.findModuleFromLesson({ language: this.studentCourse.data.activeLanguage, lesson });
 
