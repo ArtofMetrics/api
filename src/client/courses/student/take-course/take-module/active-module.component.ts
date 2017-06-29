@@ -27,6 +27,7 @@ export class ActiveModuleComponent implements OnChanges {
   @Output()
   continueOn: EventEmitter<any> = new EventEmitter();
 
+
   subscriptions: {
     retake?: Subscription
   } = {}
@@ -59,7 +60,7 @@ export class ActiveModuleComponent implements OnChanges {
   }
 
   ngOnChanges(changes: any) {
-    const studentCourse = changes.studentCourse.currentValue || this.studentCourse;
+    const studentCourse = changes.studentCourse && changes.studentCourse.currentValue || this.studentCourse;
 
     if (!studentCourse) {
       return;

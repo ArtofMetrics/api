@@ -67,8 +67,7 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
     this.subscriptions.url = this.activatedRoute
       .queryParams
       .subscribe((params: { retakeModule: number, retakeLesson: number }) => {
-        console.log('subscribed');
-        this.retakeModule = params.retakeModule;
+        this.activeModule = this.studentCourse.get(`data.modules.${ this.studentCourse.data.activeLanguage }.${ params.retakeModule }`);
         this.retakeLesson = params.retakeLesson;
       });
 
