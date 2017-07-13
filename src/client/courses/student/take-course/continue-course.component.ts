@@ -26,9 +26,9 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
   retakeLesson?: number;
 
   activeModule: CourseModule;
+  activeLesson: Lesson;
   language: string;
   subscriptions: {
-    lesson?: Subscription,
     url?: Subscription
   } = {};
 
@@ -43,39 +43,22 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sidebar.registerCourseWatch(this.studentCourse);
-    this.subscriptions.lesson = this.sidebar.lessonWatch
-      .subscribe(
-      (lesson: Lesson) => {
-        if (lesson) {
-          const newModule = this.studentCourse.findModuleFromLesson({ language: this.studentCourse.data.activeLanguage, lesson });
 
-          const moduleIdx = this.studentCourse
-            .get(`data.modules.${this.studentCourse.data.activeLanguage}`)
-            .map(module => module._id.toString())
-            .indexOf(newModule._id.toString());
-
-          const lessonIdx = newModule.lessons.map((l: Lesson) => l._id.toString()).indexOf(lesson._id.toString());
-          this.router.navigate([], {
-            queryParams: { retakeModule: moduleIdx, retakeLesson: lessonIdx }
-          });
-        }
-      },
-      error => this.errorService.logError(error)
-      );
+    this.language = this.studentCourse.data.activeLanguage;
 
     this.subscriptions.url = this.activatedRoute
       .queryParams
-      .subscribe((params: { retakeModule: number, retakeLesson: number }) => {
-        this.activeModule = this.studentCourse.get(`data.modules.${ this.studentCourse.data.activeLanguage }.${ params.retakeModule }`);
-        this.retakeLesson = params.retakeLesson;
-      });
+      .subscribe((params: { module: number, lesson: number, drip: number }) => {
+        const language = this.studentCourse.get(`data.activeLanguage`);
+        this.activeModule = this.studentCourse.get(`data.modules.${language}.${params.module}`);
+        console.log(this.activeModule)
+        // this.activeLesson = this.activeModule.lessons[params.lesson];
 
-    this.language = this.studentCourse.data.activeLanguage;
-    this.setActiveModule({ language: this.language });
+        this.setSidebarCourse({ language });
+      });
   }
 
   ngOnDestroy() {
-    this.subscriptions.lesson.unsubscribe();
     this.sidebar.deregisterCourseWatch();
   }
 
@@ -85,7 +68,7 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
       data => {
         this.studentCourse = new mongoose.Document(data.studentCourse, studentCourseSchema);
         this.language = language;
-        this.setActiveModule({ language: this.language });
+        this.setSidebarCourse({ language: this.language });
       },
       error => {
         this.toastService.toast(`Oops, there was an error changing the language to ${language}`);
@@ -94,16 +77,8 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
       )
   };
 
-  setActiveModule = ({ language }: { language: string }) => {
-    if (this.retakeModule > -1 && this.retakeLesson > -1) {
-      console.log('the retake module', this.retakeModule);
-      console.log('the retake lesson', this.retakeLesson);
-      this.activeModule = this.studentCourse
-        .get(`data.modules.${this.studentCourse.data.activeLanguage}.${this.retakeModule}`);
-    } else {
-      this.activeModule = this.studentCourse.getActiveModule({ language });
-      this.sidebar.setCourse({ course: this.studentCourse });
-    }
+  setSidebarCourse = ({ language }: { language: string }) => {
+    this.sidebar.setCourse({ course: this.studentCourse });
   };
 
   continueOn = () => {
@@ -114,16 +89,24 @@ export class ContinueCourseComponent implements OnInit, OnDestroy {
     })
       .subscribe(
       data => {
+        const language = this.studentCourse.data.activeLanguage;
         this.studentCourse = new mongoose.Document(data.studentCourse, studentCourseSchema);
+         
         if (this.studentCourse.isCompleted) {
           return this.router.navigate(['course', this.studentCourse.slug, 'finish']);
         }
-
-        this.setActiveModule({ language: this.studentCourse.data.activeLanguage });
+        
+        this.router.navigate([], { queryParams: this.studentCourse.parseLastCompleted({ language }) });
       },
       error => this.handleHttpError(error)
       );
   }
+
+  navigateToDrip = ({ module, lesson, drip }: { module?: number, lesson?: number, drip?: number }) => {
+    this.router.navigate([], {
+      queryParams: { module, lesson, drip }
+    });
+  };
 
   handleHttpError = (error: Error) => {
     this.errorService.handleHttpError(error);
