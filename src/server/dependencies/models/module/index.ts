@@ -7,7 +7,7 @@ export interface CourseModule {
   name: string;
   description: string;
   isVisible: boolean;
-  lessons: Schema.Types.ObjectId | Lesson[]
+  lessons: Lesson[]
 }
 
 export const courseModuleSchema = new Schema({

@@ -1,6 +1,7 @@
 // External Dependencies
 import { Schema, Model } from 'mongoose';
 import * as moment from 'moment';
+import * as flatten from 'lodash/flatten';
 
 // AOM Dependencies
 import { commonCourseProps } from './common-course';
@@ -84,6 +85,8 @@ export interface StudentCourse extends Course {
   expirationDate: () => moment.Moment;
 
   isExpired: () => boolean;
+
+  findModuleFromLesson: ({ language, lesson }: { language: string, lesson: Lesson }) => CourseModule;
 }
 
 /**
@@ -133,6 +136,12 @@ export interface StudentCourseModel extends Model<StudentCourse> {
 }
 
 // methods
+
+studentCourseSchema.methods.findModuleFromLesson = function({ language, lesson }: { language: string, lesson: Lesson }): CourseModule {
+  const modules = this.get(`data.modules.${ language }`);
+  const module = modules.find(module => module.lessons.find(l => l._id.toString() === lesson._id.toString()));
+  return module;
+};
 
 studentCourseSchema.methods.getActiveModule = function({ language }: { language: string }): CourseModule {
   const { module: idx } = this.parseLastCompleted({ language });
@@ -245,6 +254,15 @@ studentCourseSchema.methods.expirationDate = function(): moment.Moment {
 
 studentCourseSchema.methods.isExpired = function(): boolean {
   return this.expirationDate() < moment();
+};
+
+studentCourseSchema.methods.isCompletedLesson = function({ lessonIdx, moduleIdx }): boolean {
+  const currentActive = this.parseLastCompleted({ language: this.data.activeLanguage });
+  if (moduleIdx < currentActive.module) {
+    return true;
+  } else {
+    return lessonIdx < currentActive.lesson;
+  }
 };
 
 // statics
